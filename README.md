@@ -1,6 +1,8 @@
 # Trader
 
 
+python. 3.10  + 
+
 REMOVED_OANDA_API_KEY
 
 
