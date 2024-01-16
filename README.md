@@ -5,6 +5,8 @@ can use "python3 -V" to get version or "python3" to install
 
 python. 3.10  + required.
 
+create python virtual enviornment "python -m venv venv"
+
 The stocks and data are from Oanda
 
   Oanda api:
