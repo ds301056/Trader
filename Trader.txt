@@ -1,2 +1,0 @@
-We will need python for this application 
-can use "python3 -V" to get version or "python3" to install
