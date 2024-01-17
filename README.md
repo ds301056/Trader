@@ -1,12 +1,15 @@
 # Trader
 
 The stocks and data are from Oanda
+    @ developer.oanda.com
 
     Oanda api:
     REMOVED_OANDA_API_KEY
 
     account number
     101-001-27981277-001
+
+    
 
 We will need python for this application
 can use "python3 -V" to get version or "python3" to install
@@ -18,3 +21,6 @@ Setting up the python virtual environment:
 2.  "venv/scripts/activate" <!--run the script-->
 3.  "pip install pillow"
 4.  "venv/scripts/deactivate" <!--run the script to deactivate the virtual environment-->
+
+
+
