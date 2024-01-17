@@ -23,4 +23,9 @@ Setting up the python virtual environment:
 4.  "venv/scripts/deactivate" <!--run the script to deactivate the virtual environment-->
 
 
+in the project Code folder:
+5. "pip install wheel"
+6. "pip install pandas jupyter"
+7. "pip install jupyterthemes"
+
 
