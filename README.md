@@ -31,4 +31,6 @@ in the project Code folder:
 9. "pip install plotly"
 10."jt -t onedork -f roboto -cellw 95%" <!--chosen theme of jupyter, cell width 95%  -->
 
+11."jupyter notebook" <!--run the notebook server->
+
 
