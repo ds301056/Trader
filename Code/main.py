@@ -6,6 +6,7 @@ if __name__ == "__main__": # If this file is run directly, do the following:
     # Create an instance of the OandaApi class.
     api = OandaApi()
     
+    instrumentCollection.CreateFile(api.get_account_instruments(), "./data")
     instrumentCollection.LoadInstruments("./data") # Load the instruments from the instruments.json file
     instrumentCollection.PrintInstruments() # Print the instruments
 
@@ -13,5 +14,4 @@ if __name__ == "__main__": # If this file is run directly, do the following:
 
 
    
-    # data = api.get_account_summary() # Get the account summary
-    # print(data) # Print the account summary
+    
