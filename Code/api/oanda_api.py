@@ -59,7 +59,7 @@ class OandaApi:
         return self.get_account_ep("summary", "account")
 
     # Convenience method to get available instruments
-    def get_instruments(self):
+    def get_account_instruments(self):
         # Using get_account_ep method with 'instruments' endpoint and 'instruments' data key
         return self.get_account_ep("instruments", "instruments")
 
