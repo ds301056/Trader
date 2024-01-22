@@ -5,6 +5,7 @@ import pydoc
 import numpy as np
 import pytest
 
+from pandas._config import using_pyarrow_string_dtype
 from pandas._config.config import option_context
 
 import pandas as pd
@@ -112,6 +113,7 @@ class TestDataFrameMisc:
         with pytest.raises(TypeError, match=msg):
             hash(empty_frame)
 
+    @pytest.mark.xfail(using_pyarrow_string_dtype(), reason="surrogates not allowed")
     def test_column_name_contains_unicode_surrogate(self):
         # GH 25509
         colname = "\ud83d"
@@ -217,10 +219,8 @@ class TestDataFrameMisc:
 
     def test_deepcopy(self, float_frame):
         cp = deepcopy(float_frame)
-        series = cp["A"]
-        series[:] = 10
-        for idx, value in series.items():
-            assert float_frame["A"][idx] != value
+        cp.loc[0, "A"] = 10
+        assert not float_frame.equals(cp)
 
     def test_inplace_return_self(self):
         # GH 1893
@@ -311,9 +311,22 @@ class TestDataFrameMisc:
         result = df.rename(columns=str)
         assert result.attrs == {"version": 1}
 
+    def test_attrs_deepcopy(self):
+        df = DataFrame({"A": [2, 3]})
+        assert df.attrs == {}
+        df.attrs["tags"] = {"spam", "ham"}
+
+        result = df.rename(columns=str)
+        assert result.attrs == df.attrs
+        assert result.attrs["tags"] is not df.attrs["tags"]
+
     @pytest.mark.parametrize("allows_duplicate_labels", [True, False, None])
     def test_set_flags(
-        self, allows_duplicate_labels, frame_or_series, using_copy_on_write
+        self,
+        allows_duplicate_labels,
+        frame_or_series,
+        using_copy_on_write,
+        warn_copy_on_write,
     ):
         obj = DataFrame({"A": [1, 2]})
         key = (0, 0)
@@ -341,13 +354,15 @@ class TestDataFrameMisc:
         else:
             assert np.may_share_memory(obj["A"].values, result["A"].values)
 
-        result.iloc[key] = 0
+        with tm.assert_cow_warning(warn_copy_on_write):
+            result.iloc[key] = 0
         if using_copy_on_write:
             assert obj.iloc[key] == 1
         else:
             assert obj.iloc[key] == 0
             # set back to 1 for test below
-            result.iloc[key] = 1
+            with tm.assert_cow_warning(warn_copy_on_write):
+                result.iloc[key] = 1
 
         # Now we do copy.
         result = obj.set_flags(
