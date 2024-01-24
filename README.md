@@ -29,3 +29,6 @@ in the project Code folder: <!--"cd code"-->
 10."jt -t onedork -f roboto -cellw 95%" <!--chosen theme of jupyter, cell width 95%  -->
 
 11."jupyter notebook" <!--run the notebook server->
+
+**PS Pandas has changed the group by to include more tha numerics, 
+so we will use**    groupby(stuff...).sum(numeric_only=true) 
