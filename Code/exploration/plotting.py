@@ -3,8 +3,9 @@ import plotly.graph_objects as go
 
 class CandlePlot:
 
-  def __init__(self, df):
+  def __init__(self, df, candles=True):
     self.df_plot = df.copy()
+    self.candles = candles
     self.create_candle_fig()
 
 
@@ -16,7 +17,8 @@ class CandlePlot:
   def create_candle_fig(self):
       self.add_timestr()
       self.fig = go.Figure()
-      self.fig.add_trace(go.Candlestick(
+      if self.candles == True:    
+        self.fig.add_trace(go.Candlestick(
           x=self.df_plot.sTime,
           open=self.df_plot.mid_o,
           high=self.df_plot.mid_h,
@@ -27,8 +29,7 @@ class CandlePlot:
           decreasing_fillcolor='#CC2E3C',
           increasing_line_color='#2EC886',
           decreasing_line_color='#FF3A4C',
-                              
-      ))
+        ))
 
   def update_layout(self, width, height, nticks):
       self.fig.update_yaxes(
