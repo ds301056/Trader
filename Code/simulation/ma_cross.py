@@ -27,8 +27,8 @@ class MAResult:  # Class to represent the result of a moving average simulation
             min_gain=self.df_trades.GAIN.min(),
             max_gain=self.df_trades.GAIN.max(),
             ma_l=self.ma_l,
-            ma_s=self.ma_s
-            
+            ma_s=self.ma_s,
+            granularity = self.granularity
         )
         
       
@@ -87,7 +87,7 @@ def get_trades(df_analysis, instrument): # Function to calculate the trades and 
 
 
 
-def assess_pair(price_data, ma_l, ma_s, instrument): # Function to assess a currency pair for a given granularity and moving averages
+def assess_pair(price_data, ma_l, ma_s, instrument, granularity): # Function to assess a currency pair for a given granularity and moving averages
     df_analysis = price_data.copy() # Create a copy of the price data
     df_analysis["DELTA"] = df_analysis[ma_s] - df_analysis[ma_l] # Calculate the delta between the moving averages
     df_analysis["DELTA_PREV"] = df_analysis["DELTA"].shift(1) # Shift the delta by 1 row
@@ -98,7 +98,8 @@ def assess_pair(price_data, ma_l, ma_s, instrument): # Function to assess a curr
         df_trades,
         instrument.name,
         ma_l,
-        ma_s
+        ma_s, 
+        granularity
     ) # Return the MAResult object
 
 
@@ -129,10 +130,6 @@ def analyse_pair(instrument, granularity, ma_long, ma_short):  # Function to ana
 
 
 
-
-
-
-
     for ma_l in ma_long: # Iterate through each long moving average period
         for ma_s in ma_short: # Iterate through each short moving average period
             if ma_l <= ma_s: # If the long moving average period is less than or equal to the short moving average period
@@ -142,7 +139,8 @@ def analyse_pair(instrument, granularity, ma_long, ma_short):  # Function to ana
                 price_data,  # Passing the price data  
                 get_ma_col(ma_l),  # Passing the column name for the long moving average
                 get_ma_col(ma_s),  # Passing the column name for the short moving average
-                instrument  # Passing the instrument
+                instrument, # Passing the instrument
+                granularity  # Passing the granularity
             )  
 
 
