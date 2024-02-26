@@ -1,3 +1,12 @@
 {
-  "cSpell.words": ["nticks", "Oanda", "strtime", "timestr"]
+  "cSpell.words": [
+    "cumsum",
+    "Dataframe",
+    "dropna",
+    "nticks",
+    "Oanda",
+    "pairname",
+    "strtime",
+    "timestr"
+  ]
 }

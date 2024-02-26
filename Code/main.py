@@ -11,7 +11,7 @@ if __name__ == "__main__": # If this file is run directly, do the following:
     #instrumentCollection.LoadInstruments("./data") # Load the instruments from the instruments.json file
     #instrumentCollection.PrintInstruments() # Print the instruments
 
-    run_ma_sim(curr_list=["EUR", "USD", "GBP"]) # Run the moving average simulation
+    run_ma_sim(curr_list=["EUR", "USD", "GBP", "JPY", "AUD", "CAD"]) # Run the moving average simulation
 
 
 
