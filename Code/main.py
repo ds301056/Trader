@@ -6,12 +6,12 @@ if __name__ == "__main__": # If this file is run directly, do the following:
   
     # Create an instance of the OandaApi class.
     api = OandaApi()
-    
+    print(api.fetch_candles("EUR_USD", granularity="D", price="MB"))
     #instrumentCollection.CreateFile(api.get_account_instruments(), "./data")
     #instrumentCollection.LoadInstruments("./data") # Load the instruments from the instruments.json file
     #instrumentCollection.PrintInstruments() # Print the instruments
 
-    run_ma_sim(curr_list=["EUR", "USD", "GBP", "JPY", "AUD", "CAD"]) # Run the moving average simulation
+    #run_ma_sim(curr_list=["EUR", "USD", "GBP", "JPY", "AUD", "CAD"]) # Run the moving average simulation
 
 
 
