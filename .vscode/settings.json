@@ -5,6 +5,7 @@
     "dropna",
     "nticks",
     "Oanda",
+    "ohlc",
     "pairname",
     "strtime",
     "timestr"

@@ -1,8 +1,11 @@
 import pandas as pd # Import the pandas library
 import os.path # Import the os.path module
 from infrastructure.instrument_collection import instrumentCollection as ic # Import the instrumentCollection instance from the infrastructure/instrument_collection.py file
+from simulation.ma_excel import create_ma_res # Import the create_ma_res function from the simulation/ma_cross.py file
 
-class MAResult:
+
+
+class MAResult: # Create a class to represent the results of the moving average simulation
     def __init__(self, df_trades, pairname, ma_l, ma_s, granularity): # Initialize the MAResult class
         self.pairname = pairname # Set the pairname attribute to the pairname parameter
         self.df_trades = df_trades # Set the df_trades attribute to the df_trades parameter
@@ -132,10 +135,10 @@ def analyse_pair(instrument, granularity, ma_long, ma_short, filepath): # Analys
     process_results(results_list, filepath) # Process the results
 
 
-def run_ma_sim(curr_list=["EUR", "USD"], # Run the moving average simulation
-                granularity=["H1", "H4"], # Granularity
-                ma_long=[20,40,80,120,150], # Long moving average
-                ma_short=[10,20,30,40], # Short moving average
+def run_ma_sim(curr_list=["CAD", "JPY", "GBP", "NZD"], # Run the moving average simulation
+                granularity=["H1"], # Granularity
+                ma_long=[20,40], # Long moving average
+                ma_short=[10], # Short moving average
                 filepath="./data"): # Filepath
     ic.LoadInstruments("./data") # Load the instruments from the instruments.json file
     
@@ -145,7 +148,7 @@ def run_ma_sim(curr_list=["EUR", "USD"], # Run the moving average simulation
                 pair = f"{p1}_{p2}" # Create the pair
                 if pair in ic.instruments_dict.keys(): # If the pair is in the instruments dictionary
                     analyse_pair(ic.instruments_dict[pair], g, ma_long, ma_short, filepath) # Analyse the pair
-
+        create_ma_res(g) # Create the moving average results
 
 
 

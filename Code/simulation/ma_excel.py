@@ -111,6 +111,10 @@ def create_excel(df_ma_res, df_ma_trades, granularity):
     writer.close() # Save the writer
 
 
+def create_ma_res(granularity):
+    df_ma_res = pd.read_pickle("./data/ma_res.pkl") # Load the ma_res.pkl file into a dataframe running from main.py so remove a . from the path
+    df_ma_trades = pd.read_pickle("./data/ma_trades.pkl") # Load the ma_trades.pkl file into a dataframe running from main.py so remove a . from the path
+    create_excel(df_ma_res, df_ma_trades, granularity) # Run the create_excel function
 
 if __name__ == "__main__":
 
