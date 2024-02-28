@@ -70,57 +70,56 @@ class OandaApi:
 
 
 
-    def fetch_candles(self, pair_name, count=10, granularity="H1", #fetch_candles method to get candles data
-                      price="MBA", date_f=None, date_t=None): #pair_name, count, granularity, price, date_f, date_t are the parameters
-        
 
-        url = f"instruments/{pair_name}/candles" #url for the candles endpoint
-        params = dict( #parameters for the request
-            count = count, #count of candles
-            granularity = granularity, #granularity of candles
-            price = "MBA" #price of candles
+    def fetch_candles(self, pair_name, count=10, granularity="H1",
+                            price="MBA", date_f=None, date_t=None): # Fetch candles from the OANDA API
+        url = f"instruments/{pair_name}/candles" # Construct the URL for the candles endpoint
+        params = dict( # Create a dictionary of parameters for the request
+            granularity = granularity, # Granularity of the candles
+            price = price
         )
 
-        if date_f is not None and date_t is not None: #if date_f and date_t are not None
-            date_format = "%Y-%m-%dT%H:%M:%SZ" #date format
-            params["from"] = dt.strftime(date_f, date_format) #from date in the format specified by date_format 
-            params["to"] = dt.strftime(date_t, date_format) #to date in the format specified by date_format
+        if date_f is not None and date_t is not None: # If date from and date to are specified
+            date_format = "%Y-%m-%dT%H:%M:%SZ" # Format for the date and time
+            params["from"] = dt.strftime(date_f, date_format) # Set the from parameter to the specified date and time
+            params["to"] = dt.strftime(date_t, date_format) # Set the to parameter to the specified date and time
         else:
-            params["count"] = count #count of candles
+            params["count"] = count # Set the count parameter to the specified count
 
-        
-        ok, data = self.make_request(url, params=params) #make request to the url with the parameters
-
-  
-        # Checking if the request was successful and the key is in the response
-        if ok == True and 'candles' in data:
-            return data['candles']  # Return the specific data requested
+        ok, data = self.make_request(url, params=params) # Make the request to the OANDA API
+    
+        if ok == True and 'candles' in data: # If the request was successful and the candles key is in the response
+            return data['candles'] # Return the candles data
         else:
-            # Print error and return None if unsuccessful
-            print("Error: fetching candles",params,  data)
-            return None
+            print("ERROR fetch_candles()", params, data) # Print an error message
+            return None # Return None if the request was unsuccessful
 
-    def get_candles_df(self, data):
-        if len(data) == 0:
-            return pd.DataFrame() #use return pd.DataFrame() not .empty
+    def get_candles_df(self, pair_name, **kwargs): # Get candles as a dataframe **kwargs is a python construct that allows you to pass a variable number of arguments to a function
 
-        prices = ['mid', 'bid', 'ask']
-        ohlc = ['o', 'h', 'l', 'c']#keys for looping 
+        data = self.fetch_candles(pair_name, **kwargs) # Fetch the candles data
 
-
-        final_data = []
-        for candle in data:
-            if candle['complete'] == False:
-                continue
-            new_dict = {}
-            new_dict['time'] = parser.parse(candle['time'])
-            new_dict['volume'] = candle['volume']
+        if data is None: # If the data is None
+            return None # Return None
+        if len(data) == 0: # If the length of the data is 0
+            return pd.DataFrame() # Return an empty dataframe
         
-            for p in prices:
-                for o in ohlc:
-                    new_dict[f"{p}_{o}"]=float(candle[p][o])
-            final_data.append(new_dict)
-        df = pd.DataFrame.from_dict(final_data)
-        return df
+        prices = ['mid', 'bid', 'ask'] # List of prices
+        ohlc = ['o', 'h', 'l', 'c'] # List of OHLC values
+        
+        final_data = [] # Create an empty list to store the results
+        for candle in data: # For each candle in the data
+            if candle['complete'] == False: # If the candle is not complete
+                continue # Skip to the next candle
+            new_dict = {} # Create a new dictionary
+            new_dict['time'] = parser.parse(candle['time']) # Parse the time and add it to the dictionary
+            new_dict['volume'] = candle['volume'] # Add the volume to the dictionary
 
+            
+            for p in prices: # For each price in the list of prices
+                if p in candle: # If the price is in the candle
+                    for o in ohlc: # For each OHLC value
+                        new_dict[f"{p}_{o}"] = float(candle[p][o]) # Add the OHLC value to the dictionary
+            final_data.append(new_dict) # Append the new dictionary to the list of results
+        df = pd.DataFrame.from_dict(final_data) # Create a dataframe from the list of results
+        return df # Return the dataframe
 

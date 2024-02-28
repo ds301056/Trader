@@ -1,43 +1,39 @@
-import json # Importing the JSON library
-from models.instrument import Instrument # Importing the instrument class from the models package
+import json # Import the json module
+from models.instrument import Instrument # Import the Instrument class from the models/instrument.py file
 
-class InstrumentCollection:
-    FILENAME = "instruments.json"  # Filename for the instruments file
-    API_KEYS = ['name', 'type', 'displayName', 'pipLocation', 'tradeUnitsPrecision', 'marginRate']  # Keys for the API response
+class InstrumentCollection: # Create a class to represent a collection of instruments
+    FILENAME = "instruments.json" # Define the filename for the instruments file
+    API_KEYS = ['name', 'type', 'displayName', 'pipLocation', 
+         'displayPrecision', 'tradeUnitsPrecision', 'marginRate'] # Define the keys for the API data
 
-    def __init__(self): # Constructor method to initialize an instance of the instrument_collection class
-        self.instruments = [] # Initializing an empty list to store the instruments
-
-    def LoadInstruments(self, path): # Method to load instruments from a file
-        self.instruments_dict = {} # Initializing an empty dictionary to store the instruments
-        fileName = f"{path}/{self.FILENAME}" # Constructing the full path to the instruments file
-        with open(fileName, "r") as f: # Opening the instruments file in read mode
-            data = json.loads(f.read()) # Loading the JSON data from the file
-            for k,v in data.items(): # Iterating through the items in the JSON data
-                self.instruments_dict[k] = Instrument.FromApiObject(v) # Creating an instrument object from the API response
-
-
-
-    def CreateFile(self, data, path): # Method to create a file
-        if data is None: # If the data is None, return
-            print("Error: CreateFile() data is None")
-            return           
+    def __init__(self): # Constructor method
+        self.instruments_dict = {} # Create an empty dictionary to store the instruments
         
+    def LoadInstruments(self, path): # Load the instruments from a file
+        self.instruments_dict = {} # Create an empty dictionary to store the instruments
+        fileName = f"{path}/{self.FILENAME}" # Create the filename for the instruments file
+        with open(fileName, "r") as f: # Open the file for reading
+            data = json.loads(f.read()) # Load the data from the file
+            for k, v in data.items(): # For each key-value pair in the data
+                self.instruments_dict[k] = Instrument.FromApiObject(v) # Create an Instrument object and add it to the dictionary
 
-
-        instruments_dict = {}
-        for i in data:
-            key = i['name']
-            instruments_dict[key] = { k: i[k] for k in self.API_KEYS }
-
-        fileName = f"{path}/{self.FILENAME}"
-        with open(fileName, "w") as f:
-            f.write(json.dumps(instruments_dict, indent=2))
-
-
-    def PrintInstruments(self): # Method to print the instruments
-        [print(k,v) for k,v in self.instruments_dict.items()] # Printing the instruments
-        print(len(self.instruments_dict.keys()), "instruments") # Printing the number of instruments
+    def CreateFile(self, data, path): # Create a file with the instrument data
+        if data is None: # If the data is None
+            print("Instrument file creation failed") # Print an error message
+            return # Return
         
-instrumentCollection = InstrumentCollection() # Creating an instance of the InstrumentCollection class
-            
+        instruments_dict = {} # Create an empty dictionary to store the instruments
+        for i in data: # For each instrument in the data
+            key = i['name'] # Set the key to the name of the instrument
+            instruments_dict[key] = { k: i[k] for k in self.API_KEYS } # Set the value to a dictionary of the API keys and their values
+
+        fileName = f"{path}/{self.FILENAME}" # Create the filename for the instruments file
+        with open(fileName, "w") as f: # Open the file for writing
+            f.write(json.dumps(instruments_dict, indent=2)) # Write the instruments dictionary to the file
+
+
+    def PrintInstruments(self): # Print the instruments in the collection
+        [print(k,v) for k,v in self.instruments_dict.items()] # Print each key-value pair in the instruments dictionary
+        print(len(self.instruments_dict.keys()), "instruments") # Print the number of instruments in the collection
+
+instrumentCollection = InstrumentCollection() # Create an instance of the InstrumentCollection class
