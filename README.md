@@ -1,6 +1,10 @@
 # Trader
 
-The stocks and data are from Oanda
+# check the setup.bat file 
+run with .\setup.bat
+
+
+# The stocks and data are from Oanda
 @ developer.oanda.com
 
     Oanda api:
@@ -8,6 +12,15 @@ The stocks and data are from Oanda
 
     account number
     101-001-27981277-001
+
+
+# Requirements 
+- check the requirements.txt
+
+- generate the requirements.txt from installed packages:     pip freeze > requirements.txt
+-install rquirements.txt:                                    pip install -r requirements.txt
+
+
 
 We will need python for this application
 can use "python3 -V" to get version or "python3" to install
@@ -30,5 +43,22 @@ in the project Code folder: <!--"cd code"-->
 
 11."jupyter notebook" <!--run the notebook server->
 
-**PS Pandas has changed the group by to include more tha numerics, 
+**PS Pandas has changed the group by to include more than numerics, 
 so we will use**    groupby(stuff...).sum(numeric_only=true) 
+
+
+
+
+1. generate the pkl's for each currency with:
+
+    api = OandaApi()
+    instrumentCollection.LoadInstruments("./data")
+    run_collection(instrumentCollection, api)
+
+
+2. ** Delete the ma res trades and ma res pkl before generating the spreadsheets with:
+
+    run_ma_sim() # Run the moving average simulation
+
+    (if not deleted the spreadsheets will be wack)
+

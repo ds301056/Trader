@@ -1,0 +1,68 @@
+2024-04-26 16:55:07 LogWrapper init() ./logs/PriceProcessor_EUR_GBP.log
+2024-04-26 16:55:09 Found price: LiveApiPrice() EUR_GBP ask: 0.8561 bid: 0.8559
+2024-04-26 16:55:13 Done processing price: LiveApiPrice() EUR_GBP ask: 0.8561 bid: 0.8559
+2024-04-26 16:55:14 Found price: LiveApiPrice() EUR_GBP ask: 0.85609 bid: 0.85591
+2024-04-26 16:55:16 Done processing price: LiveApiPrice() EUR_GBP ask: 0.85609 bid: 0.85591
+2024-04-26 16:55:31 Found price: LiveApiPrice() EUR_GBP ask: 0.85606 bid: 0.8559
+2024-04-26 16:55:34 Done processing price: LiveApiPrice() EUR_GBP ask: 0.85606 bid: 0.8559
+2024-04-26 16:55:37 Found price: LiveApiPrice() EUR_GBP ask: 0.85609 bid: 0.85591
+2024-04-26 16:55:40 Done processing price: LiveApiPrice() EUR_GBP ask: 0.85609 bid: 0.85591
+2024-04-26 16:55:40 Found price: LiveApiPrice() EUR_GBP ask: 0.85609 bid: 0.8559
+2024-04-26 16:55:45 Done processing price: LiveApiPrice() EUR_GBP ask: 0.85609 bid: 0.8559
+2024-04-26 16:55:50 Found price: LiveApiPrice() EUR_GBP ask: 0.85611 bid: 0.85591
+2024-04-26 16:55:55 Done processing price: LiveApiPrice() EUR_GBP ask: 0.85611 bid: 0.85591
+2024-04-26 16:55:58 Found price: LiveApiPrice() EUR_GBP ask: 0.85611 bid: 0.85592
+2024-04-26 16:56:03 Done processing price: LiveApiPrice() EUR_GBP ask: 0.85611 bid: 0.85592
+2024-04-26 16:56:05 Found price: LiveApiPrice() EUR_GBP ask: 0.85607 bid: 0.85589
+2024-04-26 16:56:09 Done processing price: LiveApiPrice() EUR_GBP ask: 0.85607 bid: 0.85589
+2024-04-26 16:56:16 Found price: LiveApiPrice() EUR_GBP ask: 0.85606 bid: 0.85587
+2024-04-26 16:56:21 Done processing price: LiveApiPrice() EUR_GBP ask: 0.85606 bid: 0.85587
+2024-04-26 16:56:21 Found price: LiveApiPrice() EUR_GBP ask: 0.85604 bid: 0.85587
+2024-04-26 16:56:24 Done processing price: LiveApiPrice() EUR_GBP ask: 0.85604 bid: 0.85587
+2024-04-26 16:56:26 Found price: LiveApiPrice() EUR_GBP ask: 0.85602 bid: 0.85585
+2024-04-26 16:56:30 Done processing price: LiveApiPrice() EUR_GBP ask: 0.85602 bid: 0.85585
+2024-04-26 16:56:37 Found price: LiveApiPrice() EUR_GBP ask: 0.85602 bid: 0.85585
+2024-04-26 16:56:41 Done processing price: LiveApiPrice() EUR_GBP ask: 0.85602 bid: 0.85585
+2024-04-26 16:56:41 Found price: LiveApiPrice() EUR_GBP ask: 0.856 bid: 0.85585
+2024-04-26 16:56:43 Done processing price: LiveApiPrice() EUR_GBP ask: 0.856 bid: 0.85585
+2024-04-26 16:56:44 Found price: LiveApiPrice() EUR_GBP ask: 0.85601 bid: 0.85585
+2024-04-26 16:56:47 Done processing price: LiveApiPrice() EUR_GBP ask: 0.85601 bid: 0.85585
+2024-04-26 16:56:53 Found price: LiveApiPrice() EUR_GBP ask: 0.85603 bid: 0.85585
+2024-04-26 16:56:56 Done processing price: LiveApiPrice() EUR_GBP ask: 0.85603 bid: 0.85585
+2024-04-26 16:56:57 Found price: LiveApiPrice() EUR_GBP ask: 0.85605 bid: 0.85583
+2024-04-26 16:56:59 Done processing price: LiveApiPrice() EUR_GBP ask: 0.85605 bid: 0.85583
+2024-04-26 16:57:00 Found price: LiveApiPrice() EUR_GBP ask: 0.85604 bid: 0.85584
+2024-04-26 16:57:04 Done processing price: LiveApiPrice() EUR_GBP ask: 0.85604 bid: 0.85584
+2024-04-26 16:57:04 Found price: LiveApiPrice() EUR_GBP ask: 0.85604 bid: 0.85587
+2024-04-26 16:57:08 Done processing price: LiveApiPrice() EUR_GBP ask: 0.85604 bid: 0.85587
+2024-04-26 16:57:09 Found price: LiveApiPrice() EUR_GBP ask: 0.85602 bid: 0.85582
+2024-04-26 16:57:14 Done processing price: LiveApiPrice() EUR_GBP ask: 0.85602 bid: 0.85582
+2024-04-26 16:57:16 Found price: LiveApiPrice() EUR_GBP ask: 0.85602 bid: 0.85582
+2024-04-26 16:57:21 Done processing price: LiveApiPrice() EUR_GBP ask: 0.85602 bid: 0.85582
+2024-04-26 16:57:23 Found price: LiveApiPrice() EUR_GBP ask: 0.85604 bid: 0.85584
+2024-04-26 16:57:28 Done processing price: LiveApiPrice() EUR_GBP ask: 0.85604 bid: 0.85584
+2024-04-26 16:57:29 Found price: LiveApiPrice() EUR_GBP ask: 0.85604 bid: 0.85585
+2024-04-26 16:57:33 Done processing price: LiveApiPrice() EUR_GBP ask: 0.85604 bid: 0.85585
+2024-04-26 16:57:34 Found price: LiveApiPrice() EUR_GBP ask: 0.85604 bid: 0.85583
+2024-04-26 16:57:39 Done processing price: LiveApiPrice() EUR_GBP ask: 0.85604 bid: 0.85583
+2024-04-26 16:57:39 Adding work:  LiveApiPrice() EUR_GBP ask: 0.85604 bid: 0.85583
+2024-04-26 16:57:41 Found price: LiveApiPrice() EUR_GBP ask: 0.85603 bid: 0.85585
+2024-04-26 16:57:45 Done processing price: LiveApiPrice() EUR_GBP ask: 0.85603 bid: 0.85585
+2024-04-26 16:57:45 Found price: LiveApiPrice() EUR_GBP ask: 0.85602 bid: 0.85583
+2024-04-26 16:57:49 Done processing price: LiveApiPrice() EUR_GBP ask: 0.85602 bid: 0.85583
+2024-04-26 16:57:52 Found price: LiveApiPrice() EUR_GBP ask: 0.85601 bid: 0.85582
+2024-04-26 16:57:57 Done processing price: LiveApiPrice() EUR_GBP ask: 0.85601 bid: 0.85582
+2024-04-26 16:57:57 Adding work:  LiveApiPrice() EUR_GBP ask: 0.85601 bid: 0.85582
+2024-04-26 16:58:01 Found price: LiveApiPrice() EUR_GBP ask: 0.85604 bid: 0.85582
+2024-04-26 16:58:03 Done processing price: LiveApiPrice() EUR_GBP ask: 0.85604 bid: 0.85582
+2024-04-26 16:58:03 Adding work:  LiveApiPrice() EUR_GBP ask: 0.85604 bid: 0.85582
+2024-04-26 16:58:05 Found price: LiveApiPrice() EUR_GBP ask: 0.856 bid: 0.85581
+2024-04-26 16:58:07 Done processing price: LiveApiPrice() EUR_GBP ask: 0.856 bid: 0.85581
+2024-04-26 16:58:21 Found price: LiveApiPrice() EUR_GBP ask: 0.85601 bid: 0.8558
+2024-04-26 16:58:23 Done processing price: LiveApiPrice() EUR_GBP ask: 0.85601 bid: 0.8558
+2024-04-26 16:58:27 Found price: LiveApiPrice() EUR_GBP ask: 0.85598 bid: 0.85578
+2024-04-26 16:58:31 Done processing price: LiveApiPrice() EUR_GBP ask: 0.85598 bid: 0.85578
+2024-04-26 16:58:57 Found price: LiveApiPrice() EUR_GBP ask: 0.85595 bid: 0.85576
+2024-04-26 16:59:01 Done processing price: LiveApiPrice() EUR_GBP ask: 0.85595 bid: 0.85576
+2024-04-26 16:59:03 Found price: LiveApiPrice() EUR_GBP ask: 0.85594 bid: 0.85575
+2024-04-26 16:59:08 Done processing price: LiveApiPrice() EUR_GBP ask: 0.85594 bid: 0.85575

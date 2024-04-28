@@ -142,7 +142,7 @@ def run_collection(ic: InstrumentCollection, api: OandaApi):
     - ic: An instance of InstrumentCollection containing the currency pairs to be processed.
     - api: An instance of the OandaApi class to use for fetching the data.
     """
-    our_curr = ["EUR", "GBP", "AUD"] # Define a list of currencies for which to collect data.
+    our_curr = ["AUD", "CAD", "JPY", "USD", "EUR", "GBP", "NZD"] # Define a list of currencies for which to collect data.
 
     # Iterate over all combinations of the specified currencies to form currency pairs.
     for p1 in our_curr:
@@ -151,7 +151,7 @@ def run_collection(ic: InstrumentCollection, api: OandaApi):
             # Check if the formed pair is present in the instruments dictionary of the InstrumentCollection instance.
             if pair in ic.instruments_dict.keys():
                 # For each specified granularity, collect data for the currency pair.
-                for granularity in ["M5"]: # Here, we're only collecting data at 1-hour granularity.
+                for granularity in ["M5", "H1", "H4"]: # Here, we're only collecting data at 1-hour granularity.
                     # Print the currency pair and granularity being processed.
                     print(pair, granularity)
                     # Call the function to collect and save data for the currency pair and granularity.
@@ -159,7 +159,7 @@ def run_collection(ic: InstrumentCollection, api: OandaApi):
                         pair,
                         granularity,
                         "2016-01-07T00:00:00Z", # Define the start date for data collection.
-                        "2021-12-31T00:00:00Z", # Define the end date for data collection.
-                        "./data", # Define the file prefix (file location).
+                        "2023-12-31T00:00:00Z", # Define the end date for data collection.
+                        "./data/", # Define the file prefix (file location).
                         api # Pass the OandaApi instance for data fetching.
                     )

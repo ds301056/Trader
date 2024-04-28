@@ -1,13 +1,23 @@
 {
   "cSpell.words": [
+    "ADDROWS",
+    "Bollinger",
     "cumsum",
     "Dataframe",
     "dropna",
+    "iterrows",
+    "MACD",
+    "MARUBOZU",
     "nticks",
     "Oanda",
     "ohlc",
     "pairname",
+    "riskreward",
+    "sheetname",
+    "startcol",
+    "startrow",
     "strtime",
-    "timestr"
+    "timestr",
+    "xlsxwriter"
   ]
 }
