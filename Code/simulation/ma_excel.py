@@ -1,5 +1,5 @@
 import pandas as pd # Import the pandas library
-import xlsxwriter
+import xlsxwriter # Import the xlsxwriter library
 
 
 
@@ -50,8 +50,8 @@ def add_pair_charts(df_ma_res, df_ma_trades, writer): # Add the pair charts to t
     cols = ['time', 'GAIN_C'] # Create a list of columns to use for the chart
     df_temp = df_ma_res.drop_duplicates(subset="pair") # Create a temporary dataframe with the unique pairs
 
-    for _, row in df_temp.iterrows():
-        dft = df_ma_trades[(df_ma_trades.cross == row.cross)& 
+    for _, row in df_temp.iterrows(): # For each row in the temporary dataframe
+        dft = df_ma_trades[(df_ma_trades.cross == row.cross)&  # Filter the trades dataframe by the cross and pair
                             (df_ma_trades.pair == row.pair)] # Create a temporary dataframe for the pair
         dft[cols].to_excel( # Save the temporary dataframe to the Excel file
                 writer, # Use the writer object to save the dataframe to the Excel file
@@ -64,15 +64,6 @@ def add_pair_charts(df_ma_res, df_ma_trades, writer): # Add the pair charts to t
 
         set_widths(row.pair, writer) # Set the widths of the columns in the Excel file
         add_chart(row.pair, row.cross, dft, writer) # Add a chart to the Excel file
-
-
-
-
-
-
-
-
-
 
 
 

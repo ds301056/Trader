@@ -1,0 +1,93 @@
+2024-04-26 16:55:07 LogWrapper init() ./logs/PriceProcessor_EUR_CHF.log
+2024-04-26 16:55:09 Found price: LiveApiPrice() EUR_CHF ask: 0.97804 bid: 0.97774
+2024-04-26 16:55:13 Done processing price: LiveApiPrice() EUR_CHF ask: 0.97804 bid: 0.97774
+2024-04-26 16:55:27 Found price: LiveApiPrice() EUR_CHF ask: 0.97804 bid: 0.97776
+2024-04-26 16:55:32 Done processing price: LiveApiPrice() EUR_CHF ask: 0.97804 bid: 0.97776
+2024-04-26 16:55:32 Adding work:  LiveApiPrice() EUR_CHF ask: 0.97804 bid: 0.97776
+2024-04-26 16:55:37 Found price: LiveApiPrice() EUR_CHF ask: 0.97811 bid: 0.97774
+2024-04-26 16:55:39 Done processing price: LiveApiPrice() EUR_CHF ask: 0.97811 bid: 0.97774
+2024-04-26 16:55:47 Found price: LiveApiPrice() EUR_CHF ask: 0.978 bid: 0.97766
+2024-04-26 16:55:51 Done processing price: LiveApiPrice() EUR_CHF ask: 0.978 bid: 0.97766
+2024-04-26 16:55:51 Found price: LiveApiPrice() EUR_CHF ask: 0.97797 bid: 0.97767
+2024-04-26 16:55:56 Done processing price: LiveApiPrice() EUR_CHF ask: 0.97797 bid: 0.97767
+2024-04-26 16:55:56 Found price: LiveApiPrice() EUR_CHF ask: 0.97796 bid: 0.97767
+2024-04-26 16:56:00 Done processing price: LiveApiPrice() EUR_CHF ask: 0.97796 bid: 0.97767
+2024-04-26 16:56:01 Found price: LiveApiPrice() EUR_CHF ask: 0.97792 bid: 0.97767
+2024-04-26 16:56:03 Done processing price: LiveApiPrice() EUR_CHF ask: 0.97792 bid: 0.97767
+2024-04-26 16:56:05 Found price: LiveApiPrice() EUR_CHF ask: 0.97791 bid: 0.97767
+2024-04-26 16:56:09 Done processing price: LiveApiPrice() EUR_CHF ask: 0.97791 bid: 0.97767
+2024-04-26 16:56:11 Found price: LiveApiPrice() EUR_CHF ask: 0.97791 bid: 0.97767
+2024-04-26 16:56:13 Done processing price: LiveApiPrice() EUR_CHF ask: 0.97791 bid: 0.97767
+2024-04-26 16:56:16 Found price: LiveApiPrice() EUR_CHF ask: 0.97791 bid: 0.97767
+2024-04-26 16:56:20 Done processing price: LiveApiPrice() EUR_CHF ask: 0.97791 bid: 0.97767
+2024-04-26 16:56:25 Found price: LiveApiPrice() EUR_CHF ask: 0.97795 bid: 0.97767
+2024-04-26 16:56:27 Done processing price: LiveApiPrice() EUR_CHF ask: 0.97795 bid: 0.97767
+2024-04-26 16:56:28 Found price: LiveApiPrice() EUR_CHF ask: 0.97795 bid: 0.97767
+2024-04-26 16:56:31 Done processing price: LiveApiPrice() EUR_CHF ask: 0.97795 bid: 0.97767
+2024-04-26 16:56:33 Found price: LiveApiPrice() EUR_CHF ask: 0.97795 bid: 0.97767
+2024-04-26 16:56:37 Done processing price: LiveApiPrice() EUR_CHF ask: 0.97795 bid: 0.97767
+2024-04-26 16:56:37 Found price: LiveApiPrice() EUR_CHF ask: 0.97787 bid: 0.97766
+2024-04-26 16:56:39 Done processing price: LiveApiPrice() EUR_CHF ask: 0.97787 bid: 0.97766
+2024-04-26 16:56:39 Found price: LiveApiPrice() EUR_CHF ask: 0.97788 bid: 0.97764
+2024-04-26 16:56:44 Done processing price: LiveApiPrice() EUR_CHF ask: 0.97788 bid: 0.97764
+2024-04-26 16:56:44 Found price: LiveApiPrice() EUR_CHF ask: 0.97791 bid: 0.97756
+2024-04-26 16:56:46 Done processing price: LiveApiPrice() EUR_CHF ask: 0.97791 bid: 0.97756
+2024-04-26 16:56:46 Found price: LiveApiPrice() EUR_CHF ask: 0.97791 bid: 0.97762
+2024-04-26 16:56:50 Done processing price: LiveApiPrice() EUR_CHF ask: 0.97791 bid: 0.97762
+2024-04-26 16:56:52 Found price: LiveApiPrice() EUR_CHF ask: 0.9779 bid: 0.97762
+2024-04-26 16:56:54 Done processing price: LiveApiPrice() EUR_CHF ask: 0.9779 bid: 0.97762
+2024-04-26 16:56:55 Found price: LiveApiPrice() EUR_CHF ask: 0.97793 bid: 0.97763
+2024-04-26 16:56:59 Done processing price: LiveApiPrice() EUR_CHF ask: 0.97793 bid: 0.97763
+2024-04-26 16:57:00 Found price: LiveApiPrice() EUR_CHF ask: 0.97793 bid: 0.97758
+2024-04-26 16:57:03 Done processing price: LiveApiPrice() EUR_CHF ask: 0.97793 bid: 0.97758
+2024-04-26 16:57:04 Found price: LiveApiPrice() EUR_CHF ask: 0.97799 bid: 0.97766
+2024-04-26 16:57:07 Done processing price: LiveApiPrice() EUR_CHF ask: 0.97799 bid: 0.97766
+2024-04-26 16:57:07 Adding work:  LiveApiPrice() EUR_CHF ask: 0.97799 bid: 0.97766
+2024-04-26 16:57:07 Found price: LiveApiPrice() EUR_CHF ask: 0.97814 bid: 0.97779
+2024-04-26 16:57:09 Done processing price: LiveApiPrice() EUR_CHF ask: 0.97814 bid: 0.97779
+2024-04-26 16:57:10 Found price: LiveApiPrice() EUR_CHF ask: 0.97808 bid: 0.97779
+2024-04-26 16:57:13 Done processing price: LiveApiPrice() EUR_CHF ask: 0.97808 bid: 0.97779
+2024-04-26 16:57:14 Found price: LiveApiPrice() EUR_CHF ask: 0.9781 bid: 0.97779
+2024-04-26 16:57:19 Done processing price: LiveApiPrice() EUR_CHF ask: 0.9781 bid: 0.97779
+2024-04-26 16:57:19 Found price: LiveApiPrice() EUR_CHF ask: 0.97807 bid: 0.97779
+2024-04-26 16:57:22 Done processing price: LiveApiPrice() EUR_CHF ask: 0.97807 bid: 0.97779
+2024-04-26 16:57:24 Found price: LiveApiPrice() EUR_CHF ask: 0.97806 bid: 0.9778
+2024-04-26 16:57:28 Done processing price: LiveApiPrice() EUR_CHF ask: 0.97806 bid: 0.9778
+2024-04-26 16:57:30 Found price: LiveApiPrice() EUR_CHF ask: 0.97807 bid: 0.97782
+2024-04-26 16:57:34 Done processing price: LiveApiPrice() EUR_CHF ask: 0.97807 bid: 0.97782
+2024-04-26 16:57:37 Found price: LiveApiPrice() EUR_CHF ask: 0.97804 bid: 0.97781
+2024-04-26 16:57:42 Done processing price: LiveApiPrice() EUR_CHF ask: 0.97804 bid: 0.97781
+2024-04-26 16:57:45 Found price: LiveApiPrice() EUR_CHF ask: 0.97804 bid: 0.97779
+2024-04-26 16:57:49 Done processing price: LiveApiPrice() EUR_CHF ask: 0.97804 bid: 0.97779
+2024-04-26 16:57:55 Found price: LiveApiPrice() EUR_CHF ask: 0.97801 bid: 0.97774
+2024-04-26 16:58:00 Done processing price: LiveApiPrice() EUR_CHF ask: 0.97801 bid: 0.97774
+2024-04-26 16:58:02 Found price: LiveApiPrice() EUR_CHF ask: 0.97819 bid: 0.97789
+2024-04-26 16:58:04 Done processing price: LiveApiPrice() EUR_CHF ask: 0.97819 bid: 0.97789
+2024-04-26 16:58:04 Found price: LiveApiPrice() EUR_CHF ask: 0.97817 bid: 0.97792
+2024-04-26 16:58:08 Done processing price: LiveApiPrice() EUR_CHF ask: 0.97817 bid: 0.97792
+2024-04-26 16:58:08 Found price: LiveApiPrice() EUR_CHF ask: 0.97822 bid: 0.97795
+2024-04-26 16:58:10 Done processing price: LiveApiPrice() EUR_CHF ask: 0.97822 bid: 0.97795
+2024-04-26 16:58:12 Found price: LiveApiPrice() EUR_CHF ask: 0.9782 bid: 0.97792
+2024-04-26 16:58:15 Done processing price: LiveApiPrice() EUR_CHF ask: 0.9782 bid: 0.97792
+2024-04-26 16:58:15 Adding work:  LiveApiPrice() EUR_CHF ask: 0.9782 bid: 0.97792
+2024-04-26 16:58:20 Found price: LiveApiPrice() EUR_CHF ask: 0.97816 bid: 0.97789
+2024-04-26 16:58:22 Done processing price: LiveApiPrice() EUR_CHF ask: 0.97816 bid: 0.97789
+2024-04-26 16:58:23 Found price: LiveApiPrice() EUR_CHF ask: 0.97816 bid: 0.97788
+2024-04-26 16:58:27 Done processing price: LiveApiPrice() EUR_CHF ask: 0.97816 bid: 0.97788
+2024-04-26 16:58:29 Found price: LiveApiPrice() EUR_CHF ask: 0.97818 bid: 0.97786
+2024-04-26 16:58:33 Done processing price: LiveApiPrice() EUR_CHF ask: 0.97818 bid: 0.97786
+2024-04-26 16:58:33 Adding work:  LiveApiPrice() EUR_CHF ask: 0.97818 bid: 0.97786
+2024-04-26 16:58:34 Found price: LiveApiPrice() EUR_CHF ask: 0.97808 bid: 0.97784
+2024-04-26 16:58:38 Done processing price: LiveApiPrice() EUR_CHF ask: 0.97808 bid: 0.97784
+2024-04-26 16:58:39 Found price: LiveApiPrice() EUR_CHF ask: 0.97811 bid: 0.97778
+2024-04-26 16:58:44 Done processing price: LiveApiPrice() EUR_CHF ask: 0.97811 bid: 0.97778
+2024-04-26 16:58:44 Adding work:  LiveApiPrice() EUR_CHF ask: 0.97811 bid: 0.97778
+2024-04-26 16:58:46 Found price: LiveApiPrice() EUR_CHF ask: 0.97813 bid: 0.97778
+2024-04-26 16:58:49 Done processing price: LiveApiPrice() EUR_CHF ask: 0.97813 bid: 0.97778
+2024-04-26 16:58:50 Found price: LiveApiPrice() EUR_CHF ask: 0.97808 bid: 0.97778
+2024-04-26 16:58:52 Done processing price: LiveApiPrice() EUR_CHF ask: 0.97808 bid: 0.97778
+2024-04-26 16:58:52 Adding work:  LiveApiPrice() EUR_CHF ask: 0.97808 bid: 0.97778
+2024-04-26 16:58:57 Found price: LiveApiPrice() EUR_CHF ask: 0.9781 bid: 0.9778
+2024-04-26 16:59:00 Done processing price: LiveApiPrice() EUR_CHF ask: 0.9781 bid: 0.9778
+2024-04-26 16:59:03 Found price: LiveApiPrice() EUR_CHF ask: 0.97812 bid: 0.9778
+2024-04-26 16:59:07 Done processing price: LiveApiPrice() EUR_CHF ask: 0.97812 bid: 0.9778

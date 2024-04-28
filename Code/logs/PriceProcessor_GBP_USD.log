@@ -1,0 +1,75 @@
+2024-04-26 16:55:07 LogWrapper init() ./logs/PriceProcessor_GBP_USD.log
+2024-04-26 16:55:09 Found price: LiveApiPrice() GBP_USD ask: 1.24943 bid: 1.24921
+2024-04-26 16:55:12 Done processing price: LiveApiPrice() GBP_USD ask: 1.24943 bid: 1.24921
+2024-04-26 16:55:12 Adding work:  LiveApiPrice() GBP_USD ask: 1.24943 bid: 1.24921
+2024-04-26 16:55:14 Found price: LiveApiPrice() GBP_USD ask: 1.24942 bid: 1.24921
+2024-04-26 16:55:16 Done processing price: LiveApiPrice() GBP_USD ask: 1.24942 bid: 1.24921
+2024-04-26 16:55:29 Found price: LiveApiPrice() GBP_USD ask: 1.24943 bid: 1.24921
+2024-04-26 16:55:31 Done processing price: LiveApiPrice() GBP_USD ask: 1.24943 bid: 1.24921
+2024-04-26 16:55:31 Adding work:  LiveApiPrice() GBP_USD ask: 1.24943 bid: 1.24921
+2024-04-26 16:55:37 Found price: LiveApiPrice() GBP_USD ask: 1.24943 bid: 1.24921
+2024-04-26 16:55:40 Done processing price: LiveApiPrice() GBP_USD ask: 1.24943 bid: 1.24921
+2024-04-26 16:55:40 Adding work:  LiveApiPrice() GBP_USD ask: 1.24943 bid: 1.24921
+2024-04-26 16:55:42 Found price: LiveApiPrice() GBP_USD ask: 1.24943 bid: 1.24921
+2024-04-26 16:55:46 Done processing price: LiveApiPrice() GBP_USD ask: 1.24943 bid: 1.24921
+2024-04-26 16:55:46 Adding work:  LiveApiPrice() GBP_USD ask: 1.24943 bid: 1.24921
+2024-04-26 16:55:47 Found price: LiveApiPrice() GBP_USD ask: 1.24944 bid: 1.24921
+2024-04-26 16:55:50 Done processing price: LiveApiPrice() GBP_USD ask: 1.24944 bid: 1.24921
+2024-04-26 16:55:50 Found price: LiveApiPrice() GBP_USD ask: 1.2494 bid: 1.24921
+2024-04-26 16:55:52 Done processing price: LiveApiPrice() GBP_USD ask: 1.2494 bid: 1.24921
+2024-04-26 16:56:00 Found price: LiveApiPrice() GBP_USD ask: 1.24939 bid: 1.24917
+2024-04-26 16:56:04 Done processing price: LiveApiPrice() GBP_USD ask: 1.24939 bid: 1.24917
+2024-04-26 16:56:05 Found price: LiveApiPrice() GBP_USD ask: 1.24939 bid: 1.2492
+2024-04-26 16:56:09 Done processing price: LiveApiPrice() GBP_USD ask: 1.24939 bid: 1.2492
+2024-04-26 16:56:16 Found price: LiveApiPrice() GBP_USD ask: 1.2494 bid: 1.2492
+2024-04-26 16:56:21 Done processing price: LiveApiPrice() GBP_USD ask: 1.2494 bid: 1.2492
+2024-04-26 16:56:26 Found price: LiveApiPrice() GBP_USD ask: 1.2494 bid: 1.24917
+2024-04-26 16:56:30 Done processing price: LiveApiPrice() GBP_USD ask: 1.2494 bid: 1.24917
+2024-04-26 16:56:37 Found price: LiveApiPrice() GBP_USD ask: 1.2494 bid: 1.24918
+2024-04-26 16:56:42 Done processing price: LiveApiPrice() GBP_USD ask: 1.2494 bid: 1.24918
+2024-04-26 16:56:44 Found price: LiveApiPrice() GBP_USD ask: 1.24938 bid: 1.24917
+2024-04-26 16:56:47 Done processing price: LiveApiPrice() GBP_USD ask: 1.24938 bid: 1.24917
+2024-04-26 16:56:47 Found price: LiveApiPrice() GBP_USD ask: 1.2494 bid: 1.24916
+2024-04-26 16:56:51 Done processing price: LiveApiPrice() GBP_USD ask: 1.2494 bid: 1.24916
+2024-04-26 16:56:51 Adding work:  LiveApiPrice() GBP_USD ask: 1.2494 bid: 1.24916
+2024-04-26 16:56:52 Found price: LiveApiPrice() GBP_USD ask: 1.24936 bid: 1.24914
+2024-04-26 16:56:57 Done processing price: LiveApiPrice() GBP_USD ask: 1.24936 bid: 1.24914
+2024-04-26 16:56:59 Found price: LiveApiPrice() GBP_USD ask: 1.24936 bid: 1.24913
+2024-04-26 16:57:01 Done processing price: LiveApiPrice() GBP_USD ask: 1.24936 bid: 1.24913
+2024-04-26 16:57:01 Found price: LiveApiPrice() GBP_USD ask: 1.24944 bid: 1.24914
+2024-04-26 16:57:05 Done processing price: LiveApiPrice() GBP_USD ask: 1.24944 bid: 1.24914
+2024-04-26 16:57:06 Found price: LiveApiPrice() GBP_USD ask: 1.24948 bid: 1.24918
+2024-04-26 16:57:08 Done processing price: LiveApiPrice() GBP_USD ask: 1.24948 bid: 1.24918
+2024-04-26 16:57:10 Found price: LiveApiPrice() GBP_USD ask: 1.24948 bid: 1.24919
+2024-04-26 16:57:14 Done processing price: LiveApiPrice() GBP_USD ask: 1.24948 bid: 1.24919
+2024-04-26 16:57:14 Adding work:  LiveApiPrice() GBP_USD ask: 1.24948 bid: 1.24919
+2024-04-26 16:57:16 Found price: LiveApiPrice() GBP_USD ask: 1.24949 bid: 1.2492
+2024-04-26 16:57:19 Done processing price: LiveApiPrice() GBP_USD ask: 1.24949 bid: 1.2492
+2024-04-26 16:57:23 Found price: LiveApiPrice() GBP_USD ask: 1.24948 bid: 1.24918
+2024-04-26 16:57:26 Done processing price: LiveApiPrice() GBP_USD ask: 1.24948 bid: 1.24918
+2024-04-26 16:57:32 Found price: LiveApiPrice() GBP_USD ask: 1.24949 bid: 1.24918
+2024-04-26 16:57:36 Done processing price: LiveApiPrice() GBP_USD ask: 1.24949 bid: 1.24918
+2024-04-26 16:57:43 Found price: LiveApiPrice() GBP_USD ask: 1.24949 bid: 1.24918
+2024-04-26 16:57:47 Done processing price: LiveApiPrice() GBP_USD ask: 1.24949 bid: 1.24918
+2024-04-26 16:58:00 Found price: LiveApiPrice() GBP_USD ask: 1.24947 bid: 1.24918
+2024-04-26 16:58:04 Done processing price: LiveApiPrice() GBP_USD ask: 1.24947 bid: 1.24918
+2024-04-26 16:58:04 Adding work:  LiveApiPrice() GBP_USD ask: 1.24947 bid: 1.24918
+2024-04-26 16:58:07 Found price: LiveApiPrice() GBP_USD ask: 1.24949 bid: 1.24918
+2024-04-26 16:58:10 Done processing price: LiveApiPrice() GBP_USD ask: 1.24949 bid: 1.24918
+2024-04-26 16:58:20 Found price: LiveApiPrice() GBP_USD ask: 1.24949 bid: 1.24918
+2024-04-26 16:58:23 Done processing price: LiveApiPrice() GBP_USD ask: 1.24949 bid: 1.24918
+2024-04-26 16:58:24 Found price: LiveApiPrice() GBP_USD ask: 1.24948 bid: 1.24918
+2024-04-26 16:58:28 Done processing price: LiveApiPrice() GBP_USD ask: 1.24948 bid: 1.24918
+2024-04-26 16:58:28 Adding work:  LiveApiPrice() GBP_USD ask: 1.24948 bid: 1.24918
+2024-04-26 16:58:37 Found price: LiveApiPrice() GBP_USD ask: 1.24954 bid: 1.24923
+2024-04-26 16:58:40 Done processing price: LiveApiPrice() GBP_USD ask: 1.24954 bid: 1.24923
+2024-04-26 16:58:43 Found price: LiveApiPrice() GBP_USD ask: 1.24964 bid: 1.24916
+2024-04-26 16:58:48 Done processing price: LiveApiPrice() GBP_USD ask: 1.24964 bid: 1.24916
+2024-04-26 16:58:52 Found price: LiveApiPrice() GBP_USD ask: 1.24952 bid: 1.24923
+2024-04-26 16:58:56 Done processing price: LiveApiPrice() GBP_USD ask: 1.24952 bid: 1.24923
+2024-04-26 16:58:56 Adding work:  LiveApiPrice() GBP_USD ask: 1.24952 bid: 1.24923
+2024-04-26 16:58:57 Found price: LiveApiPrice() GBP_USD ask: 1.24959 bid: 1.24928
+2024-04-26 16:59:00 Done processing price: LiveApiPrice() GBP_USD ask: 1.24959 bid: 1.24928
+2024-04-26 16:59:02 Found price: LiveApiPrice() GBP_USD ask: 1.2496 bid: 1.24923
+2024-04-26 16:59:05 Done processing price: LiveApiPrice() GBP_USD ask: 1.2496 bid: 1.24923
+2024-04-26 16:59:05 Adding work:  LiveApiPrice() GBP_USD ask: 1.2496 bid: 1.24923

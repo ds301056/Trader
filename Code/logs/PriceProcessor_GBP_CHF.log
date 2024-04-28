@@ -1,0 +1,114 @@
+2024-04-26 16:55:07 LogWrapper init() ./logs/PriceProcessor_GBP_CHF.log
+2024-04-26 16:55:09 Found price: LiveApiPrice() GBP_CHF ask: 1.14266 bid: 1.14224
+2024-04-26 16:55:13 Done processing price: LiveApiPrice() GBP_CHF ask: 1.14266 bid: 1.14224
+2024-04-26 16:55:31 Found price: LiveApiPrice() GBP_CHF ask: 1.14269 bid: 1.14224
+2024-04-26 16:55:35 Done processing price: LiveApiPrice() GBP_CHF ask: 1.14269 bid: 1.14224
+2024-04-26 16:55:37 Found price: LiveApiPrice() GBP_CHF ask: 1.14268 bid: 1.14224
+2024-04-26 16:55:39 Done processing price: LiveApiPrice() GBP_CHF ask: 1.14268 bid: 1.14224
+2024-04-26 16:55:41 Found price: LiveApiPrice() GBP_CHF ask: 1.14257 bid: 1.1421
+2024-04-26 16:55:46 Done processing price: LiveApiPrice() GBP_CHF ask: 1.14257 bid: 1.1421
+2024-04-26 16:55:47 Found price: LiveApiPrice() GBP_CHF ask: 1.14258 bid: 1.14192
+2024-04-26 16:55:51 Done processing price: LiveApiPrice() GBP_CHF ask: 1.14258 bid: 1.14192
+2024-04-26 16:55:51 Found price: LiveApiPrice() GBP_CHF ask: 1.14252 bid: 1.14207
+2024-04-26 16:55:56 Done processing price: LiveApiPrice() GBP_CHF ask: 1.14252 bid: 1.14207
+2024-04-26 16:55:56 Found price: LiveApiPrice() GBP_CHF ask: 1.14253 bid: 1.14204
+2024-04-26 16:55:59 Done processing price: LiveApiPrice() GBP_CHF ask: 1.14253 bid: 1.14204
+2024-04-26 16:55:59 Found price: LiveApiPrice() GBP_CHF ask: 1.14252 bid: 1.14207
+2024-04-26 16:56:03 Done processing price: LiveApiPrice() GBP_CHF ask: 1.14252 bid: 1.14207
+2024-04-26 16:56:05 Found price: LiveApiPrice() GBP_CHF ask: 1.14249 bid: 1.1421
+2024-04-26 16:56:07 Done processing price: LiveApiPrice() GBP_CHF ask: 1.14249 bid: 1.1421
+2024-04-26 16:56:16 Found price: LiveApiPrice() GBP_CHF ask: 1.14248 bid: 1.14207
+2024-04-26 16:56:18 Done processing price: LiveApiPrice() GBP_CHF ask: 1.14248 bid: 1.14207
+2024-04-26 16:56:18 Found price: LiveApiPrice() GBP_CHF ask: 1.14263 bid: 1.14207
+2024-04-26 16:56:20 Done processing price: LiveApiPrice() GBP_CHF ask: 1.14263 bid: 1.14207
+2024-04-26 16:56:20 Found price: LiveApiPrice() GBP_CHF ask: 1.14264 bid: 1.14207
+2024-04-26 16:56:24 Done processing price: LiveApiPrice() GBP_CHF ask: 1.14264 bid: 1.14207
+2024-04-26 16:56:24 Adding work:  LiveApiPrice() GBP_CHF ask: 1.14264 bid: 1.14207
+2024-04-26 16:56:25 Found price: LiveApiPrice() GBP_CHF ask: 1.14259 bid: 1.14206
+2024-04-26 16:56:30 Done processing price: LiveApiPrice() GBP_CHF ask: 1.14259 bid: 1.14206
+2024-04-26 16:56:30 Found price: LiveApiPrice() GBP_CHF ask: 1.14258 bid: 1.14207
+2024-04-26 16:56:32 Done processing price: LiveApiPrice() GBP_CHF ask: 1.14258 bid: 1.14207
+2024-04-26 16:56:33 Found price: LiveApiPrice() GBP_CHF ask: 1.14258 bid: 1.14207
+2024-04-26 16:56:38 Done processing price: LiveApiPrice() GBP_CHF ask: 1.14258 bid: 1.14207
+2024-04-26 16:56:38 Adding work:  LiveApiPrice() GBP_CHF ask: 1.14258 bid: 1.14207
+2024-04-26 16:56:39 Found price: LiveApiPrice() GBP_CHF ask: 1.14251 bid: 1.14203
+2024-04-26 16:56:41 Done processing price: LiveApiPrice() GBP_CHF ask: 1.14251 bid: 1.14203
+2024-04-26 16:56:41 Adding work:  LiveApiPrice() GBP_CHF ask: 1.14251 bid: 1.14203
+2024-04-26 16:56:41 Found price: LiveApiPrice() GBP_CHF ask: 1.14253 bid: 1.14204
+2024-04-26 16:56:44 Done processing price: LiveApiPrice() GBP_CHF ask: 1.14253 bid: 1.14204
+2024-04-26 16:56:44 Found price: LiveApiPrice() GBP_CHF ask: 1.14257 bid: 1.14208
+2024-04-26 16:56:49 Done processing price: LiveApiPrice() GBP_CHF ask: 1.14257 bid: 1.14208
+2024-04-26 16:56:53 Found price: LiveApiPrice() GBP_CHF ask: 1.14258 bid: 1.14213
+2024-04-26 16:56:57 Done processing price: LiveApiPrice() GBP_CHF ask: 1.14258 bid: 1.14213
+2024-04-26 16:56:57 Found price: LiveApiPrice() GBP_CHF ask: 1.14254 bid: 1.14212
+2024-04-26 16:57:02 Done processing price: LiveApiPrice() GBP_CHF ask: 1.14254 bid: 1.14212
+2024-04-26 16:57:04 Found price: LiveApiPrice() GBP_CHF ask: 1.14258 bid: 1.14204
+2024-04-26 16:57:06 Done processing price: LiveApiPrice() GBP_CHF ask: 1.14258 bid: 1.14204
+2024-04-26 16:57:06 Adding work:  LiveApiPrice() GBP_CHF ask: 1.14258 bid: 1.14204
+2024-04-26 16:57:06 Found price: LiveApiPrice() GBP_CHF ask: 1.14292 bid: 1.14224
+2024-04-26 16:57:09 Done processing price: LiveApiPrice() GBP_CHF ask: 1.14292 bid: 1.14224
+2024-04-26 16:57:09 Adding work:  LiveApiPrice() GBP_CHF ask: 1.14292 bid: 1.14224
+2024-04-26 16:57:10 Found price: LiveApiPrice() GBP_CHF ask: 1.14278 bid: 1.14223
+2024-04-26 16:57:13 Done processing price: LiveApiPrice() GBP_CHF ask: 1.14278 bid: 1.14223
+2024-04-26 16:57:14 Found price: LiveApiPrice() GBP_CHF ask: 1.14277 bid: 1.14228
+2024-04-26 16:57:19 Done processing price: LiveApiPrice() GBP_CHF ask: 1.14277 bid: 1.14228
+2024-04-26 16:57:19 Found price: LiveApiPrice() GBP_CHF ask: 1.14269 bid: 1.14221
+2024-04-26 16:57:22 Done processing price: LiveApiPrice() GBP_CHF ask: 1.14269 bid: 1.14221
+2024-04-26 16:57:22 Adding work:  LiveApiPrice() GBP_CHF ask: 1.14269 bid: 1.14221
+2024-04-26 16:57:23 Found price: LiveApiPrice() GBP_CHF ask: 1.14269 bid: 1.14224
+2024-04-26 16:57:26 Done processing price: LiveApiPrice() GBP_CHF ask: 1.14269 bid: 1.14224
+2024-04-26 16:57:29 Found price: LiveApiPrice() GBP_CHF ask: 1.14271 bid: 1.14225
+2024-04-26 16:57:34 Done processing price: LiveApiPrice() GBP_CHF ask: 1.14271 bid: 1.14225
+2024-04-26 16:57:34 Found price: LiveApiPrice() GBP_CHF ask: 1.14271 bid: 1.14222
+2024-04-26 16:57:37 Done processing price: LiveApiPrice() GBP_CHF ask: 1.14271 bid: 1.14222
+2024-04-26 16:57:37 Found price: LiveApiPrice() GBP_CHF ask: 1.14272 bid: 1.14223
+2024-04-26 16:57:42 Done processing price: LiveApiPrice() GBP_CHF ask: 1.14272 bid: 1.14223
+2024-04-26 16:57:42 Adding work:  LiveApiPrice() GBP_CHF ask: 1.14272 bid: 1.14223
+2024-04-26 16:57:44 Found price: LiveApiPrice() GBP_CHF ask: 1.14271 bid: 1.14226
+2024-04-26 16:57:46 Done processing price: LiveApiPrice() GBP_CHF ask: 1.14271 bid: 1.14226
+2024-04-26 16:57:46 Found price: LiveApiPrice() GBP_CHF ask: 1.14276 bid: 1.14224
+2024-04-26 16:57:51 Done processing price: LiveApiPrice() GBP_CHF ask: 1.14276 bid: 1.14224
+2024-04-26 16:57:53 Found price: LiveApiPrice() GBP_CHF ask: 1.14272 bid: 1.14224
+2024-04-26 16:57:58 Done processing price: LiveApiPrice() GBP_CHF ask: 1.14272 bid: 1.14224
+2024-04-26 16:57:58 Adding work:  LiveApiPrice() GBP_CHF ask: 1.14272 bid: 1.14224
+2024-04-26 16:58:00 Found price: LiveApiPrice() GBP_CHF ask: 1.14273 bid: 1.14226
+2024-04-26 16:58:02 Done processing price: LiveApiPrice() GBP_CHF ask: 1.14273 bid: 1.14226
+2024-04-26 16:58:02 Found price: LiveApiPrice() GBP_CHF ask: 1.14289 bid: 1.14237
+2024-04-26 16:58:04 Done processing price: LiveApiPrice() GBP_CHF ask: 1.14289 bid: 1.14237
+2024-04-26 16:58:04 Found price: LiveApiPrice() GBP_CHF ask: 1.14289 bid: 1.1424
+2024-04-26 16:58:09 Done processing price: LiveApiPrice() GBP_CHF ask: 1.14289 bid: 1.1424
+2024-04-26 16:58:12 Found price: LiveApiPrice() GBP_CHF ask: 1.14289 bid: 1.14247
+2024-04-26 16:58:14 Done processing price: LiveApiPrice() GBP_CHF ask: 1.14289 bid: 1.14247
+2024-04-26 16:58:14 Adding work:  LiveApiPrice() GBP_CHF ask: 1.14289 bid: 1.14247
+2024-04-26 16:58:17 Found price: LiveApiPrice() GBP_CHF ask: 1.14289 bid: 1.14243
+2024-04-26 16:58:21 Done processing price: LiveApiPrice() GBP_CHF ask: 1.14289 bid: 1.14243
+2024-04-26 16:58:21 Found price: LiveApiPrice() GBP_CHF ask: 1.14288 bid: 1.14244
+2024-04-26 16:58:23 Done processing price: LiveApiPrice() GBP_CHF ask: 1.14288 bid: 1.14244
+2024-04-26 16:58:24 Found price: LiveApiPrice() GBP_CHF ask: 1.14289 bid: 1.14243
+2024-04-26 16:58:29 Done processing price: LiveApiPrice() GBP_CHF ask: 1.14289 bid: 1.14243
+2024-04-26 16:58:29 Adding work:  LiveApiPrice() GBP_CHF ask: 1.14289 bid: 1.14243
+2024-04-26 16:58:30 Found price: LiveApiPrice() GBP_CHF ask: 1.14296 bid: 1.14237
+2024-04-26 16:58:32 Done processing price: LiveApiPrice() GBP_CHF ask: 1.14296 bid: 1.14237
+2024-04-26 16:58:33 Found price: LiveApiPrice() GBP_CHF ask: 1.14283 bid: 1.14237
+2024-04-26 16:58:37 Done processing price: LiveApiPrice() GBP_CHF ask: 1.14283 bid: 1.14237
+2024-04-26 16:58:37 Adding work:  LiveApiPrice() GBP_CHF ask: 1.14283 bid: 1.14237
+2024-04-26 16:58:37 Found price: LiveApiPrice() GBP_CHF ask: 1.14297 bid: 1.14233
+2024-04-26 16:58:41 Done processing price: LiveApiPrice() GBP_CHF ask: 1.14297 bid: 1.14233
+2024-04-26 16:58:41 Adding work:  LiveApiPrice() GBP_CHF ask: 1.14297 bid: 1.14233
+2024-04-26 16:58:41 Found price: LiveApiPrice() GBP_CHF ask: 1.14297 bid: 1.1423
+2024-04-26 16:58:45 Done processing price: LiveApiPrice() GBP_CHF ask: 1.14297 bid: 1.1423
+2024-04-26 16:58:47 Found price: LiveApiPrice() GBP_CHF ask: 1.14296 bid: 1.14233
+2024-04-26 16:58:49 Done processing price: LiveApiPrice() GBP_CHF ask: 1.14296 bid: 1.14233
+2024-04-26 16:58:49 Adding work:  LiveApiPrice() GBP_CHF ask: 1.14296 bid: 1.14233
+2024-04-26 16:58:50 Found price: LiveApiPrice() GBP_CHF ask: 1.14286 bid: 1.14233
+2024-04-26 16:58:53 Done processing price: LiveApiPrice() GBP_CHF ask: 1.14286 bid: 1.14233
+2024-04-26 16:58:57 Found price: LiveApiPrice() GBP_CHF ask: 1.14287 bid: 1.14235
+2024-04-26 16:58:59 Done processing price: LiveApiPrice() GBP_CHF ask: 1.14287 bid: 1.14235
+2024-04-26 16:58:59 Adding work:  LiveApiPrice() GBP_CHF ask: 1.14287 bid: 1.14235
+2024-04-26 16:59:00 Found price: LiveApiPrice() GBP_CHF ask: 1.14304 bid: 1.14235
+2024-04-26 16:59:02 Done processing price: LiveApiPrice() GBP_CHF ask: 1.14304 bid: 1.14235
+2024-04-26 16:59:03 Found price: LiveApiPrice() GBP_CHF ask: 1.14298 bid: 1.14231
+2024-04-26 16:59:05 Done processing price: LiveApiPrice() GBP_CHF ask: 1.14298 bid: 1.14231
+2024-04-26 16:59:05 Found price: LiveApiPrice() GBP_CHF ask: 1.14298 bid: 1.14231
+2024-04-26 16:59:09 Done processing price: LiveApiPrice() GBP_CHF ask: 1.14298 bid: 1.14231
+2024-04-26 16:59:09 Adding work:  LiveApiPrice() GBP_CHF ask: 1.14298 bid: 1.14231
