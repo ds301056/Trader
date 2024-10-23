@@ -3,7 +3,6 @@
 # Copyright (C) PyZMQ Developers
 # Distributed under the terms of the Modified BSD License.
 
-
 import time
 from multiprocessing import Process
 from threading import Thread
@@ -56,7 +55,8 @@ class Device:
         sets whether the thread should be run as a daemon
         Default is true, because if it is false, the thread will not
         exit unless it is killed
-    context_factory : callable (class attribute)
+    context_factory : callable
+        This is a class attribute.
         Function for creating the Context. This will be Context.instance
         in ThreadDevices, and Context in ProcessDevices.  The only reason
         it is not instance() in ProcessDevices is that there may be a stale

@@ -1,27 +1,38 @@
-import logging # Python's built-in logging module
-import os # Python's built-in os module
+import logging
+import os
 
-LOG_FORMAT = "%(asctime)s %(message)s" # Define the log format
-DEFAULT_LEVEL = logging.DEBUG # Define the default log level
+LOG_FORMAT = "%(asctime)s %(message)s"
+DEFAULT_LEVEL = logging.DEBUG
 
-class LogWrapper: # Define the LogWrapper class
+class LogWrapper:
 
-  PATH = './logs' # Define the path to the logs directory - hard coded  
+    PATH = './logs'
 
-  def __init__(self, name, mode="w"): # Initialize the LogWrapper object with the name and mode parameters- W overwrites existing log files
-    self.create_directory() # Call the create_directory method
-    self.filename = f"{LogWrapper.PATH}/{name}.log"
-    self.logger = logging.getLogger(name)
-    self.logger.setLevel(DEFAULT_LEVEL)
+    def __init__(self, name, mode="w"):
+        self.create_directory()
+        self.filename = f"{LogWrapper.PATH}/{name}.log"
+        self.logger = logging.getLogger(name)
+        self.logger.setLevel(DEFAULT_LEVEL)
 
-    file_handler = logging.FileHandler(self.filename, mode=mode) # Create a file handler for the log file
-    formatter = logging.Formatter(LOG_FORMAT, datefmt='%Y-%m-%d %H:%M:%S') # Create a formatter for the log messages
+        file_handler = logging.FileHandler(self.filename, mode=mode)
+        formatter = logging.Formatter(LOG_FORMAT, datefmt='%Y-%m-%d %H:%M:%S')
 
-    file_handler.setFormatter(formatter) # Set the formatter for the file handler
-    self.logger.addHandler(file_handler) # Add the file handler to the logger
+        file_handler.setFormatter(formatter)
+        self.logger.addHandler(file_handler)
 
-    self.logger.info(f"LogWrapper init() {self.filename}")
+        self.logger.info(f"LogWrapper init() {self.filename}")
 
-  def create_directory(self): # Define the create_directory method
-    if not os.path.exists(LogWrapper.PATH): # Check if the logs directory does not exist
-      os.makedirs(LogWrapper.PATH) # Create the logs directory if it does not exist
+
+    def create_directory(self):
+        if not os.path.exists(LogWrapper.PATH):
+            os.makedirs(LogWrapper.PATH)
+
+
+
+
+
+
+
+
+
+

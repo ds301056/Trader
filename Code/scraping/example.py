@@ -5,19 +5,20 @@ with open("index.html", "r") as f:
 
 #print(data)
 
-soup = BeautifulSoup(data, 'html.parser')
+soup = BeautifulSoup(data, 'html.parser') # Parse the HTML content using BeautifulSoup
 
 #print(soup)
 
 
-divs = soup.select("div")
+divs = soup.select("div") # Select all elements with the class
 
-print(len(divs), "divs found")
+print(len(divs), "divs found")  # Print the number of divs found
 
-for d in divs:
-  print()
-  print(d)
+for d in divs: # Iterate through the selected elements
+  print() # Print an empty line for better readability
+  print(d)  # Print the text of the selected element
 
+# 
 
 
 print("content:", divs[0].get_text())

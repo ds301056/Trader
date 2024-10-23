@@ -18,7 +18,7 @@ class TestAstype:
         ci = CategoricalIndex(list("aabbca"), categories=list("cab"), ordered=False)
 
         result = ci.astype(object)
-        tm.assert_index_equal(result, Index(np.array(ci), dtype=object))
+        tm.assert_index_equal(result, Index(np.array(ci)))
 
         # this IS equal, but not the same class
         assert result.equals(ci)
@@ -73,15 +73,12 @@ class TestAstype:
             expected = index
             tm.assert_index_equal(result, expected)
 
-    @pytest.mark.parametrize("box", [True, False])
-    def test_categorical_date_roundtrip(self, box):
+    def test_categorical_date_roundtrip(self):
         # astype to categorical and back should preserve date objects
         v = date.today()
 
         obj = Index([v, v])
         assert obj.dtype == object
-        if box:
-            obj = obj.array
 
         cat = obj.astype("category")
 

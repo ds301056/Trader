@@ -26,11 +26,12 @@ class MainLogHandler:
         # Ensure the logger does not duplicate logs
         if not self.logger.handlers:
             # Create file handler with append mode
-            file_handler = logging.FileHandler(log_filename, mode='a')
-            formatter = logging.Formatter(MainLogHandler.LOG_FORMAT, datefmt='%Y-%m-%d %H:%M:%S')
-            file_handler.setFormatter(formatter)
+            # file_handler = logging.FileHandler(log_filename, mode='a')
+            # formatter = logging.Formatter(MainLogHandler.LOG_FORMAT, datefmt='%Y-%m-%d %H:%M:%S')
+            # file_handler.setFormatter(formatter)
 
-            self.logger.addHandler(file_handler)
+            # self.logger.addHandler(file_handler)
+            pass  # Comment out the creation of file handler
 
     def log(self, message):
         # Log a message

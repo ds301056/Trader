@@ -23,6 +23,11 @@ to other string extension arrays.
 # BaseStringArrayMethods
 #  - ObjectStringArrayMixin
 #     - StringArray
-#     - NumpyExtensionArray
+#     - PandasArray
 #     - Categorical
 #     - ArrowStringArray
+
+from pandas.core.strings.accessor import StringMethods
+from pandas.core.strings.base import BaseStringArrayMethods
+
+__all__ = ["StringMethods", "BaseStringArrayMethods"]

@@ -1,5 +1,5 @@
-"""Decorator for layering authorization into JupyterHandlers.
-"""
+"""Decorator for layering authorization into JupyterHandlers."""
+
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
 import asyncio
@@ -83,5 +83,60 @@ def authorized(
         action = None
         # no-arguments `@authorized` decorator called
         return cast(FuncT, wrapper(method))
+
+    return cast(FuncT, wrapper)
+
+
+def allow_unauthenticated(method: FuncT) -> FuncT:
+    """A decorator for tornado.web.RequestHandler methods
+    that allows any user to make the following request.
+
+    Selectively disables the 'authentication' layer of REST API which
+    is active when `ServerApp.allow_unauthenticated_access = False`.
+
+    To be used exclusively on endpoints which may be considered public,
+    for example the login page handler.
+
+    .. versionadded:: 2.13
+
+    Parameters
+    ----------
+    method : bound callable
+        the endpoint method to remove authentication from.
+    """
+
+    @wraps(method)
+    def wrapper(self, *args, **kwargs):
+        return method(self, *args, **kwargs)
+
+    setattr(wrapper, "__allow_unauthenticated", True)
+
+    return cast(FuncT, wrapper)
+
+
+def ws_authenticated(method: FuncT) -> FuncT:
+    """A decorator for websockets derived from `WebSocketHandler`
+    that authenticates user before allowing to proceed.
+
+    Differently from tornado.web.authenticated, does not redirect
+    to the login page, which would be meaningless for websockets.
+
+    .. versionadded:: 2.13
+
+    Parameters
+    ----------
+    method : bound callable
+        the endpoint method to add authentication for.
+    """
+
+    @wraps(method)
+    def wrapper(self, *args, **kwargs):
+        user = self.current_user
+        if user is None:
+            self.log.warning("Couldn't authenticate WebSocket connection")
+            raise HTTPError(403)
+        return method(self, *args, **kwargs)
+
+    setattr(wrapper, "__allow_unauthenticated", False)
 
     return cast(FuncT, wrapper)

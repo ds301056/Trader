@@ -1,4 +1,5 @@
 """Main entry point."""
+
 from __future__ import annotations
 
 from platformdirs import PlatformDirs, __version__
@@ -23,7 +24,7 @@ PROPS = (
 
 
 def main() -> None:
-    """Run main entry point."""
+    """Run the main entry point."""
     app_name = "MyApp"
     app_author = "MyCompany"
 
