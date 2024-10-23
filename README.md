@@ -4,12 +4,23 @@
 
 # Writes data to pkl's for advanced data analysis
 
-# to see with UI
+# ---------------------------------------------
 
-PS F:\github\trader\code> cd forex-dash
-PS F:\github\trader\code\forex-dash> cd build
-PS F:\github\trader\code\forex-dash\build> python -m http.server
-Serving HTTP on :: port 8000 (http://[::]:8000/) ...
+# to Start the backend server:
+
+# 1. get into python venv: F:\GitHub\Trader\Code> .\venv\Scripts\Activate
+
+# 2. Collect data if needed: python main.py
+
+# 3. start the server we built using python server.py
+
+# -----------------------------------------------------
+
+# to view / create the dashboard
+
+# 1. navigate to: F:\GitHub\Trader\Code\forex-dash>
+
+# 2. run: npm start
 
 # check the setup.bat file
 
