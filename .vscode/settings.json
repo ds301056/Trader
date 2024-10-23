@@ -20,5 +20,6 @@
     "strtime",
     "timestr",
     "xlsxwriter"
-  ]
+  ],
+  "git.ignoreLimitWarning": true
 }
