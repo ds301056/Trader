@@ -31,5 +31,6 @@ class CandleManager:
         self.timings[pair].is_ready = True # Set the is_ready attribute to True
         self.timings[pair].last_time = current # Update the last_time attribute
         self.log_message(f"CandleManager() new candle:{self.timings[pair]}", pair) # Log the new candle timing
+        print(f"CandleManager() new candle:{self.timings[pair]}")
         triggered.append(pair) # Append the pair to the triggered list
     return triggered # Return the triggered list

@@ -1,4 +1,17 @@
 # Trader
+# on remote at Linode.com
+-to access remote server
+ssh root@172.232.22.131
+
+
+# to see with UI 
+PS F:\github\trader\code> cd forex-dash
+PS F:\github\trader\code\forex-dash> cd build
+PS F:\github\trader\code\forex-dash\build> python -m http.server
+Serving HTTP on :: port 8000 (http://[::]:8000/) ...
+
+
+
 
 # check the setup.bat file 
 run with .\setup.bat
@@ -18,7 +31,7 @@ run with .\setup.bat
 - check the requirements.txt
 
 - generate the requirements.txt from installed packages:     pip freeze > requirements.txt
--install rquirements.txt:                                    pip install -r requirements.txt
+-install requirements.txt:                                    pip install -r requirements.txt
 
 
 

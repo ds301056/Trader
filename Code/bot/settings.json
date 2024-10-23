@@ -1,40 +1,488 @@
 {
   "trade_risk": 20,
   "pairs": {
-      "GBP_CHF": {
+    "EUR_USD": {
       "n_ma": 12,
       "n_std": 2.5,
       "maxspread": 0.0004,
       "mingain": 0.0014,
-      "riskreward": 1.5
-    },
-    "EUR_CHF": {
-      "n_ma": 12,
-      "n_std": 2.5,
-      "maxspread": 0.0004,
-      "mingain": 0.0014,
-      "riskreward": 1.5
-    },
-    "GBP_JPY": {
-      "n_ma": 12,
-      "n_std": 2.5,
-      "maxspread": 0.04,
-      "mingain": 0.14,
-      "riskreward": 1.5
+      "riskreward": 1.4
     },
     "GBP_USD": {
       "n_ma": 12,
       "n_std": 2.5,
       "maxspread": 0.0004,
       "mingain": 0.0014,
-      "riskreward": 1.5
+      "riskreward": 1.4
+    },
+    "USD_JPY": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.04,
+      "mingain": 0.14,
+      "riskreward": 1.4
+    },
+    "USD_CHF": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.0004,
+      "mingain": 0.0014,
+      "riskreward": 1.4
+    },
+    "AUD_USD": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.0004,
+      "mingain": 0.0014,
+      "riskreward": 1.4
     },
     "EUR_GBP": {
       "n_ma": 12,
       "n_std": 2.5,
       "maxspread": 0.0004,
       "mingain": 0.0014,
-      "riskreward": 1.5
+      "riskreward": 1.4
+    },
+    "USD_CAD": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.0004,
+      "mingain": 0.0014,
+      "riskreward": 1.4
+    },
+    "NZD_USD": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.0004,
+      "mingain": 0.0014,
+      "riskreward": 1.4
+    },
+    "EUR_JPY": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.04,
+      "mingain": 0.14,
+      "riskreward": 1.4
+    },
+    "EUR_CHF": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.0004,
+      "mingain": 0.0014,
+      "riskreward": 1.4
+    },
+    "GBP_JPY": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.04,
+      "mingain": 0.14,
+      "riskreward": 1.4
+    },
+    "GBP_CHF": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.0004,
+      "mingain": 0.0014,
+      "riskreward": 1.4
+    },
+    "CHF_JPY": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.04,
+      "mingain": 0.14,
+      "riskreward": 1.4
+    },
+    "CAD_CHF": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.0004,
+      "mingain": 0.0014,
+      "riskreward": 1.4
+    },
+    "EUR_AUD": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.0004,
+      "mingain": 0.0014,
+      "riskreward": 1.4
+    },
+    "EUR_CAD": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.0004,
+      "mingain": 0.0014,
+      "riskreward": 1.4
+    },
+    "USD_ZAR": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.04,
+      "mingain": 0.14,
+      "riskreward": 1.4
+    },
+    "USD_TRY": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.04,
+      "mingain": 0.14,
+      "riskreward": 1.4
+    },
+    "EUR_NOK": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.04,
+      "mingain": 0.14,
+      "riskreward": 1.4
+    },
+    "USD_MXN": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.04,
+      "mingain": 0.14,
+      "riskreward": 1.4
+    },
+    "USD_PLN": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.04,
+      "mingain": 0.14,
+      "riskreward": 1.4
+    },
+    "USD_SEK": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.04,
+      "mingain": 0.14,
+      "riskreward": 1.4
+    },
+    "USD_SGD": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.04,
+      "mingain": 0.14,
+      "riskreward": 1.4
+    },
+    "USD_DKK": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.04,
+      "mingain": 0.14,
+      "riskreward": 1.4
+    },
+    "EUR_DKK": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.04,
+      "mingain": 0.14,
+      "riskreward": 1.4
+    },
+    "EUR_PLN": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.04,
+      "mingain": 0.14,
+      "riskreward": 1.4
+    },
+    "AUD_CAD": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.0004,
+      "mingain": 0.0014,
+      "riskreward": 1.4
+    },
+    "AUD_CHF": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.0004,
+      "mingain": 0.0014,
+      "riskreward": 1.4
+    },
+    "AUD_JPY": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.04,
+      "mingain": 0.14,
+      "riskreward": 1.4
+    },
+    "AUD_NZD": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.0004,
+      "mingain": 0.0014,
+      "riskreward": 1.4
+    },
+    "CAD_JPY": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.04,
+      "mingain": 0.14,
+      "riskreward": 1.4
+    },
+    "EUR_NZD": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.0004,
+      "mingain": 0.0014,
+      "riskreward": 1.4
+    },
+    "GBP_AUD": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.0004,
+      "mingain": 0.0014,
+      "riskreward": 1.4
+    },
+    "GBP_CAD": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.0004,
+      "mingain": 0.0014,
+      "riskreward": 1.4
+    },
+    "GBP_NZD": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.0004,
+      "mingain": 0.0014,
+      "riskreward": 1.4
+    },
+    "NZD_CAD": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.0004,
+      "mingain": 0.0014,
+      "riskreward": 1.4
+    },
+    "NZD_CHF": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.0004,
+      "mingain": 0.0014,
+      "riskreward": 1.4
+    },
+    "NZD_JPY": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.04,
+      "mingain": 0.14,
+      "riskreward": 1.4
+    },
+    "USD_NOK": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.04,
+      "mingain": 0.14,
+      "riskreward": 1.4
+    },
+    "HKD_JPY": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.04,
+      "mingain": 0.14,
+      "riskreward": 1.4
+    },
+    "EUR_SEK": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.04,
+      "mingain": 0.14,
+      "riskreward": 1.4
+    },
+    "GBP_PLN": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.04,
+      "mingain": 0.14,
+      "riskreward": 1.4
+    },
+    "USD_CZK": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.04,
+      "mingain": 0.14,
+      "riskreward": 1.4
+    },
+    "CHF_HKD": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.04,
+      "mingain": 0.14,
+      "riskreward": 1.4
+    },
+    "EUR_CZK": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.04,
+      "mingain": 0.14,
+      "riskreward": 1.4
+    },
+    "EUR_HUF": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.04,
+      "mingain": 0.14,
+      "riskreward": 1.4
+    },
+    "CAD_HKD": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.04,
+      "mingain": 0.14,
+      "riskreward": 1.4
+    },
+    "AUD_HKD": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.04,
+      "mingain": 0.14,
+      "riskreward": 1.4
+    },
+    "USD_THB": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.04,
+      "mingain": 0.14,
+      "riskreward": 1.4
+    },
+    "EUR_HKD": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.04,
+      "mingain": 0.14,
+      "riskreward": 1.4
+    },
+    "GBP_HKD": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.04,
+      "mingain": 0.14,
+      "riskreward": 1.4
+    },
+    "AUD_SGD": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.04,
+      "mingain": 0.14,
+      "riskreward": 1.4
+    },
+    "EUR_TRY": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.04,
+      "mingain": 0.14,
+      "riskreward": 1.4
+    },
+    "SGD_JPY": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.04,
+      "mingain": 0.14,
+      "riskreward": 1.4
+    },
+    "GBP_ZAR": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.04,
+      "mingain": 0.14,
+      "riskreward": 1.4
+    },
+    "ZAR_JPY": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.04,
+      "mingain": 0.14,
+      "riskreward": 1.4
+    },
+    "SGD_CHF": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.04,
+      "mingain": 0.14,
+      "riskreward": 1.4
+    },
+    "USD_CNH": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.04,
+      "mingain": 0.14,
+      "riskreward": 1.4
+    },
+    "GBP_JPY": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.04,
+      "mingain": 0.14,
+      "riskreward": 1.4
+    },
+    "EUR_SGD": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.04,
+      "mingain": 0.14,
+      "riskreward": 1.4
+    },
+    "NZD_SGD": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.04,
+      "mingain": 0.14,
+      "riskreward": 1.4
+    },
+    "TRY_JPY": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.04,
+      "mingain": 0.14,
+      "riskreward": 1.4
+    },
+    "EUR_ZAR": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.04,
+      "mingain": 0.14,
+      "riskreward": 1.4
+    },
+    "USD_HKD": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.04,
+      "mingain": 0.14,
+      "riskreward": 1.4
+    },
+    "CHF_ZAR": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.04,
+      "mingain": 0.14,
+      "riskreward": 1.4
+    },
+    "GBP_SGD": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.04,
+      "mingain": 0.14,
+      "riskreward": 1.4
+    },
+    "USD_HUF": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.04,
+      "mingain": 0.14,
+      "riskreward": 1.4
+    },
+    "CAD_SGD": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.04,
+      "mingain": 0.14,
+      "riskreward": 1.4
+    },
+    "NZD_HKD": {
+      "n_ma": 12,
+      "n_std": 2.5,
+      "maxspread": 0.04,
+      "mingain": 0.14,
+      "riskreward": 1.4
     }
   }
 }
