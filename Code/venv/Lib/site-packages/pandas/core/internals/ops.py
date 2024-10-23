@@ -1,21 +1,29 @@
 from __future__ import annotations
 
-from collections import namedtuple
 from typing import (
     TYPE_CHECKING,
-    Iterator,
+    NamedTuple,
 )
 
-from pandas._typing import ArrayLike
+from pandas.core.dtypes.common import is_1d_only_ea_dtype
 
 if TYPE_CHECKING:
+    from collections.abc import Iterator
+
+    from pandas._libs.internals import BlockPlacement
+    from pandas._typing import ArrayLike
+
     from pandas.core.internals.blocks import Block
     from pandas.core.internals.managers import BlockManager
 
 
-BlockPairInfo = namedtuple(
-    "BlockPairInfo", ["lvals", "rvals", "locs", "left_ea", "right_ea", "rblk"]
-)
+class BlockPairInfo(NamedTuple):
+    lvals: ArrayLike
+    rvals: ArrayLike
+    locs: BlockPlacement
+    left_ea: bool
+    right_ea: bool
+    rblk: Block
 
 
 def _iter_block_pairs(
@@ -55,7 +63,12 @@ def operate_blockwise(
     res_blks: list[Block] = []
     for lvals, rvals, locs, left_ea, right_ea, rblk in _iter_block_pairs(left, right):
         res_values = array_op(lvals, rvals)
-        if left_ea and not right_ea and hasattr(res_values, "reshape"):
+        if (
+            left_ea
+            and not right_ea
+            and hasattr(res_values, "reshape")
+            and not is_1d_only_ea_dtype(res_values.dtype)
+        ):
             res_values = res_values.reshape(1, -1)
         nbs = rblk._split_op_result(res_values)
 
@@ -80,7 +93,7 @@ def operate_blockwise(
     return new_mgr
 
 
-def _reset_block_mgr_locs(nbs: list[Block], locs):
+def _reset_block_mgr_locs(nbs: list[Block], locs) -> None:
     """
     Reset mgr_locs to correspond to our original DataFrame.
     """
@@ -106,28 +119,26 @@ def _get_same_shape_values(
 
     # TODO(EA2D): with 2D EAs only this first clause would be needed
     if not (left_ea or right_ea):
-        # error: Invalid index type "Tuple[Any, slice]" for "Union[ndarray,
-        # ExtensionArray]"; expected type "Union[int, slice, ndarray]"
-        lvals = lvals[rblk.mgr_locs.indexer, :]  # type: ignore[index]
+        # error: No overload variant of "__getitem__" of "ExtensionArray" matches
+        # argument type "Tuple[Union[ndarray, slice], slice]"
+        lvals = lvals[rblk.mgr_locs.indexer, :]  # type: ignore[call-overload]
         assert lvals.shape == rvals.shape, (lvals.shape, rvals.shape)
     elif left_ea and right_ea:
         assert lvals.shape == rvals.shape, (lvals.shape, rvals.shape)
     elif right_ea:
         # lvals are 2D, rvals are 1D
 
-        # error: Invalid index type "Tuple[Any, slice]" for "Union[ndarray,
-        # ExtensionArray]"; expected type "Union[int, slice, ndarray]"
-        lvals = lvals[rblk.mgr_locs.indexer, :]  # type: ignore[index]
+        # error: No overload variant of "__getitem__" of "ExtensionArray" matches
+        # argument type "Tuple[Union[ndarray, slice], slice]"
+        lvals = lvals[rblk.mgr_locs.indexer, :]  # type: ignore[call-overload]
         assert lvals.shape[0] == 1, lvals.shape
-        # error: Invalid index type "Tuple[int, slice]" for "Union[Any,
-        # ExtensionArray]"; expected type "Union[int, slice, ndarray]"
-        lvals = lvals[0, :]  # type: ignore[index]
+        lvals = lvals[0, :]
     else:
         # lvals are 1D, rvals are 2D
         assert rvals.shape[0] == 1, rvals.shape
-        # error: Invalid index type "Tuple[int, slice]" for "Union[ndarray,
-        # ExtensionArray]"; expected type "Union[int, slice, ndarray]"
-        rvals = rvals[0, :]  # type: ignore[index]
+        # error: No overload variant of "__getitem__" of "ExtensionArray" matches
+        # argument type "Tuple[int, slice]"
+        rvals = rvals[0, :]  # type: ignore[call-overload]
 
     return lvals, rvals
 

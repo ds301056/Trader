@@ -12,12 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Representation for the MongoDB internal MinKey type.
-"""
+"""Representation for the MongoDB internal MinKey type."""
+from __future__ import annotations
+
 from typing import Any
 
 
-class MinKey(object):
+class MinKey:
     """MongoDB internal MinKey type."""
 
     __slots__ = ()
@@ -51,5 +52,5 @@ class MinKey(object):
     def __gt__(self, dummy: Any) -> bool:
         return False
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "MinKey()"

@@ -3,11 +3,12 @@ import re
 import numpy as np
 import pytest
 
-from pandas.core.dtypes.common import is_categorical_dtype
+import pandas.util._test_decorators as td
 
 import pandas as pd
 from pandas import (
     Categorical,
+    CategoricalDtype,
     CategoricalIndex,
     DataFrame,
     Index,
@@ -15,37 +16,46 @@ from pandas import (
     Series,
     Timedelta,
     Timestamp,
+    option_context,
 )
 import pandas._testing as tm
-from pandas.api.types import CategoricalDtype as CDT
+
+
+@pytest.fixture
+def df():
+    return DataFrame(
+        {
+            "A": np.arange(6, dtype="int64"),
+        },
+        index=CategoricalIndex(
+            list("aabbca"), dtype=CategoricalDtype(list("cab")), name="B"
+        ),
+    )
+
+
+@pytest.fixture
+def df2():
+    return DataFrame(
+        {
+            "A": np.arange(6, dtype="int64"),
+        },
+        index=CategoricalIndex(
+            list("aabbca"), dtype=CategoricalDtype(list("cabe")), name="B"
+        ),
+    )
 
 
 class TestCategoricalIndex:
-    def setup_method(self, method):
-
-        self.df = DataFrame(
-            {
-                "A": np.arange(6, dtype="int64"),
-            },
-            index=CategoricalIndex(list("aabbca"), dtype=CDT(list("cab")), name="B"),
-        )
-        self.df2 = DataFrame(
-            {
-                "A": np.arange(6, dtype="int64"),
-            },
-            index=CategoricalIndex(list("aabbca"), dtype=CDT(list("cabe")), name="B"),
-        )
-
-    def test_loc_scalar(self):
-        dtype = CDT(list("cab"))
-        result = self.df.loc["a"]
+    def test_loc_scalar(self, df):
+        dtype = CategoricalDtype(list("cab"))
+        result = df.loc["a"]
         bidx = Series(list("aaa"), name="B").astype(dtype)
         assert bidx.dtype == dtype
 
         expected = DataFrame({"A": [0, 1, 5]}, index=Index(bidx))
         tm.assert_frame_equal(result, expected)
 
-        df = self.df.copy()
+        df = df.copy()
         df.loc["a"] = 20
         bidx2 = Series(list("aabbca"), name="B").astype(dtype)
         assert bidx2.dtype == dtype
@@ -68,9 +78,8 @@ class TestCategoricalIndex:
         df2.loc["d"] = 10
         tm.assert_frame_equal(df2, expected)
 
-    def test_loc_setitem_with_expansion_non_category(self):
+    def test_loc_setitem_with_expansion_non_category(self, df):
         # Setting-with-expansion with a new key "d" that is not among caegories
-        df = self.df
         df.loc["a"] = 20
 
         # Setting a new row on an existing column
@@ -85,7 +94,7 @@ class TestCategoricalIndex:
         )
         tm.assert_frame_equal(df3, expected3)
 
-        # Settig a new row _and_ new column
+        # Setting a new row _and_ new column
         df4 = df.copy()
         df4.loc["d", "C"] = 10
         expected3 = DataFrame(
@@ -97,9 +106,9 @@ class TestCategoricalIndex:
         )
         tm.assert_frame_equal(df4, expected3)
 
-    def test_loc_getitem_scalar_non_category(self):
+    def test_loc_getitem_scalar_non_category(self, df):
         with pytest.raises(KeyError, match="^1$"):
-            self.df.loc[1]
+            df.loc[1]
 
     def test_slicing(self):
         cat = Series(Categorical([1, 2, 3, 4]))
@@ -127,7 +136,6 @@ class TestCategoricalIndex:
         tm.assert_series_equal(result, expected)
 
     def test_slicing_and_getting_ops(self):
-
         # systematically test the slicing operations:
         #  for all slicing ops:
         #   - returning a dataframe
@@ -163,7 +171,7 @@ class TestCategoricalIndex:
         # frame
         res_df = df.iloc[2:4, :]
         tm.assert_frame_equal(res_df, exp_df)
-        assert is_categorical_dtype(res_df["cats"].dtype)
+        assert isinstance(res_df["cats"].dtype, CategoricalDtype)
 
         # row
         res_row = df.iloc[2, :]
@@ -173,7 +181,7 @@ class TestCategoricalIndex:
         # col
         res_col = df.iloc[:, 0]
         tm.assert_series_equal(res_col, exp_col)
-        assert is_categorical_dtype(res_col.dtype)
+        assert isinstance(res_col.dtype, CategoricalDtype)
 
         # single value
         res_val = df.iloc[2, 0]
@@ -183,7 +191,7 @@ class TestCategoricalIndex:
         # frame
         res_df = df.loc["j":"k", :]
         tm.assert_frame_equal(res_df, exp_df)
-        assert is_categorical_dtype(res_df["cats"].dtype)
+        assert isinstance(res_df["cats"].dtype, CategoricalDtype)
 
         # row
         res_row = df.loc["j", :]
@@ -193,7 +201,7 @@ class TestCategoricalIndex:
         # col
         res_col = df.loc[:, "cats"]
         tm.assert_series_equal(res_col, exp_col)
-        assert is_categorical_dtype(res_col.dtype)
+        assert isinstance(res_col.dtype, CategoricalDtype)
 
         # single value
         res_val = df.loc["j", "cats"]
@@ -230,26 +238,25 @@ class TestCategoricalIndex:
 
         res_df = df.iloc[slice(2, 4)]
         tm.assert_frame_equal(res_df, exp_df)
-        assert is_categorical_dtype(res_df["cats"].dtype)
+        assert isinstance(res_df["cats"].dtype, CategoricalDtype)
 
         res_df = df.iloc[[2, 3]]
         tm.assert_frame_equal(res_df, exp_df)
-        assert is_categorical_dtype(res_df["cats"].dtype)
+        assert isinstance(res_df["cats"].dtype, CategoricalDtype)
 
         res_col = df.iloc[:, 0]
         tm.assert_series_equal(res_col, exp_col)
-        assert is_categorical_dtype(res_col.dtype)
+        assert isinstance(res_col.dtype, CategoricalDtype)
 
         res_df = df.iloc[:, slice(0, 2)]
         tm.assert_frame_equal(res_df, df)
-        assert is_categorical_dtype(res_df["cats"].dtype)
+        assert isinstance(res_df["cats"].dtype, CategoricalDtype)
 
         res_df = df.iloc[:, [0, 1]]
         tm.assert_frame_equal(res_df, df)
-        assert is_categorical_dtype(res_df["cats"].dtype)
+        assert isinstance(res_df["cats"].dtype, CategoricalDtype)
 
     def test_slicing_doc_examples(self):
-
         # GH 7918
         cats = Categorical(
             ["a", "b", "b", "b", "c", "c", "c"], categories=["a", "b", "c"]
@@ -269,7 +276,7 @@ class TestCategoricalIndex:
         tm.assert_frame_equal(result, expected)
 
         result = df.iloc[2:4, :].dtypes
-        expected = Series(["category", "int64"], ["cats", "values"])
+        expected = Series(["category", "int64"], ["cats", "values"], dtype=object)
         tm.assert_series_equal(result, expected)
 
         result = df.loc["h":"j", "cats"]
@@ -287,31 +294,31 @@ class TestCategoricalIndex:
         )
         tm.assert_frame_equal(result, expected)
 
-    def test_loc_getitem_listlike_labels(self):
+    def test_loc_getitem_listlike_labels(self, df):
         # list of labels
-        result = self.df.loc[["c", "a"]]
-        expected = self.df.iloc[[4, 0, 1, 5]]
+        result = df.loc[["c", "a"]]
+        expected = df.iloc[[4, 0, 1, 5]]
         tm.assert_frame_equal(result, expected, check_index_type=True)
 
-    def test_loc_getitem_listlike_unused_category(self):
+    def test_loc_getitem_listlike_unused_category(self, df2):
         # GH#37901 a label that is in index.categories but not in index
         # listlike containing an element in the categories but not in the values
         with pytest.raises(KeyError, match=re.escape("['e'] not in index")):
-            self.df2.loc[["a", "b", "e"]]
+            df2.loc[["a", "b", "e"]]
 
-    def test_loc_getitem_label_unused_category(self):
+    def test_loc_getitem_label_unused_category(self, df2):
         # element in the categories but not in the values
         with pytest.raises(KeyError, match=r"^'e'$"):
-            self.df2.loc["e"]
+            df2.loc["e"]
 
-    def test_loc_getitem_non_category(self):
+    def test_loc_getitem_non_category(self, df2):
         # not all labels in the categories
         with pytest.raises(KeyError, match=re.escape("['d'] not in index")):
-            self.df2.loc[["a", "d"]]
+            df2.loc[["a", "d"]]
 
-    def test_loc_setitem_expansion_label_unused_category(self):
+    def test_loc_setitem_expansion_label_unused_category(self, df2):
         # assigning with a label that is in the categories but not in the index
-        df = self.df2.copy()
+        df = df2.copy()
         df.loc["e"] = 20
         result = df.loc[["a", "b", "e"]]
         exp_index = CategoricalIndex(list("aaabbe"), categories=list("cabe"), name="B")
@@ -401,7 +408,11 @@ class TestCategoricalIndex:
 
     def test_ix_categorical_index(self):
         # GH 12531
-        df = DataFrame(np.random.randn(3, 3), index=list("ABC"), columns=list("XYZ"))
+        df = DataFrame(
+            np.random.default_rng(2).standard_normal((3, 3)),
+            index=list("ABC"),
+            columns=list("XYZ"),
+        )
         cdf = df.copy()
         cdf.index = CategoricalIndex(df.index)
         cdf.columns = CategoricalIndex(df.columns)
@@ -420,47 +431,54 @@ class TestCategoricalIndex:
         expect = DataFrame(df.loc[:, ["X", "Y"]], index=cdf.index, columns=exp_columns)
         tm.assert_frame_equal(cdf.loc[:, ["X", "Y"]], expect)
 
-    def test_ix_categorical_index_non_unique(self):
-
+    @pytest.mark.parametrize(
+        "infer_string", [False, pytest.param(True, marks=td.skip_if_no("pyarrow"))]
+    )
+    def test_ix_categorical_index_non_unique(self, infer_string):
         # non-unique
-        df = DataFrame(np.random.randn(3, 3), index=list("ABA"), columns=list("XYX"))
-        cdf = df.copy()
-        cdf.index = CategoricalIndex(df.index)
-        cdf.columns = CategoricalIndex(df.columns)
+        with option_context("future.infer_string", infer_string):
+            df = DataFrame(
+                np.random.default_rng(2).standard_normal((3, 3)),
+                index=list("ABA"),
+                columns=list("XYX"),
+            )
+            cdf = df.copy()
+            cdf.index = CategoricalIndex(df.index)
+            cdf.columns = CategoricalIndex(df.columns)
 
-        exp_index = CategoricalIndex(list("AA"), categories=["A", "B"])
-        expect = DataFrame(df.loc["A", :], columns=cdf.columns, index=exp_index)
-        tm.assert_frame_equal(cdf.loc["A", :], expect)
+            exp_index = CategoricalIndex(list("AA"), categories=["A", "B"])
+            expect = DataFrame(df.loc["A", :], columns=cdf.columns, index=exp_index)
+            tm.assert_frame_equal(cdf.loc["A", :], expect)
 
-        exp_columns = CategoricalIndex(list("XX"), categories=["X", "Y"])
-        expect = DataFrame(df.loc[:, "X"], index=cdf.index, columns=exp_columns)
-        tm.assert_frame_equal(cdf.loc[:, "X"], expect)
+            exp_columns = CategoricalIndex(list("XX"), categories=["X", "Y"])
+            expect = DataFrame(df.loc[:, "X"], index=cdf.index, columns=exp_columns)
+            tm.assert_frame_equal(cdf.loc[:, "X"], expect)
 
-        expect = DataFrame(
-            df.loc[["A", "B"], :],
-            columns=cdf.columns,
-            index=CategoricalIndex(list("AAB")),
-        )
-        tm.assert_frame_equal(cdf.loc[["A", "B"], :], expect)
+            expect = DataFrame(
+                df.loc[["A", "B"], :],
+                columns=cdf.columns,
+                index=CategoricalIndex(list("AAB")),
+            )
+            tm.assert_frame_equal(cdf.loc[["A", "B"], :], expect)
 
-        expect = DataFrame(
-            df.loc[:, ["X", "Y"]],
-            index=cdf.index,
-            columns=CategoricalIndex(list("XXY")),
-        )
-        tm.assert_frame_equal(cdf.loc[:, ["X", "Y"]], expect)
+            expect = DataFrame(
+                df.loc[:, ["X", "Y"]],
+                index=cdf.index,
+                columns=CategoricalIndex(list("XXY")),
+            )
+            tm.assert_frame_equal(cdf.loc[:, ["X", "Y"]], expect)
 
-    def test_loc_slice(self):
+    def test_loc_slice(self, df):
         # GH9748
         msg = (
             "cannot do slice indexing on CategoricalIndex with these "
             r"indexers \[1\] of type int"
         )
         with pytest.raises(TypeError, match=msg):
-            self.df.loc[1:5]
+            df.loc[1:5]
 
-        result = self.df.loc["b":"c"]
-        expected = self.df.iloc[[2, 3, 4]]
+        result = df.loc["b":"c"]
+        expected = df.iloc[[2, 3, 4]]
         tm.assert_frame_equal(result, expected)
 
     def test_loc_and_at_with_categorical_index(self):
@@ -485,9 +503,9 @@ class TestCategoricalIndex:
             [1.5, 2.5, 3.5],
             [-1.5, -2.5, -3.5],
             # numpy int/uint
-            *[np.array([1, 2, 3], dtype=dtype) for dtype in tm.ALL_INT_DTYPES],
+            *(np.array([1, 2, 3], dtype=dtype) for dtype in tm.ALL_INT_NUMPY_DTYPES),
             # numpy floats
-            *[np.array([1.5, 2.5, 3.5], dtype=dtyp) for dtyp in tm.FLOAT_DTYPES],
+            *(np.array([1.5, 2.5, 3.5], dtype=dtyp) for dtyp in tm.FLOAT_NUMPY_DTYPES),
             # numpy object
             np.array([1, "b", 3.5], dtype=object),
             # pandas scalars
@@ -495,7 +513,7 @@ class TestCategoricalIndex:
             [Timestamp(2019, 1, 1), Timestamp(2019, 2, 1), Timestamp(2019, 3, 1)],
             [Timedelta(1, "d"), Timedelta(2, "d"), Timedelta(3, "D")],
             # pandas Integer arrays
-            *[pd.array([1, 2, 3], dtype=dtype) for dtype in tm.ALL_EA_INT_DTYPES],
+            *(pd.array([1, 2, 3], dtype=dtype) for dtype in tm.ALL_INT_EA_DTYPES),
             # other pandas arrays
             pd.IntervalIndex.from_breaks([1, 4, 6, 9]).array,
             pd.date_range("2019-01-01", periods=3).array,

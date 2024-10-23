@@ -5,26 +5,33 @@ Based on code from Jack Cushman (github.com/jcushman/xport).
 
 The file format is defined here:
 
-https://support.sas.com/techsup/technote/ts140.pdf
+https://support.sas.com/content/dam/SAS/support/en/technical-papers/record-layout-of-a-sas-version-5-or-6-data-set-in-sas-transport-xport-format.pdf
 """
+from __future__ import annotations
+
 from collections import abc
 from datetime import datetime
 import struct
-from typing import (
-    IO,
-    cast,
-)
+from typing import TYPE_CHECKING
 import warnings
 
 import numpy as np
 
 from pandas.util._decorators import Appender
+from pandas.util._exceptions import find_stack_level
 
 import pandas as pd
 
 from pandas.io.common import get_handle
 from pandas.io.sas.sasreader import ReaderBase
 
+if TYPE_CHECKING:
+    from pandas._typing import (
+        CompressionOptions,
+        DatetimeNaTType,
+        FilePath,
+        ReadBuffer,
+    )
 _correct_line1 = (
     "HEADER RECORD*******LIBRARY HEADER RECORD!!!!!!!"
     "000000000000000000000000000000  "
@@ -137,7 +144,7 @@ A DataFrame.
 """
 
 
-def _parse_date(datestr: str) -> datetime:
+def _parse_date(datestr: str) -> DatetimeNaTType:
     """Given a date in xport format, return Python date."""
     try:
         # e.g. "16FEB11:10:07:55"
@@ -248,18 +255,26 @@ class XportReader(ReaderBase, abc.Iterator):
     __doc__ = _xport_reader_doc
 
     def __init__(
-        self, filepath_or_buffer, index=None, encoding="ISO-8859-1", chunksize=None
-    ):
-
+        self,
+        filepath_or_buffer: FilePath | ReadBuffer[bytes],
+        index=None,
+        encoding: str | None = "ISO-8859-1",
+        chunksize: int | None = None,
+        compression: CompressionOptions = "infer",
+    ) -> None:
         self._encoding = encoding
         self._lines_read = 0
         self._index = index
         self._chunksize = chunksize
 
         self.handles = get_handle(
-            filepath_or_buffer, "rb", encoding=encoding, is_text=False
+            filepath_or_buffer,
+            "rb",
+            encoding=encoding,
+            is_text=False,
+            compression=compression,
         )
-        self.filepath_or_buffer = cast(IO[bytes], self.handles.handle)
+        self.filepath_or_buffer = self.handles.handle
 
         try:
             self._read_header()
@@ -267,18 +282,24 @@ class XportReader(ReaderBase, abc.Iterator):
             self.close()
             raise
 
-    def close(self):
+    def close(self) -> None:
         self.handles.close()
 
     def _get_row(self):
         return self.filepath_or_buffer.read(80).decode()
 
-    def _read_header(self):
+    def _read_header(self) -> None:
         self.filepath_or_buffer.seek(0)
 
         # read file header
         line1 = self._get_row()
         if line1 != _correct_line1:
+            if "**COMPRESSED**" in line1:
+                # this was created with the PROC CPORT method and can't be read
+                # https://documentation.sas.com/doc/en/pgmsascdc/9.4_3.5/movefile/p1bm6aqp3fw4uin1hucwh718f6kp.htm
+                raise ValueError(
+                    "Header record indicates a CPORT file, which is not readable."
+                )
             raise ValueError("Header record is not an XPORT file.")
 
         line2 = self._get_row()
@@ -377,7 +398,7 @@ class XportReader(ReaderBase, abc.Iterator):
         dtype = np.dtype(dtypel)
         self._dtype = dtype
 
-    def __next__(self):
+    def __next__(self) -> pd.DataFrame:
         return self.read(nrows=self._chunksize or 1)
 
     def _record_count(self) -> int:
@@ -393,7 +414,10 @@ class XportReader(ReaderBase, abc.Iterator):
         total_records_length = self.filepath_or_buffer.tell() - self.record_start
 
         if total_records_length % 80 != 0:
-            warnings.warn("xport file may be corrupted")
+            warnings.warn(
+                "xport file may be corrupted.",
+                stacklevel=find_stack_level(),
+            )
 
         if self.record_length > 80:
             self.filepath_or_buffer.seek(self.record_start)
@@ -415,7 +439,7 @@ class XportReader(ReaderBase, abc.Iterator):
 
         return (total_records_length - tail_pad) // self.record_length
 
-    def get_chunk(self, size=None):
+    def get_chunk(self, size: int | None = None) -> pd.DataFrame:
         """
         Reads lines from Xport file and returns as dataframe
 
@@ -444,8 +468,7 @@ class XportReader(ReaderBase, abc.Iterator):
         return miss
 
     @Appender(_read_method_doc)
-    def read(self, nrows=None):
-
+    def read(self, nrows: int | None = None) -> pd.DataFrame:
         if nrows is None:
             nrows = self.nobs
 
@@ -457,7 +480,7 @@ class XportReader(ReaderBase, abc.Iterator):
         raw = self.filepath_or_buffer.read(read_len)
         data = np.frombuffer(raw, dtype=self._dtype, count=read_lines)
 
-        df = pd.DataFrame(index=range(read_lines))
+        df_data = {}
         for j, x in enumerate(self.columns):
             vec = data["s" + str(j)]
             ntype = self.fields[j]["ntype"]
@@ -472,7 +495,8 @@ class XportReader(ReaderBase, abc.Iterator):
                 if self._encoding is not None:
                     v = [y.decode(self._encoding) for y in v]
 
-            df[x] = v
+            df_data.update({x: v})
+        df = pd.DataFrame(df_data)
 
         if self._index is None:
             df.index = pd.Index(range(self._lines_read, self._lines_read + read_lines))

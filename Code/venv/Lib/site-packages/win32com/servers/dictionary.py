@@ -27,10 +27,9 @@ The object responds to the _NewEnum method by returning an enumerator over
 the dictionary's keys. This allows for the following type of VB code:
 
     for each name in ob
-        debug.print name, ob(name)
+        debug.print(name, ob(name))
     next
 """
-
 
 import pythoncom
 import pywintypes
@@ -75,7 +74,7 @@ class DictionaryPolicy(policy.BasicWrapPolicy):
                 )
 
             key = args[0]
-            if type(key) not in [str, str]:
+            if not isinstance(key, str):
                 ### the nArgErr thing should be 0-based, not reversed... sigh
                 raise COMException(
                     desc="Key must be a string", scode=winerror.DISP_E_TYPEMISMATCH

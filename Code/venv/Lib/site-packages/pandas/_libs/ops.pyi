@@ -1,25 +1,29 @@
 from typing import (
     Any,
     Callable,
+    Iterable,
     Literal,
+    TypeAlias,
     overload,
 )
 
 import numpy as np
 
-_BinOp = Callable[[Any, Any], Any]
-_BoolOp = Callable[[Any, Any], bool]
+from pandas._typing import npt
+
+_BinOp: TypeAlias = Callable[[Any, Any], Any]
+_BoolOp: TypeAlias = Callable[[Any, Any], bool]
 
 def scalar_compare(
     values: np.ndarray,  # object[:]
     val: object,
     op: _BoolOp,  # {operator.eq, operator.ne, ...}
-) -> np.ndarray: ...  # np.ndarray[bool]
+) -> npt.NDArray[np.bool_]: ...
 def vec_compare(
-    left: np.ndarray,  # np.ndarray[object]
-    right: np.ndarray,  # np.ndarray[object]
+    left: npt.NDArray[np.object_],
+    right: npt.NDArray[np.object_],
     op: _BoolOp,  # {operator.eq, operator.ne, ...}
-) -> np.ndarray: ...  # np.ndarray[bool]
+) -> npt.NDArray[np.bool_]: ...
 def scalar_binop(
     values: np.ndarray,  # object[:]
     val: object,
@@ -32,16 +36,16 @@ def vec_binop(
 ) -> np.ndarray: ...
 @overload
 def maybe_convert_bool(
-    arr: np.ndarray,  # np.ndarray[object]
-    true_values=...,
-    false_values=...,
+    arr: npt.NDArray[np.object_],
+    true_values: Iterable | None = None,
+    false_values: Iterable | None = None,
     convert_to_masked_nullable: Literal[False] = ...,
 ) -> tuple[np.ndarray, None]: ...
 @overload
 def maybe_convert_bool(
-    arr: np.ndarray,  # np.ndarray[object]
-    true_values=...,
-    false_values=...,
+    arr: npt.NDArray[np.object_],
+    true_values: Iterable = ...,
+    false_values: Iterable = ...,
     *,
     convert_to_masked_nullable: Literal[True],
 ) -> tuple[np.ndarray, np.ndarray]: ...

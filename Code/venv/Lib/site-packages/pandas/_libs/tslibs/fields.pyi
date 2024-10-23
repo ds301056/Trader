@@ -1,35 +1,47 @@
 import numpy as np
 
+from pandas._typing import npt
+
 def build_field_sarray(
-    dtindex: np.ndarray,  # const int64_t[:]
+    dtindex: npt.NDArray[np.int64],  # const int64_t[:]
+    reso: int,  # NPY_DATETIMEUNIT
 ) -> np.ndarray: ...
 def month_position_check(fields, weekdays) -> str | None: ...
 def get_date_name_field(
-    dtindex: np.ndarray,  # const int64_t[:]
+    dtindex: npt.NDArray[np.int64],  # const int64_t[:]
     field: str,
-    locale=...,
-) -> np.ndarray: ...  # np.ndarray[object]
+    locale: str | None = ...,
+    reso: int = ...,  # NPY_DATETIMEUNIT
+) -> npt.NDArray[np.object_]: ...
 def get_start_end_field(
-    dtindex: np.ndarray,  # const int64_t[:]
+    dtindex: npt.NDArray[np.int64],
     field: str,
     freqstr: str | None = ...,
     month_kw: int = ...,
-) -> np.ndarray: ...  # np.ndarray[bool]
+    reso: int = ...,  # NPY_DATETIMEUNIT
+) -> npt.NDArray[np.bool_]: ...
 def get_date_field(
-    dtindex: np.ndarray,  # const int64_t[:]
+    dtindex: npt.NDArray[np.int64],  # const int64_t[:]
     field: str,
-) -> np.ndarray: ...  # np.ndarray[in32]
+    reso: int = ...,  # NPY_DATETIMEUNIT
+) -> npt.NDArray[np.int32]: ...
 def get_timedelta_field(
-    tdindex: np.ndarray,  # const int64_t[:]
+    tdindex: npt.NDArray[np.int64],  # const int64_t[:]
     field: str,
-) -> np.ndarray: ...  # np.ndarray[int32]
+    reso: int = ...,  # NPY_DATETIMEUNIT
+) -> npt.NDArray[np.int32]: ...
+def get_timedelta_days(
+    tdindex: npt.NDArray[np.int64],  # const int64_t[:]
+    reso: int = ...,  # NPY_DATETIMEUNIT
+) -> npt.NDArray[np.int64]: ...
 def isleapyear_arr(
     years: np.ndarray,
-) -> np.ndarray: ...  # np.ndarray[bool]
+) -> npt.NDArray[np.bool_]: ...
 def build_isocalendar_sarray(
-    dtindex: np.ndarray,  # const int64_t[:]
+    dtindex: npt.NDArray[np.int64],  # const int64_t[:]
+    reso: int,  # NPY_DATETIMEUNIT
 ) -> np.ndarray: ...
-def get_locale_names(name_type: str, locale: object = None): ...
+def _get_locale_names(name_type: str, locale: str | None = ...): ...
 
 class RoundTo:
     @property
@@ -44,7 +56,7 @@ class RoundTo:
     def NEAREST_HALF_MINUS_INFTY(self) -> int: ...
 
 def round_nsint64(
-    values: np.ndarray,  # np.ndarray[np.int64]
+    values: npt.NDArray[np.int64],
     mode: RoundTo,
     nanos: int,
-) -> np.ndarray: ...  # np.ndarray[np.int64]
+) -> npt.NDArray[np.int64]: ...

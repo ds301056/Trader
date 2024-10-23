@@ -1,13 +1,15 @@
+from datetime import timedelta
 from typing import Literal
 
 import numpy as np
 
+from pandas._libs.tslibs.dtypes import PeriodDtypeBase
 from pandas._libs.tslibs.nattype import NaTType
 from pandas._libs.tslibs.offsets import BaseOffset
 from pandas._libs.tslibs.timestamps import Timestamp
 from pandas._typing import (
     Frequency,
-    Timezone,
+    npt,
 )
 
 INVALID_FREQ_ERR_MSG: str
@@ -16,31 +18,37 @@ DIFFERENT_FREQ: str
 class IncompatibleFrequency(ValueError): ...
 
 def periodarr_to_dt64arr(
-    periodarr: np.ndarray,  # const int64_t[:]
+    periodarr: npt.NDArray[np.int64],  # const int64_t[:]
     freq: int,
-) -> np.ndarray: ...  # np.ndarray[np.int64]
+) -> npt.NDArray[np.int64]: ...
 def period_asfreq_arr(
-    arr: np.ndarray,  # ndarray[int64_t] arr,
+    arr: npt.NDArray[np.int64],
     freq1: int,
     freq2: int,
     end: bool,
-) -> np.ndarray: ...  # np.ndarray[np.int64]
+) -> npt.NDArray[np.int64]: ...
 def get_period_field_arr(
     field: str,
-    arr: np.ndarray,  # const int64_t[:]
+    arr: npt.NDArray[np.int64],  # const int64_t[:]
     freq: int,
-) -> np.ndarray: ...  # np.ndarray[np.int64]
+) -> npt.NDArray[np.int64]: ...
 def from_ordinals(
-    values: np.ndarray,  # const int64_t[:]
-    freq: Frequency,
-) -> np.ndarray: ...  # np.ndarray[np.int64]
+    values: npt.NDArray[np.int64],  # const int64_t[:]
+    freq: timedelta | BaseOffset | str,
+) -> npt.NDArray[np.int64]: ...
 def extract_ordinals(
-    values: np.ndarray,  # np.ndarray[object]
+    values: npt.NDArray[np.object_],
     freq: Frequency | int,
-) -> np.ndarray: ...  # np.ndarray[np.int64]
+) -> npt.NDArray[np.int64]: ...
 def extract_freq(
-    values: np.ndarray,  # np.ndarray[object]
+    values: npt.NDArray[np.object_],
 ) -> BaseOffset: ...
+def period_array_strftime(
+    values: npt.NDArray[np.int64],
+    dtype_code: int,
+    na_rep,
+    date_format: str | None,
+) -> npt.NDArray[np.object_]: ...
 
 # exposed for tests
 def period_asfreq(ordinal: int, freq1: int, freq2: int, end: bool) -> int: ...
@@ -50,38 +58,45 @@ def period_ordinal(
 def freq_to_dtype_code(freq: BaseOffset) -> int: ...
 def validate_end_alias(how: str) -> Literal["E", "S"]: ...
 
-class Period:
+class PeriodMixin:
+    @property
+    def end_time(self) -> Timestamp: ...
+    @property
+    def start_time(self) -> Timestamp: ...
+    def _require_matching_freq(self, other: BaseOffset, base: bool = ...) -> None: ...
+
+class Period(PeriodMixin):
     ordinal: int  # int64_t
     freq: BaseOffset
+    _dtype: PeriodDtypeBase
 
     # error: "__new__" must return a class instance (got "Union[Period, NaTType]")
     def __new__(  # type: ignore[misc]
         cls,
-        value=None,
-        freq=None,
-        ordinal=None,
-        year=None,
-        month=None,
-        quarter=None,
-        day=None,
-        hour=None,
-        minute=None,
-        second=None,
+        value=...,
+        freq: int | str | BaseOffset | None = ...,
+        ordinal: int | None = ...,
+        year: int | None = ...,
+        month: int | None = ...,
+        quarter: int | None = ...,
+        day: int | None = ...,
+        hour: int | None = ...,
+        minute: int | None = ...,
+        second: int | None = ...,
     ) -> Period | NaTType: ...
     @classmethod
     def _maybe_convert_freq(cls, freq) -> BaseOffset: ...
     @classmethod
-    def _from_ordinal(cls, ordinal: int, freq) -> Period: ...
+    def _from_ordinal(cls, ordinal: int, freq: BaseOffset) -> Period: ...
     @classmethod
-    def now(cls, freq=...) -> Period: ...
-    def strftime(self, fmt: str) -> str: ...
+    def now(cls, freq: Frequency) -> Period: ...
+    def strftime(self, fmt: str | None) -> str: ...
     def to_timestamp(
         self,
         freq: str | BaseOffset | None = ...,
         how: str = ...,
-        tz: Timezone | None = ...,
     ) -> Timestamp: ...
-    def asfreq(self, freq, how=...) -> Period: ...
+    def asfreq(self, freq: str | BaseOffset, how: str = ...) -> Period: ...
     @property
     def freqstr(self) -> str: ...
     @property
@@ -116,9 +131,5 @@ class Period:
     def month(self) -> int: ...
     @property
     def year(self) -> int: ...
-    @property
-    def end_time(self) -> Timestamp: ...
-    @property
-    def start_time(self) -> Timestamp: ...
     def __sub__(self, other) -> Period | BaseOffset: ...
     def __add__(self, other) -> Period: ...

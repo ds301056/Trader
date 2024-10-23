@@ -1,3 +1,5 @@
+import re
+
 import numpy as np
 import pytest
 
@@ -9,14 +11,19 @@ from pandas import (
 import pandas._testing as tm
 
 
+@pytest.fixture
+def left():
+    return DataFrame({"key": ["a", "c", "e"], "lvalue": [1, 2.0, 3]})
+
+
+@pytest.fixture
+def right():
+    return DataFrame({"key": ["b", "c", "d", "f"], "rvalue": [1, 2, 3.0, 4]})
+
+
 class TestMergeOrdered:
-    def setup_method(self, method):
-        self.left = DataFrame({"key": ["a", "c", "e"], "lvalue": [1, 2.0, 3]})
-
-        self.right = DataFrame({"key": ["b", "c", "d", "f"], "rvalue": [1, 2, 3.0, 4]})
-
-    def test_basic(self):
-        result = merge_ordered(self.left, self.right, on="key")
+    def test_basic(self, left, right):
+        result = merge_ordered(left, right, on="key")
         expected = DataFrame(
             {
                 "key": ["a", "b", "c", "d", "e", "f"],
@@ -27,8 +34,8 @@ class TestMergeOrdered:
 
         tm.assert_frame_equal(result, expected)
 
-    def test_ffill(self):
-        result = merge_ordered(self.left, self.right, on="key", fill_method="ffill")
+    def test_ffill(self, left, right):
+        result = merge_ordered(left, right, on="key", fill_method="ffill")
         expected = DataFrame(
             {
                 "key": ["a", "b", "c", "d", "e", "f"],
@@ -38,13 +45,13 @@ class TestMergeOrdered:
         )
         tm.assert_frame_equal(result, expected)
 
-    def test_multigroup(self):
-        left = pd.concat([self.left, self.left], ignore_index=True)
+    def test_multigroup(self, left, right):
+        left = pd.concat([left, left], ignore_index=True)
 
         left["group"] = ["a"] * 3 + ["b"] * 3
 
         result = merge_ordered(
-            left, self.right, on="key", left_by="group", fill_method="ffill"
+            left, right, on="key", left_by="group", fill_method="ffill"
         )
         expected = DataFrame(
             {
@@ -58,42 +65,47 @@ class TestMergeOrdered:
         tm.assert_frame_equal(result, expected.loc[:, result.columns])
 
         result2 = merge_ordered(
-            self.right, left, on="key", right_by="group", fill_method="ffill"
+            right, left, on="key", right_by="group", fill_method="ffill"
         )
         tm.assert_frame_equal(result, result2.loc[:, result.columns])
 
-        result = merge_ordered(left, self.right, on="key", left_by="group")
+        result = merge_ordered(left, right, on="key", left_by="group")
         assert result["group"].notna().all()
 
-    def test_merge_type(self):
+    @pytest.mark.filterwarnings(
+        "ignore:Passing a BlockManager|Passing a SingleBlockManager:DeprecationWarning"
+    )
+    def test_merge_type(self, left, right):
         class NotADataFrame(DataFrame):
             @property
             def _constructor(self):
                 return NotADataFrame
 
-        nad = NotADataFrame(self.left)
-        result = nad.merge(self.right, on="key")
+        nad = NotADataFrame(left)
+        result = nad.merge(right, on="key")
 
         assert isinstance(result, NotADataFrame)
 
-    def test_empty_sequence_concat(self):
+    @pytest.mark.parametrize(
+        "df_seq, pattern",
+        [
+            ((), "[Nn]o objects"),
+            ([], "[Nn]o objects"),
+            ({}, "[Nn]o objects"),
+            ([None], "objects.*None"),
+            ([None, None], "objects.*None"),
+        ],
+    )
+    def test_empty_sequence_concat(self, df_seq, pattern):
         # GH 9157
-        empty_pat = "[Nn]o objects"
-        none_pat = "objects.*None"
-        test_cases = [
-            ((), empty_pat),
-            ([], empty_pat),
-            ({}, empty_pat),
-            ([None], none_pat),
-            ([None, None], none_pat),
-        ]
-        for df_seq, pattern in test_cases:
-            with pytest.raises(ValueError, match=pattern):
-                pd.concat(df_seq)
+        with pytest.raises(ValueError, match=pattern):
+            pd.concat(df_seq)
 
-        pd.concat([DataFrame()])
-        pd.concat([None, DataFrame()])
-        pd.concat([DataFrame(), None])
+    @pytest.mark.parametrize(
+        "arg", [[DataFrame()], [None, DataFrame()], [DataFrame(), None]]
+    )
+    def test_empty_sequence_concat_ok(self, arg):
+        pd.concat(arg)
 
     def test_doc_example(self):
         left = DataFrame(
@@ -199,3 +211,34 @@ class TestMergeOrdered:
         msg = r"\{'h'\} not found in left columns"
         with pytest.raises(KeyError, match=msg):
             merge_ordered(left, right, on="E", left_by=["G", "h"])
+
+    @pytest.mark.parametrize("invalid_method", ["linear", "carrot"])
+    def test_ffill_validate_fill_method(self, left, right, invalid_method):
+        # GH 55884
+        with pytest.raises(
+            ValueError, match=re.escape("fill_method must be 'ffill' or None")
+        ):
+            merge_ordered(left, right, on="key", fill_method=invalid_method)
+
+    def test_ffill_left_merge(self):
+        # GH 57010
+        df1 = DataFrame(
+            {
+                "key": ["a", "c", "e", "a", "c", "e"],
+                "lvalue": [1, 2, 3, 1, 2, 3],
+                "group": ["a", "a", "a", "b", "b", "b"],
+            }
+        )
+        df2 = DataFrame({"key": ["b", "c", "d"], "rvalue": [1, 2, 3]})
+        result = merge_ordered(
+            df1, df2, fill_method="ffill", left_by="group", how="left"
+        )
+        expected = DataFrame(
+            {
+                "key": ["a", "c", "e", "a", "c", "e"],
+                "lvalue": [1, 2, 3, 1, 2, 3],
+                "group": ["a", "a", "a", "b", "b", "b"],
+                "rvalue": [np.nan, 2.0, 2.0, np.nan, 2.0, 2.0],
+            }
+        )
+        tm.assert_frame_equal(result, expected)

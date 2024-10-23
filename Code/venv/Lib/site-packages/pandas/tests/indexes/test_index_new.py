@@ -1,12 +1,17 @@
 """
 Tests for the Index constructor conducting inference.
 """
+from datetime import (
+    datetime,
+    timedelta,
+    timezone,
+)
 from decimal import Decimal
 
 import numpy as np
 import pytest
 
-from pandas.core.dtypes.common import is_unsigned_integer_dtype
+from pandas._libs.tslibs.timezones import maybe_get_tz
 
 from pandas import (
     NA,
@@ -14,7 +19,6 @@ from pandas import (
     CategoricalIndex,
     DatetimeIndex,
     Index,
-    Int64Index,
     IntervalIndex,
     MultiIndex,
     NaT,
@@ -22,7 +26,7 @@ from pandas import (
     Series,
     TimedeltaIndex,
     Timestamp,
-    UInt64Index,
+    array,
     date_range,
     period_range,
     timedelta_range,
@@ -31,6 +35,42 @@ import pandas._testing as tm
 
 
 class TestIndexConstructorInference:
+    def test_object_all_bools(self):
+        # GH#49594 match Series behavior on ndarray[object] of all bools
+        arr = np.array([True, False], dtype=object)
+        res = Index(arr)
+        assert res.dtype == object
+
+        # since the point is matching Series behavior, let's double check
+        assert Series(arr).dtype == object
+
+    def test_object_all_complex(self):
+        # GH#49594 match Series behavior on ndarray[object] of all complex
+        arr = np.array([complex(1), complex(2)], dtype=object)
+        res = Index(arr)
+        assert res.dtype == object
+
+        # since the point is matching Series behavior, let's double check
+        assert Series(arr).dtype == object
+
+    @pytest.mark.parametrize("val", [NaT, None, np.nan, float("nan")])
+    def test_infer_nat(self, val):
+        # GH#49340 all NaT/None/nan and at least 1 NaT -> datetime64[ns],
+        #  matching Series behavior
+        values = [NaT, val]
+
+        idx = Index(values)
+        assert idx.dtype == "datetime64[ns]" and idx.isna().all()
+
+        idx = Index(values[::-1])
+        assert idx.dtype == "datetime64[ns]" and idx.isna().all()
+
+        idx = Index(np.array(values, dtype=object))
+        assert idx.dtype == "datetime64[ns]" and idx.isna().all()
+
+        idx = Index(np.array(values, dtype=object)[::-1])
+        assert idx.dtype == "datetime64[ns]" and idx.isna().all()
+
     @pytest.mark.parametrize("na_value", [None, np.nan])
     @pytest.mark.parametrize("vtype", [list, tuple, iter])
     def test_construction_list_tuples_nan(self, na_value, vtype):
@@ -46,12 +86,7 @@ class TestIndexConstructorInference:
     )
     def test_constructor_int_dtype_float(self, dtype):
         # GH#18400
-        if is_unsigned_integer_dtype(dtype):
-            index_type = UInt64Index
-        else:
-            index_type = Int64Index
-
-        expected = index_type([0, 1, 2, 3])
+        expected = Index([0, 1, 2, 3], dtype=dtype)
         result = Index([0.0, 1.0, 2.0, 3.0], dtype=dtype)
         tm.assert_index_equal(result, expected)
 
@@ -66,7 +101,7 @@ class TestIndexConstructorInference:
             index = Index(vals)
 
         assert type(index) is Index
-        assert index.dtype == object
+        assert index.dtype == bool
 
     def test_constructor_categorical_to_object(self):
         # GH#32167 Categorical data and dtype=object should return object-dtype
@@ -100,7 +135,10 @@ class TestIndexConstructorInference:
     ):
         if isinstance(nulls_fixture, Decimal):
             # We dont cast these to datetime64/timedelta64
-            return
+            pytest.skip(
+                f"We don't cast {type(nulls_fixture).__name__} to "
+                "datetime64/timedelta64"
+            )
 
         expected = klass([NaT, NaT])
         assert expected.dtype == dtype
@@ -111,7 +149,7 @@ class TestIndexConstructorInference:
         if nulls_fixture is NA:
             expected = Index([NA, NaT])
             mark = pytest.mark.xfail(reason="Broken with np.NaT ctor; see GH 31884")
-            request.node.add_marker(mark)
+            request.applymarker(mark)
             # GH#35942 numpy will emit a DeprecationWarning within the
             #  assert_index_equal calls.  Since we can't do anything
             #  about it until GH#31884 is fixed, we suppress that warning.
@@ -148,9 +186,25 @@ class TestIndexConstructorInference:
         tm.assert_index_equal(Index(data), expected)
         tm.assert_index_equal(Index(np.array(data, dtype=object)), expected)
 
+    def test_constructor_datetimes_mixed_tzs(self):
+        # https://github.com/pandas-dev/pandas/pull/55793/files#r1383719998
+        tz = maybe_get_tz("US/Central")
+        dt1 = datetime(2020, 1, 1, tzinfo=tz)
+        dt2 = datetime(2020, 1, 1, tzinfo=timezone.utc)
+        result = Index([dt1, dt2])
+        expected = Index([dt1, dt2], dtype=object)
+        tm.assert_index_equal(result, expected)
+
 
 class TestDtypeEnforced:
     # check we don't silently ignore the dtype keyword
+
+    def test_constructor_object_dtype_with_ea_data(self, any_numeric_ea_dtype):
+        # GH#45206
+        arr = array([0], dtype=any_numeric_ea_dtype)
+
+        idx = Index(arr, dtype=object)
+        assert idx.dtype == object
 
     @pytest.mark.parametrize("dtype", [object, "float64", "uint64", "category"])
     def test_constructor_range_values_mismatched_dtype(self, dtype):
@@ -222,6 +276,109 @@ class TestDtypeEnforced:
         expected = dti.to_period("D")
         tm.assert_index_equal(result, expected)
 
+    @pytest.mark.parametrize("dtype", ["int64", "uint64"])
+    def test_constructor_int_dtype_nan_raises(self, dtype):
+        # see GH#15187
+        data = [np.nan]
+        msg = "cannot convert"
+        with pytest.raises(ValueError, match=msg):
+            Index(data, dtype=dtype)
+
+    @pytest.mark.parametrize(
+        "vals",
+        [
+            [1, 2, 3],
+            np.array([1, 2, 3]),
+            np.array([1, 2, 3], dtype=int),
+            # below should coerce
+            [1.0, 2.0, 3.0],
+            np.array([1.0, 2.0, 3.0], dtype=float),
+        ],
+    )
+    def test_constructor_dtypes_to_int(self, vals, any_int_numpy_dtype):
+        dtype = any_int_numpy_dtype
+        index = Index(vals, dtype=dtype)
+        assert index.dtype == dtype
+
+    @pytest.mark.parametrize(
+        "vals",
+        [
+            [1, 2, 3],
+            [1.0, 2.0, 3.0],
+            np.array([1.0, 2.0, 3.0]),
+            np.array([1, 2, 3], dtype=int),
+            np.array([1.0, 2.0, 3.0], dtype=float),
+        ],
+    )
+    def test_constructor_dtypes_to_float(self, vals, float_numpy_dtype):
+        dtype = float_numpy_dtype
+        index = Index(vals, dtype=dtype)
+        assert index.dtype == dtype
+
+    @pytest.mark.parametrize(
+        "vals",
+        [
+            [1, 2, 3],
+            np.array([1, 2, 3], dtype=int),
+            np.array(["2011-01-01", "2011-01-02"], dtype="datetime64[ns]"),
+            [datetime(2011, 1, 1), datetime(2011, 1, 2)],
+        ],
+    )
+    def test_constructor_dtypes_to_categorical(self, vals):
+        index = Index(vals, dtype="category")
+        assert isinstance(index, CategoricalIndex)
+
+    @pytest.mark.parametrize("cast_index", [True, False])
+    @pytest.mark.parametrize(
+        "vals",
+        [
+            Index(np.array([np.datetime64("2011-01-01"), np.datetime64("2011-01-02")])),
+            Index([datetime(2011, 1, 1), datetime(2011, 1, 2)]),
+        ],
+    )
+    def test_constructor_dtypes_to_datetime(self, cast_index, vals):
+        if cast_index:
+            index = Index(vals, dtype=object)
+            assert isinstance(index, Index)
+            assert index.dtype == object
+        else:
+            index = Index(vals)
+            assert isinstance(index, DatetimeIndex)
+
+    @pytest.mark.parametrize("cast_index", [True, False])
+    @pytest.mark.parametrize(
+        "vals",
+        [
+            np.array([np.timedelta64(1, "D"), np.timedelta64(1, "D")]),
+            [timedelta(1), timedelta(1)],
+        ],
+    )
+    def test_constructor_dtypes_to_timedelta(self, cast_index, vals):
+        if cast_index:
+            index = Index(vals, dtype=object)
+            assert isinstance(index, Index)
+            assert index.dtype == object
+        else:
+            index = Index(vals)
+            assert isinstance(index, TimedeltaIndex)
+
+    def test_pass_timedeltaindex_to_index(self):
+        rng = timedelta_range("1 days", "10 days")
+        idx = Index(rng, dtype=object)
+
+        expected = Index(rng.to_pytimedelta(), dtype=object)
+
+        tm.assert_numpy_array_equal(idx.values, expected.values)
+
+    def test_pass_datetimeindex_to_index(self):
+        # GH#1396
+        rng = date_range("1/1/2000", "3/1/2000")
+        idx = Index(rng, dtype=object)
+
+        expected = Index(rng.to_pydatetime(), dtype=object)
+
+        tm.assert_numpy_array_equal(idx.values, expected.values)
+
 
 class TestIndexConstructorUnwrapping:
     # Test passing different arraylike values to pd.Index
@@ -233,3 +390,43 @@ class TestIndexConstructorUnwrapping:
         ser = Series(stamps)
         result = klass(ser)
         tm.assert_index_equal(result, expected)
+
+    def test_constructor_no_pandas_array(self):
+        ser = Series([1, 2, 3])
+        result = Index(ser.array)
+        expected = Index([1, 2, 3])
+        tm.assert_index_equal(result, expected)
+
+    @pytest.mark.parametrize(
+        "array",
+        [
+            np.arange(5),
+            np.array(["a", "b", "c"]),
+            date_range("2000-01-01", periods=3).values,
+        ],
+    )
+    def test_constructor_ndarray_like(self, array):
+        # GH#5460#issuecomment-44474502
+        # it should be possible to convert any object that satisfies the numpy
+        # ndarray interface directly into an Index
+        class ArrayLike:
+            def __init__(self, array) -> None:
+                self.array = array
+
+            def __array__(self, dtype=None, copy=None) -> np.ndarray:
+                return self.array
+
+        expected = Index(array)
+        result = Index(ArrayLike(array))
+        tm.assert_index_equal(result, expected)
+
+
+class TestIndexConstructionErrors:
+    def test_constructor_overflow_int64(self):
+        # see GH#15832
+        msg = (
+            "The elements provided in the data cannot "
+            "all be casted to the dtype int64"
+        )
+        with pytest.raises(OverflowError, match=msg):
+            Index([np.iinfo(np.uint64).max - 1], dtype="int64")

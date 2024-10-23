@@ -1,4 +1,5 @@
 # -*- coding: UTF-8 -*-
+from __future__ import annotations
 
 """
 win32timezone:
@@ -144,7 +145,7 @@ True
 True
 
 This test helps ensure language support for unicode characters
->>> x = TIME_ZONE_INFORMATION(0, u'français')
+>>> x = TIME_ZONE_INFORMATION(0, 'français')
 
 
 Test conversion from one time zone to another at a DST boundary
@@ -231,7 +232,6 @@ Test offsets that occur right at the DST changeover
 datetime.datetime(2011, 11, 6, 1, 0, tzinfo=TimeZoneInfo('Pacific Standard Time'))
 
 """
-__author__ = "Jason R. Coombs <jaraco@jaraco.com>"
 
 import datetime
 import logging
@@ -240,16 +240,19 @@ import re
 import struct
 import winreg
 from itertools import count
+from typing import Dict
 
 import win32api
+
+__author__ = "Jason R. Coombs <jaraco@jaraco.com>"
 
 log = logging.getLogger(__file__)
 
 
 # A couple of objects for working with objects as if they were native C-type
 # structures.
-class _SimpleStruct(object):
-    _fields_ = None  # must be overridden by subclasses
+class _SimpleStruct:
+    _fields_: list[tuple[str, type]] = []  # must be overridden by subclasses
 
     def __init__(self, *args, **kw):
         for i, (name, typ) in enumerate(self._fields_):
@@ -337,7 +340,7 @@ class TimeZoneDefinition(DYNAMIC_TIME_ZONE_INFORMATION):
         c) a byte structure (using _from_bytes)
         """
         try:
-            super(TimeZoneDefinition, self).__init__(*args, **kwargs)
+            super().__init__(*args, **kwargs)
             return
         except (TypeError, ValueError):
             pass
@@ -369,7 +372,7 @@ class TimeZoneDefinition(DYNAMIC_TIME_ZONE_INFORMATION):
         bias, standard_bias, daylight_bias = components[:3]
         standard_start = SYSTEMTIME(*components[3:11])
         daylight_start = SYSTEMTIME(*components[11:19])
-        super(TimeZoneDefinition, self).__init__(
+        super().__init__(
             bias,
             standard_name,
             standard_start,
@@ -393,7 +396,7 @@ class TimeZoneDefinition(DYNAMIC_TIME_ZONE_INFORMATION):
         # ctypes.memmove(ctypes.addressof(self), other, size)
 
     def __getattribute__(self, attr):
-        value = super(TimeZoneDefinition, self).__getattribute__(attr)
+        value = super().__getattribute__(attr)
         if "bias" in attr:
             value = datetime.timedelta(minutes=value)
         return value
@@ -568,7 +571,7 @@ class TimeZoneInfo(datetime.tzinfo):
         """
         try:
             info = key.subkey("Dynamic DST")
-        except WindowsError:
+        except OSError:
             return
         del info["FirstEntry"]
         del info["LastEntry"]
@@ -578,12 +581,12 @@ class TimeZoneInfo(datetime.tzinfo):
         # if the target year is greater or equal.
         self.dynamicInfo = RangeMap(
             zip(years, values),
-            sort_params=dict(reverse=True),
+            sort_params={"reverse": True},
             key_match_comparator=operator.ge,
         )
 
     def __repr__(self):
-        result = "%s(%s" % (self.__class__.__name__, repr(self.timeZoneName))
+        result = f"{self.__class__.__name__}({repr(self.timeZoneName)}"
         if self.fixedStandardTime:
             result += ", True"
         result += ")"
@@ -678,8 +681,8 @@ class TimeZoneInfo(datetime.tzinfo):
         "Given a year, determines the time when daylight savings ends."
         return self.getWinInfo(year).locate_standard_start(year)
 
-    def __cmp__(self, other):
-        return cmp(self.__dict__, other.__dict__)
+    def __le__(self, other):
+        return self.__dict__ < other.__dict__
 
     def __eq__(self, other):
         return self.__dict__ == other.__dict__
@@ -790,8 +793,8 @@ class TimeZoneInfo(datetime.tzinfo):
         return zones
 
 
-class _RegKeyDict(dict):
-    def __init__(self, key):
+class _RegKeyDict(Dict[str, int]):
+    def __init__(self, key: winreg.HKEYType):
         dict.__init__(self)
         self.key = key
         self.__load_values()
@@ -824,7 +827,7 @@ class _RegKeyDict(dict):
         try:
             for index in count():
                 yield func(key, index)
-        except WindowsError:
+        except OSError:
             pass
 
 
@@ -874,7 +877,7 @@ def GetTZCapabilities():
     return locals()
 
 
-class DLLHandleCache(object):
+class DLLHandleCache:
     def __init__(self):
         self.__cache = {}
 
@@ -888,15 +891,6 @@ DLLCache = DLLHandleCache()
 
 def resolveMUITimeZone(spec):
     """Resolve a multilingual user interface resource for the time zone name
-    >>> #some pre-amble for the doc-tests to be py2k and py3k aware)
-    >>> try: unicode and None
-    ... except NameError: unicode=str
-    ...
-    >>> import sys
-    >>> result = resolveMUITimeZone('@tzres.dll,-110')
-    >>> expectedResultType = [type(None),unicode][sys.getwindowsversion() >= (6,)]
-    >>> type(result) is expectedResultType
-    True
 
     spec should be of the format @path,-stringID[;comment]
     see http://msdn2.microsoft.com/en-us/library/ms725481.aspx for details
@@ -914,7 +908,8 @@ def resolveMUITimeZone(spec):
 
 
 # from jaraco.util.dictlib 5.3.1
-class RangeMap(dict):
+# TODO: Update to implementation in jaraco.collections
+class RangeMap(dict):  # type: ignore[type-arg] # Source code is untyped :/ TODO: Add generics!
     """
     A dictionary-like object that uses the keys as bounds for a range.
     Inclusion of the value for that range is determined by the
@@ -923,7 +918,7 @@ class RangeMap(dict):
     the sorted list of keys.
 
     One may supply keyword parameters to be passed to the sort function used
-    to sort keys (i.e. cmp [python 2 only], keys, reverse) as sort_params.
+    to sort keys (i.e. keys, reverse) as sort_params.
 
     Let's create a map that maps 1-3 -> 'a', 4-6 -> 'b'
     >>> r = RangeMap({3: 'a', 6: 'b'})  # boy, that was easy
@@ -976,7 +971,7 @@ class RangeMap(dict):
         self.match = key_match_comparator
 
     def __getitem__(self, item):
-        sorted_keys = sorted(list(self.keys()), **self.sort_params)
+        sorted_keys = sorted(self.keys(), **self.sort_params)
         if isinstance(item, RangeMap.Item):
             result = self.__getitem__(sorted_keys[item])
         else:
@@ -1007,14 +1002,14 @@ class RangeMap(dict):
         raise KeyError(item)
 
     def bounds(self):
-        sorted_keys = sorted(list(self.keys()), **self.sort_params)
+        sorted_keys = sorted(self.keys(), **self.sort_params)
         return (
             sorted_keys[RangeMap.first_item],
             sorted_keys[RangeMap.last_item],
         )
 
     # some special values for the RangeMap
-    undefined_value = type(str("RangeValueUndefined"), (object,), {})()
+    undefined_value = type("RangeValueUndefined", (object,), {})()
 
     class Item(int):
         pass

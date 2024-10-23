@@ -18,13 +18,14 @@ import pandas._testing as tm
 
 
 class TestBetweenTime:
-    @td.skip_if_has_locale
+    @td.skip_if_not_us_locale
     def test_between_time_formats(self, frame_or_series):
         # GH#11818
         rng = date_range("1/1/2000", "1/5/2000", freq="5min")
-        ts = DataFrame(np.random.randn(len(rng), 2), index=rng)
-        if frame_or_series is Series:
-            ts = ts[0]
+        ts = DataFrame(
+            np.random.default_rng(2).standard_normal((len(rng), 2)), index=rng
+        )
+        ts = tm.get_obj(ts, frame_or_series)
 
         strings = [
             ("2:00", "2:30"),
@@ -45,8 +46,8 @@ class TestBetweenTime:
     def test_localized_between_time(self, tzstr, frame_or_series):
         tz = timezones.maybe_get_tz(tzstr)
 
-        rng = date_range("4/16/2012", "5/1/2012", freq="H")
-        ts = Series(np.random.randn(len(rng)), index=rng)
+        rng = date_range("4/16/2012", "5/1/2012", freq="h")
+        ts = Series(np.random.default_rng(2).standard_normal(len(rng)), index=rng)
         if frame_or_series is DataFrame:
             ts = ts.to_frame()
 
@@ -62,39 +63,40 @@ class TestBetweenTime:
         # GH11818
         rng = date_range("1/1/2000", "1/5/2000", freq="5min")
         obj = DataFrame({"A": 0}, index=rng)
-        if frame_or_series is Series:
-            obj = obj["A"]
+        obj = tm.get_obj(obj, frame_or_series)
 
         msg = r"Cannot convert arg \[datetime\.datetime\(2010, 1, 2, 1, 0\)\] to a time"
         with pytest.raises(ValueError, match=msg):
             obj.between_time(datetime(2010, 1, 2, 1), datetime(2010, 1, 2, 5))
 
-    def test_between_time(self, close_open_fixture, frame_or_series):
+    def test_between_time(self, inclusive_endpoints_fixture, frame_or_series):
         rng = date_range("1/1/2000", "1/5/2000", freq="5min")
-        ts = DataFrame(np.random.randn(len(rng), 2), index=rng)
-        if frame_or_series is not DataFrame:
-            ts = ts[0]
+        ts = DataFrame(
+            np.random.default_rng(2).standard_normal((len(rng), 2)), index=rng
+        )
+        ts = tm.get_obj(ts, frame_or_series)
 
         stime = time(0, 0)
         etime = time(1, 0)
-        inc_start, inc_end = close_open_fixture
+        inclusive = inclusive_endpoints_fixture
 
-        filtered = ts.between_time(stime, etime, inc_start, inc_end)
+        filtered = ts.between_time(stime, etime, inclusive=inclusive)
         exp_len = 13 * 4 + 1
-        if not inc_start:
+
+        if inclusive in ["right", "neither"]:
             exp_len -= 5
-        if not inc_end:
+        if inclusive in ["left", "neither"]:
             exp_len -= 4
 
         assert len(filtered) == exp_len
         for rs in filtered.index:
             t = rs.time()
-            if inc_start:
+            if inclusive in ["left", "both"]:
                 assert t >= stime
             else:
                 assert t > stime
 
-            if inc_end:
+            if inclusive in ["right", "both"]:
                 assert t <= etime
             else:
                 assert t < etime
@@ -105,28 +107,29 @@ class TestBetweenTime:
 
         # across midnight
         rng = date_range("1/1/2000", "1/5/2000", freq="5min")
-        ts = DataFrame(np.random.randn(len(rng), 2), index=rng)
-        if frame_or_series is not DataFrame:
-            ts = ts[0]
+        ts = DataFrame(
+            np.random.default_rng(2).standard_normal((len(rng), 2)), index=rng
+        )
+        ts = tm.get_obj(ts, frame_or_series)
         stime = time(22, 0)
         etime = time(9, 0)
 
-        filtered = ts.between_time(stime, etime, inc_start, inc_end)
+        filtered = ts.between_time(stime, etime, inclusive=inclusive)
         exp_len = (12 * 11 + 1) * 4 + 1
-        if not inc_start:
+        if inclusive in ["right", "neither"]:
             exp_len -= 4
-        if not inc_end:
+        if inclusive in ["left", "neither"]:
             exp_len -= 4
 
         assert len(filtered) == exp_len
         for rs in filtered.index:
             t = rs.time()
-            if inc_start:
+            if inclusive in ["left", "both"]:
                 assert (t >= stime) or (t <= etime)
             else:
                 assert (t > stime) or (t <= etime)
 
-            if inc_end:
+            if inclusive in ["right", "both"]:
                 assert (t <= etime) or (t >= stime)
             else:
                 assert (t < etime) or (t >= stime)
@@ -134,8 +137,7 @@ class TestBetweenTime:
     def test_between_time_raises(self, frame_or_series):
         # GH#20725
         obj = DataFrame([[1, 2, 3], [4, 5, 6]])
-        if frame_or_series is not DataFrame:
-            obj = obj[0]
+        obj = tm.get_obj(obj, frame_or_series)
 
         msg = "Index must be DatetimeIndex"
         with pytest.raises(TypeError, match=msg):  # index is not a DatetimeIndex
@@ -144,7 +146,7 @@ class TestBetweenTime:
     def test_between_time_axis(self, frame_or_series):
         # GH#8839
         rng = date_range("1/1/2000", periods=100, freq="10min")
-        ts = Series(np.random.randn(len(rng)), index=rng)
+        ts = Series(np.random.default_rng(2).standard_normal(len(rng)), index=rng)
         if frame_or_series is DataFrame:
             ts = ts.to_frame()
 
@@ -160,7 +162,7 @@ class TestBetweenTime:
     def test_between_time_axis_aliases(self, axis):
         # GH#8839
         rng = date_range("1/1/2000", periods=100, freq="10min")
-        ts = DataFrame(np.random.randn(len(rng), len(rng)))
+        ts = DataFrame(np.random.default_rng(2).standard_normal((len(rng), len(rng))))
         stime, etime = ("08:00:00", "09:00:00")
         exp_len = 7
 
@@ -178,7 +180,7 @@ class TestBetweenTime:
         # issue 8839
         rng = date_range("1/1/2000", periods=100, freq="10min")
         mask = np.arange(0, len(rng))
-        rand_data = np.random.randn(len(rng), len(rng))
+        rand_data = np.random.default_rng(2).standard_normal((len(rng), len(rng)))
         ts = DataFrame(rand_data, index=rng, columns=rng)
         stime, etime = ("08:00:00", "09:00:00")
 
@@ -197,7 +199,9 @@ class TestBetweenTime:
 
     def test_between_time_datetimeindex(self):
         index = date_range("2012-01-01", "2012-01-05", freq="30min")
-        df = DataFrame(np.random.randn(len(index), 5), index=index)
+        df = DataFrame(
+            np.random.default_rng(2).standard_normal((len(index), 5)), index=index
+        )
         bkey = slice(time(13, 0, 0), time(14, 0, 0))
         binds = [26, 27, 28, 74, 75, 76, 122, 123, 124, 170, 171, 172]
 
@@ -207,3 +211,17 @@ class TestBetweenTime:
         tm.assert_frame_equal(result, expected)
         tm.assert_frame_equal(result, expected2)
         assert len(result) == 12
+
+    def test_between_time_incorrect_arg_inclusive(self):
+        # GH40245
+        rng = date_range("1/1/2000", "1/5/2000", freq="5min")
+        ts = DataFrame(
+            np.random.default_rng(2).standard_normal((len(rng), 2)), index=rng
+        )
+
+        stime = time(0, 0)
+        etime = time(1, 0)
+        inclusive = "bad_string"
+        msg = "Inclusive has to be either 'both', 'neither', 'left' or 'right'"
+        with pytest.raises(ValueError, match=msg):
+            ts.between_time(stime, etime, inclusive=inclusive)

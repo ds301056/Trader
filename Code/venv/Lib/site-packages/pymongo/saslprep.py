@@ -13,6 +13,8 @@
 # limitations under the License.
 
 """An implementation of RFC4013 SASLprep."""
+from __future__ import annotations
+
 from typing import Any, Optional
 
 try:
@@ -20,7 +22,10 @@ try:
 except ImportError:
     HAVE_STRINGPREP = False
 
-    def saslprep(data: Any, prohibit_unassigned_code_points: Optional[bool] = True) -> str:
+    def saslprep(
+        data: Any,
+        prohibit_unassigned_code_points: Optional[bool] = True,  # noqa: ARG001
+    ) -> Any:
         """SASLprep dummy"""
         if isinstance(data, str):
             raise TypeError(
@@ -49,21 +54,19 @@ else:
         stringprep.in_table_c9,
     )
 
-    def saslprep(data: Any, prohibit_unassigned_code_points: Optional[bool] = True) -> str:
+    def saslprep(data: Any, prohibit_unassigned_code_points: Optional[bool] = True) -> Any:
         """An implementation of RFC4013 SASLprep.
 
-        :Parameters:
-          - `data`: The string to SASLprep. Unicode strings
+        :param data: The string to SASLprep. Unicode strings
             (:class:`str`) are supported. Byte strings
             (:class:`bytes`) are ignored.
-          - `prohibit_unassigned_code_points`: True / False. RFC 3454
+        :param prohibit_unassigned_code_points: True / False. RFC 3454
             and RFCs for various SASL mechanisms distinguish between
             `queries` (unassigned code points allowed) and
             `stored strings` (unassigned code points prohibited). Defaults
             to ``True`` (unassigned code points are prohibited).
 
-        :Returns:
-        The SASLprep'ed version of `data`.
+        :return: The SASLprep'ed version of `data`.
         """
         prohibited: Any
 
@@ -71,7 +74,7 @@ else:
             return data
 
         if prohibit_unassigned_code_points:
-            prohibited = _PROHIBITED + (stringprep.in_table_a1,)
+            prohibited = (*_PROHIBITED, stringprep.in_table_a1)
         else:
             prohibited = _PROHIBITED
 
@@ -98,12 +101,12 @@ else:
                 raise ValueError("SASLprep: failed bidirectional check")
             # RFC3454, Section 6, #2. If a string contains any RandALCat
             # character, it MUST NOT contain any LCat character.
-            prohibited = prohibited + (stringprep.in_table_d2,)
+            prohibited = (*prohibited, stringprep.in_table_d2)
         else:
             # RFC3454, Section 6, #3. Following the logic of #3, if
             # the first character is not a RandALCat, no other character
             # can be either.
-            prohibited = prohibited + (in_table_d1,)
+            prohibited = (*prohibited, in_table_d1)
 
         # RFC3454 section 2, step 3 and 4 - Prohibit and check bidi
         for char in data:

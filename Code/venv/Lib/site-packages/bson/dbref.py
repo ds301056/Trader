@@ -13,6 +13,7 @@
 # limitations under the License.
 
 """Tools for manipulating DBRefs (references to MongoDB documents)."""
+from __future__ import annotations
 
 from copy import deepcopy
 from typing import Any, Mapping, Optional
@@ -21,7 +22,7 @@ from bson._helpers import _getstate_slots, _setstate_slots
 from bson.son import SON
 
 
-class DBRef(object):
+class DBRef:
     """A reference to a document stored in MongoDB."""
 
     __slots__ = "__collection", "__id", "__database", "__kwargs"
@@ -36,21 +37,20 @@ class DBRef(object):
         id: Any,
         database: Optional[str] = None,
         _extra: Optional[Mapping[str, Any]] = None,
-        **kwargs: Any
+        **kwargs: Any,
     ) -> None:
         """Initialize a new :class:`DBRef`.
 
         Raises :class:`TypeError` if `collection` or `database` is not
-        an instance of :class:`basestring` (:class:`str` in python 3).
-        `database` is optional and allows references to documents to work
-        across databases. Any additional keyword arguments will create
-        additional fields in the resultant embedded document.
+        an instance of :class:`str`. `database` is optional and allows
+        references to documents to work across databases. Any additional
+        keyword arguments will create additional fields in the resultant
+        embedded document.
 
-        :Parameters:
-          - `collection`: name of the collection the document is stored in
-          - `id`: the value of the document's ``"_id"`` field
-          - `database` (optional): name of the database to reference
-          - `**kwargs` (optional): additional keyword arguments will
+        :param collection: name of the collection the document is stored in
+        :param id: the value of the document's ``"_id"`` field
+        :param database: name of the database to reference
+        :param kwargs: additional keyword arguments will
             create additional, custom fields
 
         .. seealso:: The MongoDB documentation on `dbrefs <https://dochub.mongodb.org/core/dbrefs>`_.
@@ -88,7 +88,7 @@ class DBRef(object):
         try:
             return self.__kwargs[key]
         except KeyError:
-            raise AttributeError(key)
+            raise AttributeError(key) from None
 
     def as_doc(self) -> SON[str, Any]:
         """Get the SON document representation of this DBRef.
@@ -101,11 +101,11 @@ class DBRef(object):
         doc.update(self.__kwargs)
         return doc
 
-    def __repr__(self):
-        extra = "".join([", %s=%r" % (k, v) for k, v in self.__kwargs.items()])
+    def __repr__(self) -> str:
+        extra = "".join([f", {k}={v!r}" for k, v in self.__kwargs.items()])
         if self.database is None:
-            return "DBRef(%r, %r%s)" % (self.collection, self.id, extra)
-        return "DBRef(%r, %r, %r%s)" % (self.collection, self.id, self.database, extra)
+            return f"DBRef({self.collection!r}, {self.id!r}{extra})"
+        return f"DBRef({self.collection!r}, {self.id!r}, {self.database!r}{extra})"
 
     def __eq__(self, other: Any) -> bool:
         if isinstance(other, DBRef):
@@ -123,7 +123,7 @@ class DBRef(object):
             (self.__collection, self.__id, self.__database, tuple(sorted(self.__kwargs.items())))
         )
 
-    def __deepcopy__(self, memo: Any) -> "DBRef":
+    def __deepcopy__(self, memo: Any) -> DBRef:
         """Support function for `copy.deepcopy()`."""
         return DBRef(
             deepcopy(self.__collection, memo),

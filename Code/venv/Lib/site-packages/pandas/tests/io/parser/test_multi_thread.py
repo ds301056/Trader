@@ -12,41 +12,35 @@ import pytest
 import pandas as pd
 from pandas import DataFrame
 import pandas._testing as tm
+from pandas.util.version import Version
+
+xfail_pyarrow = pytest.mark.usefixtures("pyarrow_xfail")
+
+# We'll probably always skip these for pyarrow
+# Maybe we'll add our own tests for pyarrow too
+pytestmark = [
+    pytest.mark.single_cpu,
+    pytest.mark.slow,
+]
 
 
-def _construct_dataframe(num_rows):
-    """
-    Construct a DataFrame for testing.
-
-    Parameters
-    ----------
-    num_rows : int
-        The number of rows for our DataFrame.
-
-    Returns
-    -------
-    df : DataFrame
-    """
-    df = DataFrame(np.random.rand(num_rows, 5), columns=list("abcde"))
-    df["foo"] = "foo"
-    df["bar"] = "bar"
-    df["baz"] = "baz"
-    df["date"] = pd.date_range("20000101 09:00:00", periods=num_rows, freq="s")
-    df["int"] = np.arange(num_rows, dtype="int64")
-    return df
-
-
-@pytest.mark.slow
-def test_multi_thread_string_io_read_csv(all_parsers):
+@pytest.mark.filterwarnings("ignore:Passing a BlockManager:DeprecationWarning")
+def test_multi_thread_string_io_read_csv(all_parsers, request):
     # see gh-11786
     parser = all_parsers
-    max_row_range = 10000
-    num_files = 100
+    if parser.engine == "pyarrow":
+        pa = pytest.importorskip("pyarrow")
+        if Version(pa.__version__) < Version("16.0"):
+            request.applymarker(
+                pytest.mark.xfail(reason="# ValueError: Found non-unique column index")
+            )
+    max_row_range = 100
+    num_files = 10
 
-    bytes_to_df = [
-        "\n".join(f"{i:d},{i:d},{i:d}" for i in range(max_row_range)).encode()
+    bytes_to_df = (
+        "\n".join([f"{i:d},{i:d},{i:d}" for i in range(max_row_range)]).encode()
         for _ in range(num_files)
-    ]
+    )
 
     # Read all files in many threads.
     with ExitStack() as stack:
@@ -131,15 +125,28 @@ def _generate_multi_thread_dataframe(parser, path, num_rows, num_tasks):
     return final_dataframe
 
 
-@pytest.mark.slow
+@xfail_pyarrow  # ValueError: The 'nrows' option is not supported
 def test_multi_thread_path_multipart_read_csv(all_parsers):
     # see gh-11786
     num_tasks = 4
-    num_rows = 100000
+    num_rows = 48
 
     parser = all_parsers
     file_name = "__thread_pool_reader__.csv"
-    df = _construct_dataframe(num_rows)
+    df = DataFrame(
+        {
+            "a": np.random.default_rng(2).random(num_rows),
+            "b": np.random.default_rng(2).random(num_rows),
+            "c": np.random.default_rng(2).random(num_rows),
+            "d": np.random.default_rng(2).random(num_rows),
+            "e": np.random.default_rng(2).random(num_rows),
+            "foo": ["foo"] * num_rows,
+            "bar": ["bar"] * num_rows,
+            "baz": ["baz"] * num_rows,
+            "date": pd.date_range("20000101 09:00:00", periods=num_rows, freq="s"),
+            "int": np.arange(num_rows, dtype="int64"),
+        }
+    )
 
     with tm.ensure_clean(file_name) as path:
         df.to_csv(path)

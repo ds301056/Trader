@@ -8,8 +8,9 @@ from datetime import datetime
 from functools import partial
 import operator
 from typing import (
+    TYPE_CHECKING,
     Callable,
-    Iterable,
+    Literal,
 )
 
 import numpy as np
@@ -33,7 +34,13 @@ from pandas.io.formats.printing import (
     pprint_thing_encoded,
 )
 
-REDUCTIONS = ("sum", "prod")
+if TYPE_CHECKING:
+    from collections.abc import (
+        Iterable,
+        Iterator,
+    )
+
+REDUCTIONS = ("sum", "prod", "min", "max")
 
 _unary_math_ops = (
     "sin",
@@ -65,20 +72,6 @@ MATHOPS = _unary_math_ops + _binary_math_ops
 LOCAL_TAG = "__pd_eval_local_"
 
 
-class UndefinedVariableError(NameError):
-    """
-    NameError subclass for local variables.
-    """
-
-    def __init__(self, name: str, is_local: bool | None = None):
-        base_msg = f"{repr(name)} is not defined"
-        if is_local:
-            msg = f"local variable {base_msg}"
-        else:
-            msg = f"name {base_msg}"
-        super().__init__(msg)
-
-
 class Term:
     def __new__(cls, name, env, side=None, encoding=None):
         klass = Constant if not isinstance(name, str) else cls
@@ -88,7 +81,7 @@ class Term:
 
     is_local: bool
 
-    def __init__(self, name, env, side=None, encoding=None):
+    def __init__(self, name, env, side=None, encoding=None) -> None:
         # name is a str for Term, but may be something else for subclasses
         self._name = name
         self.env = env
@@ -108,11 +101,18 @@ class Term:
     def __call__(self, *args, **kwargs):
         return self.value
 
-    def evaluate(self, *args, **kwargs):
+    def evaluate(self, *args, **kwargs) -> Term:
         return self
 
     def _resolve_name(self):
-        res = self.env.resolve(self.local_name, is_local=self.is_local)
+        local_name = str(self.local_name)
+        is_local = self.is_local
+        if local_name in self.env.scope and isinstance(
+            self.env.scope[local_name], type
+        ):
+            is_local = False
+
+        res = self.env.resolve(local_name, is_local=is_local)
         self.update(res)
 
         if hasattr(res, "ndim") and res.ndim > 2:
@@ -121,7 +121,7 @@ class Term:
             )
         return res
 
-    def update(self, value):
+    def update(self, value) -> None:
         """
         search order for local (i.e., @variable) variables:
 
@@ -176,7 +176,7 @@ class Term:
         return self._value
 
     @value.setter
-    def value(self, new_value):
+    def value(self, new_value) -> None:
         self._value = new_value
 
     @property
@@ -189,9 +189,6 @@ class Term:
 
 
 class Constant(Term):
-    def __init__(self, value, env, side=None, encoding=None):
-        super().__init__(value, env, side=side, encoding=encoding)
-
     def _resolve_name(self):
         return self._name
 
@@ -215,12 +212,12 @@ class Op:
 
     op: str
 
-    def __init__(self, op: str, operands: Iterable[Term | Op], encoding=None):
+    def __init__(self, op: str, operands: Iterable[Term | Op], encoding=None) -> None:
         self.op = _bool_op_map.get(op, op)
         self.operands = operands
         self.encoding = encoding
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator:
         return iter(self.operands)
 
     def __repr__(self) -> str:
@@ -335,31 +332,6 @@ for d in (_cmp_ops_dict, _bool_ops_dict, _arith_ops_dict):
     _binary_ops_dict.update(d)
 
 
-def _cast_inplace(terms, acceptable_dtypes, dtype):
-    """
-    Cast an expression inplace.
-
-    Parameters
-    ----------
-    terms : Op
-        The expression that should cast.
-    acceptable_dtypes : list of acceptable numpy.dtype
-        Will not cast if term's dtype in this list.
-    dtype : str or numpy.dtype
-        The dtype to cast to.
-    """
-    dt = np.dtype(dtype)
-    for term in terms:
-        if term.type in acceptable_dtypes:
-            continue
-
-        try:
-            new_value = term.value.astype(dt)
-        except AttributeError:
-            new_value = dt.type(term.value)
-        term.update(new_value)
-
-
 def is_term(obj) -> bool:
     return isinstance(obj, Term)
 
@@ -375,7 +347,7 @@ class BinOp(Op):
     rhs : Term or Op
     """
 
-    def __init__(self, op: str, lhs, rhs):
+    def __init__(self, op: str, lhs, rhs) -> None:
         super().__init__(op, (lhs, rhs))
         self.lhs = lhs
         self.rhs = rhs
@@ -461,7 +433,7 @@ class BinOp(Op):
         name = env.add_tmp(res)
         return term_type(name, env=env)
 
-    def convert_values(self):
+    def convert_values(self) -> None:
         """
         Convert datetimes to a comparable value in an expression.
         """
@@ -520,30 +492,6 @@ def isnumeric(dtype) -> bool:
     return issubclass(np.dtype(dtype).type, np.number)
 
 
-class Div(BinOp):
-    """
-    Div operator to special case casting.
-
-    Parameters
-    ----------
-    lhs, rhs : Term or Op
-        The Terms or Ops in the ``/`` expression.
-    """
-
-    def __init__(self, lhs, rhs):
-        super().__init__("/", lhs, rhs)
-
-        if not isnumeric(lhs.return_type) or not isnumeric(rhs.return_type):
-            raise TypeError(
-                f"unsupported operand type(s) for {self.op}: "
-                f"'{lhs.return_type}' and '{rhs.return_type}'"
-            )
-
-        # do not upcast float32s to float64 un-necessarily
-        acceptable_dtypes = [np.float32, np.float_]
-        _cast_inplace(com.flatten(self), acceptable_dtypes, np.float_)
-
-
 UNARY_OPS_SYMS = ("+", "-", "~", "not")
 _unary_ops_funcs = (operator.pos, operator.neg, operator.invert, operator.invert)
 _unary_ops_dict = dict(zip(UNARY_OPS_SYMS, _unary_ops_funcs))
@@ -566,7 +514,7 @@ class UnaryOp(Op):
         * If no function associated with the passed operator token is found.
     """
 
-    def __init__(self, op: str, operand):
+    def __init__(self, op: Literal["+", "-", "~", "not"], operand) -> None:
         super().__init__(op, (operand,))
         self.operand = operand
 
@@ -578,9 +526,10 @@ class UnaryOp(Op):
                 f"valid operators are {UNARY_OPS_SYMS}"
             ) from err
 
-    def __call__(self, env):
+    def __call__(self, env) -> MathCall:
         operand = self.operand(env)
-        return self.func(operand)
+        # error: Cannot call function of unknown type
+        return self.func(operand)  # type: ignore[operator]
 
     def __repr__(self) -> str:
         return pprint_thing(f"{self.op}({self.operand})")
@@ -598,15 +547,14 @@ class UnaryOp(Op):
 
 
 class MathCall(Op):
-    def __init__(self, func, args):
+    def __init__(self, func, args) -> None:
         super().__init__(func.name, args)
         self.func = func
 
     def __call__(self, env):
         # error: "Op" not callable
         operands = [op(env) for op in self.operands]  # type: ignore[operator]
-        with np.errstate(all="ignore"):
-            return self.func.func(*operands)
+        return self.func.func(*operands)
 
     def __repr__(self) -> str:
         operands = map(str, self.operands)
@@ -614,11 +562,11 @@ class MathCall(Op):
 
 
 class FuncNode:
-    def __init__(self, name: str):
+    def __init__(self, name: str) -> None:
         if name not in MATHOPS:
             raise ValueError(f'"{name}" is not a supported function')
         self.name = name
         self.func = getattr(np, name)
 
-    def __call__(self, *args):
+    def __call__(self, *args) -> MathCall:
         return MathCall(self, args)

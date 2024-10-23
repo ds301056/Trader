@@ -18,11 +18,12 @@ class TestToPeriod:
 
         dr = date_range("1/1/2000", "1/1/2001", freq="D")
         obj = DataFrame(
-            np.random.randn(len(dr), K), index=dr, columns=["A", "B", "C", "D", "E"]
+            np.random.default_rng(2).standard_normal((len(dr), K)),
+            index=dr,
+            columns=["A", "B", "C", "D", "E"],
         )
         obj["mix"] = "a"
-        if frame_or_series is Series:
-            obj = obj["A"]
+        obj = tm.get_obj(obj, frame_or_series)
 
         pts = obj.to_period()
         exp = obj.copy()
@@ -40,9 +41,10 @@ class TestToPeriod:
             ["2011-01-01", "2011-01-02", "2011-01-03", "2011-01-04"], freq="D"
         )
 
-        obj = DataFrame(np.random.randn(4, 4), index=idx, columns=idx)
-        if frame_or_series is Series:
-            obj = obj[idx[0]]
+        obj = DataFrame(
+            np.random.default_rng(2).standard_normal((4, 4)), index=idx, columns=idx
+        )
+        obj = tm.get_obj(obj, frame_or_series)
         expected = obj.copy()
         expected.index = exp_idx
         tm.assert_equal(obj.to_period(), expected)
@@ -54,7 +56,7 @@ class TestToPeriod:
 
     def test_to_period_columns(self):
         dr = date_range("1/1/2000", "1/1/2001")
-        df = DataFrame(np.random.randn(len(dr), 5), index=dr)
+        df = DataFrame(np.random.default_rng(2).standard_normal((len(dr), 5)), index=dr)
         df["mix"] = "a"
 
         df = df.T
@@ -68,7 +70,7 @@ class TestToPeriod:
 
     def test_to_period_invalid_axis(self):
         dr = date_range("1/1/2000", "1/1/2001")
-        df = DataFrame(np.random.randn(len(dr), 5), index=dr)
+        df = DataFrame(np.random.default_rng(2).standard_normal((len(dr), 5)), index=dr)
         df["mix"] = "a"
 
         msg = "No axis named 2 for object type DataFrame"

@@ -1,8 +1,6 @@
 import numpy as np
 import pytest
 
-from pandas.compat import np_version_under1p18
-
 from pandas import (
     DataFrame,
     Index,
@@ -13,14 +11,13 @@ import pandas.core.common as com
 
 
 class TestSample:
-    @pytest.fixture(params=[Series, DataFrame])
-    def obj(self, request):
-        klass = request.param
-        if klass is Series:
-            arr = np.random.randn(10)
+    @pytest.fixture
+    def obj(self, frame_or_series):
+        if frame_or_series is Series:
+            arr = np.random.default_rng(2).standard_normal(10)
         else:
-            arr = np.random.randn(10, 10)
-        return klass(arr, dtype=None)
+            arr = np.random.default_rng(2).standard_normal((10, 10))
+        return frame_or_series(arr, dtype=None)
 
     @pytest.mark.parametrize("test", list(range(10)))
     def test_sample(self, test, obj):
@@ -29,7 +26,7 @@ class TestSample:
         # Check for stability when receives seed or random state -- run 10
         # times.
 
-        seed = np.random.randint(0, 100)
+        seed = np.random.default_rng(2).integers(0, 100)
         tm.assert_equal(
             obj.sample(n=4, random_state=seed), obj.sample(n=4, random_state=seed)
         )
@@ -40,25 +37,32 @@ class TestSample:
         )
 
         tm.assert_equal(
-            obj.sample(n=4, random_state=np.random.RandomState(test)),
-            obj.sample(n=4, random_state=np.random.RandomState(test)),
+            obj.sample(n=4, random_state=np.random.default_rng(test)),
+            obj.sample(n=4, random_state=np.random.default_rng(test)),
         )
 
         tm.assert_equal(
-            obj.sample(frac=0.7, random_state=np.random.RandomState(test)),
-            obj.sample(frac=0.7, random_state=np.random.RandomState(test)),
+            obj.sample(frac=0.7, random_state=np.random.default_rng(test)),
+            obj.sample(frac=0.7, random_state=np.random.default_rng(test)),
         )
 
         tm.assert_equal(
-            obj.sample(frac=2, replace=True, random_state=np.random.RandomState(test)),
-            obj.sample(frac=2, replace=True, random_state=np.random.RandomState(test)),
+            obj.sample(
+                frac=2,
+                replace=True,
+                random_state=np.random.default_rng(test),
+            ),
+            obj.sample(
+                frac=2,
+                replace=True,
+                random_state=np.random.default_rng(test),
+            ),
         )
 
         os1, os2 = [], []
         for _ in range(2):
-            np.random.seed(test)
-            os1.append(obj.sample(n=4))
-            os2.append(obj.sample(frac=0.7))
+            os1.append(obj.sample(n=4, random_state=test))
+            os2.append(obj.sample(frac=0.7, random_state=test))
         tm.assert_equal(*os1)
         tm.assert_equal(*os2)
 
@@ -71,8 +75,8 @@ class TestSample:
     def test_sample_invalid_random_state(self, obj):
         # Check for error when random_state argument invalid.
         msg = (
-            "random_state must be an integer, array-like, a BitGenerator, a numpy "
-            "RandomState, or None"
+            "random_state must be an integer, array-like, a BitGenerator, Generator, "
+            "a numpy RandomState, or None"
         )
         with pytest.raises(ValueError, match=msg):
             obj.sample(random_state="a_string")
@@ -84,10 +88,15 @@ class TestSample:
             obj.sample(n=3, frac=0.3)
 
     def test_sample_requires_positive_n_frac(self, obj):
-        msg = "A negative number of rows requested. Please provide positive value."
-        with pytest.raises(ValueError, match=msg):
+        with pytest.raises(
+            ValueError,
+            match="A negative number of rows requested. Please provide `n` >= 0",
+        ):
             obj.sample(n=-3)
-        with pytest.raises(ValueError, match=msg):
+        with pytest.raises(
+            ValueError,
+            match="A negative number of rows requested. Please provide `frac` >= 0",
+        ):
             obj.sample(frac=-0.3)
 
     def test_sample_requires_integer_n(self, obj):
@@ -156,33 +165,39 @@ class TestSample:
         "func_str,arg",
         [
             ("np.array", [2, 3, 1, 0]),
-            pytest.param(
-                "np.random.MT19937",
-                3,
-                marks=pytest.mark.skipif(np_version_under1p18, reason="NumPy<1.18"),
-            ),
-            pytest.param(
-                "np.random.PCG64",
-                11,
-                marks=pytest.mark.skipif(np_version_under1p18, reason="NumPy<1.18"),
-            ),
+            ("np.random.MT19937", 3),
+            ("np.random.PCG64", 11),
         ],
     )
     def test_sample_random_state(self, func_str, arg, frame_or_series):
         # GH#32503
         obj = DataFrame({"col1": range(10, 20), "col2": range(20, 30)})
-        if frame_or_series is Series:
-            obj = obj["col1"]
+        obj = tm.get_obj(obj, frame_or_series)
         result = obj.sample(n=3, random_state=eval(func_str)(arg))
         expected = obj.sample(n=3, random_state=com.random_state(eval(func_str)(arg)))
         tm.assert_equal(result, expected)
+
+    def test_sample_generator(self, frame_or_series):
+        # GH#38100
+        obj = frame_or_series(np.arange(100))
+        rng = np.random.default_rng(2)
+
+        # Consecutive calls should advance the seed
+        result1 = obj.sample(n=50, random_state=rng)
+        result2 = obj.sample(n=50, random_state=rng)
+        assert not (result1.index.values == result2.index.values).all()
+
+        # Matching generator initialization must give same result
+        # Consecutive calls should advance the seed
+        result1 = obj.sample(n=50, random_state=np.random.default_rng(11))
+        result2 = obj.sample(n=50, random_state=np.random.default_rng(11))
+        tm.assert_equal(result1, result2)
 
     def test_sample_upsampling_without_replacement(self, frame_or_series):
         # GH#27451
 
         obj = DataFrame({"A": list("abc")})
-        if frame_or_series is Series:
-            obj = obj["A"]
+        obj = tm.get_obj(obj, frame_or_series)
 
         msg = (
             "Replace has to be set to `True` when "
@@ -298,7 +313,6 @@ class TestSampleDataFrame:
         )
 
     def test_sample_aligns_weights_with_frame(self):
-
         # Test that function aligns weights with frame
         df = DataFrame({"col1": [5, 6, 7], "col2": ["a", "b", "c"]}, index=[9, 5, 3])
         ser = Series([1, 0, 0], index=[3, 5, 9])
@@ -322,11 +336,31 @@ class TestSampleDataFrame:
     def test_sample_is_copy(self):
         # GH#27357, GH#30784: ensure the result of sample is an actual copy and
         # doesn't track the parent dataframe / doesn't give SettingWithCopy warnings
-        df = DataFrame(np.random.randn(10, 3), columns=["a", "b", "c"])
+        df = DataFrame(
+            np.random.default_rng(2).standard_normal((10, 3)), columns=["a", "b", "c"]
+        )
         df2 = df.sample(3)
 
         with tm.assert_produces_warning(None):
             df2["d"] = 1
+
+    def test_sample_does_not_modify_weights(self):
+        # GH-42843
+        result = np.array([np.nan, 1, np.nan])
+        expected = result.copy()
+        ser = Series([1, 2, 3])
+
+        # Test numpy array weights won't be modified in place
+        ser.sample(weights=result)
+        tm.assert_numpy_array_equal(result, expected)
+
+        # Test DataFrame column won't be modified in place
+        df = DataFrame({"values": [1, 1, 1], "weights": [1, np.nan, np.nan]})
+        expected = df["weights"].copy()
+
+        df.sample(frac=1.0, replace=True, weights="weights")
+        result = df["weights"]
+        tm.assert_series_equal(result, expected)
 
     def test_sample_ignore_index(self):
         # GH 38581
@@ -334,5 +368,5 @@ class TestSampleDataFrame:
             {"col1": range(10, 20), "col2": range(20, 30), "colString": ["a"] * 10}
         )
         result = df.sample(3, ignore_index=True)
-        expected_index = Index([0, 1, 2])
-        tm.assert_index_equal(result.index, expected_index)
+        expected_index = Index(range(3))
+        tm.assert_index_equal(result.index, expected_index, exact=True)

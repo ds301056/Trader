@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Tools for representing JavaScript code in BSON.
-"""
+"""Tools for representing JavaScript code in BSON."""
+from __future__ import annotations
 
 from collections.abc import Mapping as _Mapping
 from typing import Any, Mapping, Optional, Type, Union
@@ -23,23 +23,22 @@ class Code(str):
     """BSON's JavaScript code type.
 
     Raises :class:`TypeError` if `code` is not an instance of
-    :class:`basestring` (:class:`str` in python 3) or `scope`
-    is not ``None`` or an instance of :class:`dict`.
+    :class:`str` or `scope` is not ``None`` or an instance
+    of :class:`dict`.
 
     Scope variables can be set by passing a dictionary as the `scope`
     argument or by using keyword arguments. If a variable is set as a
     keyword argument it will override any setting for that variable in
     the `scope` dictionary.
 
-    :Parameters:
-      - `code`: A string containing JavaScript code to be evaluated or another
+    :param code: A string containing JavaScript code to be evaluated or another
         instance of Code. In the latter case, the scope of `code` becomes this
         Code's :attr:`scope`.
-      - `scope` (optional): dictionary representing the scope in which
+    :param scope: dictionary representing the scope in which
         `code` should be evaluated - a mapping from identifiers (as
         strings) to values. Defaults to ``None``. This is applied after any
         scope associated with a given `code` above.
-      - `**kwargs` (optional): scope variables can also be passed as
+    :param kwargs: scope variables can also be passed as
         keyword arguments. These are applied after `scope` and `code`.
 
     .. versionchanged:: 3.4
@@ -51,11 +50,11 @@ class Code(str):
     __scope: Union[Mapping[str, Any], None]
 
     def __new__(
-        cls: Type["Code"],
-        code: Union[str, "Code"],
+        cls: Type[Code],
+        code: Union[str, Code],
         scope: Optional[Mapping[str, Any]] = None,
-        **kwargs: Any
-    ) -> "Code":
+        **kwargs: Any,
+    ) -> Code:
         if not isinstance(code, str):
             raise TypeError("code must be an instance of str")
 
@@ -87,8 +86,8 @@ class Code(str):
         """Scope dictionary for this instance or ``None``."""
         return self.__scope
 
-    def __repr__(self):
-        return "Code(%s, %r)" % (str.__repr__(self), self.__scope)
+    def __repr__(self) -> str:
+        return f"Code({str.__repr__(self)}, {self.__scope!r})"
 
     def __eq__(self, other: Any) -> bool:
         if isinstance(other, Code):

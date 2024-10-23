@@ -10,8 +10,13 @@ from pandas.core.arrays import DatetimeArray
 
 
 class TestReductions:
+    @pytest.fixture(params=["s", "ms", "us", "ns"])
+    def unit(self, request):
+        return request.param
+
     @pytest.fixture
     def arr1d(self, tz_naive_fixture):
+        """Fixture returning DatetimeArray with parametrized timezones"""
         tz = tz_naive_fixture
         dtype = DatetimeTZDtype(tz=tz) if tz is not None else np.dtype("M8[ns]")
         arr = DatetimeArray._from_sequence(
@@ -27,17 +32,20 @@ class TestReductions:
         )
         return arr
 
-    def test_min_max(self, arr1d):
+    def test_min_max(self, arr1d, unit):
         arr = arr1d
+        arr = arr.as_unit(unit)
         tz = arr.tz
 
         result = arr.min()
-        expected = pd.Timestamp("2000-01-02", tz=tz)
+        expected = pd.Timestamp("2000-01-02", tz=tz).as_unit(unit)
         assert result == expected
+        assert result.unit == expected.unit
 
         result = arr.max()
-        expected = pd.Timestamp("2000-01-05", tz=tz)
+        expected = pd.Timestamp("2000-01-05", tz=tz).as_unit(unit)
         assert result == expected
+        assert result.unit == expected.unit
 
         result = arr.min(skipna=False)
         assert result is NaT
@@ -116,7 +124,7 @@ class TestReductions:
 
         # axis = 1
         result = arr.median(axis=1)
-        expected = type(arr)._from_sequence([arr1d.median()])
+        expected = type(arr)._from_sequence([arr1d.median()], dtype=arr.dtype)
         tm.assert_equal(result, expected)
 
         result = arr.median(axis=1, skipna=False)

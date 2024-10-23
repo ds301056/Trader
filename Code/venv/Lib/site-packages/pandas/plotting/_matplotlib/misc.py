@@ -1,13 +1,10 @@
 from __future__ import annotations
 
 import random
-from typing import (
-    TYPE_CHECKING,
-    Hashable,
-)
+from typing import TYPE_CHECKING
 
+from matplotlib import patches
 import matplotlib.lines as mlines
-import matplotlib.patches as patches
 import numpy as np
 
 from pandas.core.dtypes.missing import notna
@@ -22,26 +19,29 @@ from pandas.plotting._matplotlib.tools import (
 )
 
 if TYPE_CHECKING:
+    from collections.abc import Hashable
+
     from matplotlib.axes import Axes
     from matplotlib.figure import Figure
 
     from pandas import (
         DataFrame,
+        Index,
         Series,
     )
 
 
 def scatter_matrix(
     frame: DataFrame,
-    alpha=0.5,
-    figsize=None,
+    alpha: float = 0.5,
+    figsize: tuple[float, float] | None = None,
     ax=None,
-    grid=False,
-    diagonal="hist",
-    marker=".",
+    grid: bool = False,
+    diagonal: str = "hist",
+    marker: str = ".",
     density_kwds=None,
     hist_kwds=None,
-    range_padding=0.05,
+    range_padding: float = 0.05,
     **kwds,
 ):
     df = frame._get_numeric_data()
@@ -193,14 +193,13 @@ def radviz(
     ax.add_patch(patches.Circle((0.0, 0.0), radius=1.0, facecolor="none"))
 
     for xy, name in zip(s, df.columns):
-
         ax.add_patch(patches.Circle(xy, radius=0.025, facecolor="gray"))
 
         if xy[0] < 0.0 and xy[1] < 0.0:
             ax.text(
                 xy[0] - 0.025, xy[1] - 0.025, name, ha="right", va="top", size="small"
             )
-        elif xy[0] < 0.0 and xy[1] >= 0.0:
+        elif xy[0] < 0.0 <= xy[1]:
             ax.text(
                 xy[0] - 0.025,
                 xy[1] + 0.025,
@@ -209,7 +208,7 @@ def radviz(
                 va="bottom",
                 size="small",
             )
-        elif xy[0] >= 0.0 and xy[1] < 0.0:
+        elif xy[1] < 0.0 <= xy[0]:
             ax.text(
                 xy[0] + 0.025, xy[1] - 0.025, name, ha="left", va="top", size="small"
             )
@@ -296,7 +295,6 @@ def bootstrap_plot(
     samples: int = 500,
     **kwds,
 ) -> Figure:
-
     import matplotlib.pyplot as plt
 
     # TODO: is the failure mentioned below still relevant?
@@ -351,7 +349,7 @@ def parallel_coordinates(
     cols=None,
     ax: Axes | None = None,
     color=None,
-    use_columns=False,
+    use_columns: bool = False,
     xticks=None,
     colormap=None,
     axvlines: bool = True,
@@ -378,6 +376,7 @@ def parallel_coordinates(
     ncols = len(df.columns)
 
     # determine values to use for xticks
+    x: list[int] | Index
     if use_columns is True:
         if not np.all(np.isreal(list(df.columns))):
             raise ValueError("Columns must be numeric to be used as xticks")
@@ -385,7 +384,7 @@ def parallel_coordinates(
     elif xticks is not None:
         if not np.all(np.isreal(xticks)):
             raise ValueError("xticks specified must be numeric")
-        elif len(xticks) != ncols:
+        if len(xticks) != ncols:
             raise ValueError("Length of xticks must match number of columns")
         x = xticks
     else:
@@ -473,3 +472,10 @@ def autocorrelation_plot(series: Series, ax: Axes | None = None, **kwds) -> Axes
         ax.legend()
     ax.grid()
     return ax
+
+
+def unpack_single_str_list(keys):
+    # GH 42795
+    if isinstance(keys, list) and len(keys) == 1:
+        keys = keys[0]
+    return keys

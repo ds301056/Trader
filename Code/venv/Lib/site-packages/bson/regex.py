@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Tools for representing MongoDB regular expressions.
-"""
+"""Tools for representing MongoDB regular expressions."""
+from __future__ import annotations
 
 import re
 from typing import Any, Generic, Pattern, Type, TypeVar, Union
@@ -54,7 +54,7 @@ class Regex(Generic[_T]):
     _type_marker = 11
 
     @classmethod
-    def from_native(cls: Type["Regex"], regex: "Pattern[_T]") -> "Regex[_T]":
+    def from_native(cls: Type[Regex[Any]], regex: Pattern[_T]) -> Regex[_T]:
         """Convert a Python regular expression into a ``Regex`` instance.
 
         Note that in Python 3, a regular expression compiled from a
@@ -66,8 +66,7 @@ class Regex(Generic[_T]):
           >>> regex.flags ^= re.UNICODE
           >>> db.collection.insert_one({'pattern': regex})
 
-        :Parameters:
-          - `regex`: A regular expression object from ``re.compile()``.
+        :param regex: A regular expression object from ``re.compile()``.
 
         .. warning::
            Python regular expressions use a different syntax and different
@@ -89,9 +88,8 @@ class Regex(Generic[_T]):
         This class is useful to store and retrieve regular expressions that are
         incompatible with Python's regular expression dialect.
 
-        :Parameters:
-          - `pattern`: string
-          - `flags`: (optional) an integer bitmask, or a string of flag
+        :param pattern: string
+        :param flags: an integer bitmask, or a string of flag
             characters like "im" for IGNORECASE and MULTILINE
         """
         if not isinstance(pattern, (str, bytes)):
@@ -116,10 +114,10 @@ class Regex(Generic[_T]):
     def __ne__(self, other: Any) -> bool:
         return not self == other
 
-    def __repr__(self):
-        return "Regex(%r, %r)" % (self.pattern, self.flags)
+    def __repr__(self) -> str:
+        return f"Regex({self.pattern!r}, {self.flags!r})"
 
-    def try_compile(self) -> "Pattern[_T]":
+    def try_compile(self) -> Pattern[_T]:
         """Compile this :class:`Regex` as a Python regular expression.
 
         .. warning::

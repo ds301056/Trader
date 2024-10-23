@@ -2,18 +2,14 @@
 from __future__ import annotations
 
 from math import ceil
-from typing import (
-    TYPE_CHECKING,
-    Iterable,
-    Sequence,
-)
+from typing import TYPE_CHECKING
 import warnings
 
+from matplotlib import ticker
 import matplotlib.table
-import matplotlib.ticker as ticker
 import numpy as np
 
-from pandas._typing import FrameOrSeriesUnion
+from pandas.util._exceptions import find_stack_level
 
 from pandas.core.dtypes.common import is_list_like
 from pandas.core.dtypes.generic import (
@@ -22,40 +18,50 @@ from pandas.core.dtypes.generic import (
     ABCSeries,
 )
 
-from pandas.plotting._matplotlib import compat
-
 if TYPE_CHECKING:
+    from collections.abc import (
+        Iterable,
+        Sequence,
+    )
+
     from matplotlib.axes import Axes
     from matplotlib.axis import Axis
     from matplotlib.figure import Figure
     from matplotlib.lines import Line2D
     from matplotlib.table import Table
 
+    from pandas import (
+        DataFrame,
+        Series,
+    )
 
-def do_adjust_figure(fig: Figure):
+
+def do_adjust_figure(fig: Figure) -> bool:
     """Whether fig has constrained_layout enabled."""
     if not hasattr(fig, "get_constrained_layout"):
         return False
     return not fig.get_constrained_layout()
 
 
-def maybe_adjust_figure(fig: Figure, *args, **kwargs):
+def maybe_adjust_figure(fig: Figure, *args, **kwargs) -> None:
     """Call fig.subplots_adjust unless fig has constrained_layout enabled."""
     if do_adjust_figure(fig):
         fig.subplots_adjust(*args, **kwargs)
 
 
-def format_date_labels(ax: Axes, rot):
+def format_date_labels(ax: Axes, rot) -> None:
     # mini version of autofmt_xdate
     for label in ax.get_xticklabels():
-        label.set_ha("right")
+        label.set_horizontalalignment("right")
         label.set_rotation(rot)
     fig = ax.get_figure()
-    maybe_adjust_figure(fig, bottom=0.2)
+    if fig is not None:
+        # should always be a Figure but can technically be None
+        maybe_adjust_figure(fig, bottom=0.2)
 
 
 def table(
-    ax, data: FrameOrSeriesUnion, rowLabels=None, colLabels=None, **kwargs
+    ax, data: DataFrame | Series, rowLabels=None, colLabels=None, **kwargs
 ) -> Table:
     if isinstance(data, ABCSeries):
         data = data.to_frame()
@@ -72,13 +78,22 @@ def table(
 
     cellText = data.values
 
-    table = matplotlib.table.table(
-        ax, cellText=cellText, rowLabels=rowLabels, colLabels=colLabels, **kwargs
+    # error: Argument "cellText" to "table" has incompatible type "ndarray[Any,
+    # Any]"; expected "Sequence[Sequence[str]] | None"
+    return matplotlib.table.table(
+        ax,
+        cellText=cellText,  # type: ignore[arg-type]
+        rowLabels=rowLabels,
+        colLabels=colLabels,
+        **kwargs,
     )
-    return table
 
 
-def _get_layout(nplots: int, layout=None, layout_type: str = "box") -> tuple[int, int]:
+def _get_layout(
+    nplots: int,
+    layout: tuple[int, int] | None = None,
+    layout_type: str = "box",
+) -> tuple[int, int]:
     if layout is not None:
         if not isinstance(layout, (tuple, list)) or len(layout) != 2:
             raise ValueError("Layout must be a tuple of (rows, columns)")
@@ -112,7 +127,7 @@ def _get_layout(nplots: int, layout=None, layout_type: str = "box") -> tuple[int
         return layouts[nplots]
     except KeyError:
         k = 1
-        while k ** 2 < nplots:
+        while k**2 < nplots:
             k += 1
 
         if (k - 1) * k >= nplots:
@@ -222,14 +237,16 @@ def create_subplots(
                 ax = flatten_axes(ax)
             if layout is not None:
                 warnings.warn(
-                    "When passing multiple axes, layout keyword is ignored", UserWarning
+                    "When passing multiple axes, layout keyword is ignored.",
+                    UserWarning,
+                    stacklevel=find_stack_level(),
                 )
             if sharex or sharey:
                 warnings.warn(
                     "When passing multiple axes, sharex and sharey "
-                    "are ignored. These settings must be specified when creating axes",
+                    "are ignored. These settings must be specified when creating axes.",
                     UserWarning,
-                    stacklevel=4,
+                    stacklevel=find_stack_level(),
                 )
             if ax.size == naxes:
                 fig = ax.flat[0].get_figure()
@@ -250,9 +267,9 @@ def create_subplots(
         else:
             warnings.warn(
                 "To output multiple subplots, the figure containing "
-                "the passed axes is being cleared",
+                "the passed axes is being cleared.",
                 UserWarning,
-                stacklevel=4,
+                stacklevel=find_stack_level(),
             )
             fig.clear()
 
@@ -306,7 +323,7 @@ def create_subplots(
     return fig, axes
 
 
-def _remove_labels_from_axis(axis: Axis):
+def _remove_labels_from_axis(axis: Axis) -> None:
     for t in axis.get_majorticklabels():
         t.set_visible(False)
 
@@ -322,13 +339,13 @@ def _remove_labels_from_axis(axis: Axis):
     axis.get_label().set_visible(False)
 
 
-def _has_externally_shared_axis(ax1: matplotlib.axes, compare_axis: str) -> bool:
+def _has_externally_shared_axis(ax1: Axes, compare_axis: str) -> bool:
     """
     Return whether an axis is externally shared.
 
     Parameters
     ----------
-    ax1 : matplotlib.axes
+    ax1 : matplotlib.axes.Axes
         Axis to query.
     compare_axis : str
         `"x"` or `"y"` according to whether the X-axis or Y-axis is being
@@ -360,12 +377,12 @@ def _has_externally_shared_axis(ax1: matplotlib.axes, compare_axis: str) -> bool
             "_has_externally_shared_axis() needs 'x' or 'y' as a second parameter"
         )
 
-    axes = axes.get_siblings(ax1)
+    axes_siblings = axes.get_siblings(ax1)
 
     # Retain ax1 and any of its siblings which aren't in the same position as it
     ax1_points = ax1.get_position().get_points()
 
-    for ax2 in axes:
+    for ax2 in axes_siblings:
         if not np.array_equal(ax1_points, ax2.get_position().get_points()):
             return True
 
@@ -380,19 +397,12 @@ def handle_shared_axes(
     ncols: int,
     sharex: bool,
     sharey: bool,
-):
+) -> None:
     if nplots > 1:
-        if compat.mpl_ge_3_2_0():
-            row_num = lambda x: x.get_subplotspec().rowspan.start
-            col_num = lambda x: x.get_subplotspec().colspan.start
-        else:
-            row_num = lambda x: x.rowNum
-            col_num = lambda x: x.colNum
+        row_num = lambda x: x.get_subplotspec().rowspan.start
+        col_num = lambda x: x.get_subplotspec().colspan.start
 
-        if compat.mpl_ge_3_4_0():
-            is_first_col = lambda x: x.get_subplotspec().is_first_col()
-        else:
-            is_first_col = lambda x: x.is_first_col()
+        is_first_col = lambda x: x.get_subplotspec().is_first_col()
 
         if nrows > 1:
             try:
@@ -414,10 +424,7 @@ def handle_shared_axes(
             except IndexError:
                 # if gridspec is used, ax.rowNum and ax.colNum may different
                 # from layout shape. in this case, use last_row logic
-                if compat.mpl_ge_3_4_0():
-                    is_last_row = lambda x: x.get_subplotspec().is_last_row()
-                else:
-                    is_last_row = lambda x: x.is_last_row()
+                is_last_row = lambda x: x.get_subplotspec().is_last_row()
                 for ax in axarr:
                     if is_last_row(ax):
                         continue
@@ -445,9 +452,9 @@ def flatten_axes(axes: Axes | Sequence[Axes]) -> np.ndarray:
 
 def set_ticks_props(
     axes: Axes | Sequence[Axes],
-    xlabelsize=None,
+    xlabelsize: int | None = None,
     xrot=None,
-    ylabelsize=None,
+    ylabelsize: int | None = None,
     yrot=None,
 ):
     import matplotlib.pyplot as plt

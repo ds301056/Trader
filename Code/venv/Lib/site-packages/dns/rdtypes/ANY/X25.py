@@ -25,30 +25,30 @@ import dns.tokenizer
 
 @dns.immutable.immutable
 class X25(dns.rdata.Rdata):
-
     """X25 record"""
 
     # see RFC 1183
 
-    __slots__ = ['address']
+    __slots__ = ["address"]
 
     def __init__(self, rdclass, rdtype, address):
         super().__init__(rdclass, rdtype)
         self.address = self._as_bytes(address, True, 255)
 
     def to_text(self, origin=None, relativize=True, **kw):
-        return '"%s"' % dns.rdata._escapify(self.address)
+        return f'"{dns.rdata._escapify(self.address)}"'
 
     @classmethod
-    def from_text(cls, rdclass, rdtype, tok, origin=None, relativize=True,
-                  relativize_to=None):
+    def from_text(
+        cls, rdclass, rdtype, tok, origin=None, relativize=True, relativize_to=None
+    ):
         address = tok.get_string()
         return cls(rdclass, rdtype, address)
 
     def _to_wire(self, file, compress=None, origin=None, canonicalize=False):
         l = len(self.address)
         assert l < 256
-        file.write(struct.pack('!B', l))
+        file.write(struct.pack("!B", l))
         file.write(self.address)
 
     @classmethod

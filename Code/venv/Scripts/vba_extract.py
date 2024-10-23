@@ -1,4 +1,4 @@
-#!F:\github\trader\code\venv\Scripts\python.exe
+#!F:\GitHub\Trader\Code\venv\Scripts\python.exe
 
 ##############################################################################
 #

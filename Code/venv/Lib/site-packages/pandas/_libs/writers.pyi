@@ -1,8 +1,9 @@
 import numpy as np
 
-# TODO: can make this more specific
+from pandas._typing import ArrayLike
+
 def write_csv_rows(
-    data: list,
+    data: list[ArrayLike],
     data_index: np.ndarray,
     nlevels: int,
     cols: np.ndarray,
@@ -14,7 +15,6 @@ def max_len_string_array(
 ) -> int: ...
 def word_len(val: object) -> int: ...
 def string_array_replace_from_nan_rep(
-    arr: np.ndarray,  #  np.ndarray[object, ndim=1]
+    arr: np.ndarray,  # np.ndarray[object, ndim=1]
     nan_rep: object,
-    replace: object = ...,
 ) -> None: ...

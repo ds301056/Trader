@@ -6,21 +6,19 @@ import win32ui
 
 
 def ParseArgs(str):
-    import string
-
     ret = []
     pos = 0
     length = len(str)
     while pos < length:
         try:
             while str[pos] in string.whitespace:
-                pos = pos + 1
+                pos += 1
         except IndexError:
             break
         if pos >= length:
             break
         if str[pos] == '"':
-            pos = pos + 1
+            pos += 1
             try:
                 endPos = str.index('"', pos) - 1
                 nextPos = endPos + 2
@@ -30,7 +28,7 @@ def ParseArgs(str):
         else:
             endPos = pos
             while endPos < length and not str[endPos] in string.whitespace:
-                endPos = endPos + 1
+                endPos += 1
             nextPos = endPos + 1
         ret.append(str[pos : endPos + 1].strip())
         pos = nextPos

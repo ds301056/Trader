@@ -7,29 +7,37 @@ from datetime import tzinfo
 import numpy as np
 
 from pandas._libs.tslibs.dtypes import Resolution
-from pandas._libs.tslibs.offsets import BaseOffset
+from pandas._typing import npt
 
 def dt64arr_to_periodarr(
-    stamps: np.ndarray,  # const int64_t[:]
+    stamps: npt.NDArray[np.int64],
     freq: int,
     tz: tzinfo | None,
-) -> np.ndarray: ...  # np.ndarray[np.int64, ndim=1]
+    reso: int = ...,  # NPY_DATETIMEUNIT
+) -> npt.NDArray[np.int64]: ...
 def is_date_array_normalized(
-    stamps: np.ndarray,  # const int64_t[:]
-    tz: tzinfo | None = None,
+    stamps: npt.NDArray[np.int64],
+    tz: tzinfo | None,
+    reso: int,  # NPY_DATETIMEUNIT
 ) -> bool: ...
 def normalize_i8_timestamps(
-    stamps: np.ndarray,  # const int64_t[:]
+    stamps: npt.NDArray[np.int64],
     tz: tzinfo | None,
-) -> np.ndarray: ...  # np.ndarray[np.int64]
+    reso: int,  # NPY_DATETIMEUNIT
+) -> npt.NDArray[np.int64]: ...
 def get_resolution(
-    stamps: np.ndarray,  # const int64_t[:]
-    tz: tzinfo | None = None,
+    stamps: npt.NDArray[np.int64],
+    tz: tzinfo | None = ...,
+    reso: int = ...,  # NPY_DATETIMEUNIT
 ) -> Resolution: ...
 def ints_to_pydatetime(
-    arr: np.ndarray,  # const int64_t[:}]
-    tz: tzinfo | None = None,
-    freq: str | BaseOffset | None = None,
-    fold: bool = False,
-    box: str = "datetime",
-) -> np.ndarray: ...  # np.ndarray[object]
+    stamps: npt.NDArray[np.int64],
+    tz: tzinfo | None = ...,
+    box: str = ...,
+    reso: int = ...,  # NPY_DATETIMEUNIT
+) -> npt.NDArray[np.object_]: ...
+def tz_convert_from_utc(
+    stamps: npt.NDArray[np.int64],
+    tz: tzinfo | None,
+    reso: int = ...,  # NPY_DATETIMEUNIT
+) -> npt.NDArray[np.int64]: ...

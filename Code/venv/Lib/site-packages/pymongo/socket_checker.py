@@ -13,11 +13,12 @@
 # limitations under the License.
 
 """Select / poll helper"""
+from __future__ import annotations
 
 import errno
 import select
 import sys
-from typing import Any, Optional
+from typing import Any, Optional, cast
 
 # PYTHON-2320: Jython does not fully support poll on SSL sockets,
 # https://bugs.jython.org/issue2900
@@ -25,15 +26,15 @@ _HAVE_POLL = hasattr(select, "poll") and not sys.platform.startswith("java")
 _SelectError = getattr(select, "error", OSError)
 
 
-def _errno_from_exception(exc):
+def _errno_from_exception(exc: BaseException) -> Optional[int]:
     if hasattr(exc, "errno"):
-        return exc.errno
+        return cast(int, exc.errno)
     if exc.args:
-        return exc.args[0]
+        return cast(int, exc.args[0])
     return None
 
 
-class SocketChecker(object):
+class SocketChecker:
     def __init__(self) -> None:
         self._poller: Optional[select.poll]
         if _HAVE_POLL:
@@ -78,7 +79,7 @@ class SocketChecker(object):
                     # ready: subsets of the first three arguments. Return
                     # True if any of the lists are not empty.
                     return any(res)
-            except (_SelectError, IOError) as exc:  # type: ignore
+            except (_SelectError, OSError) as exc:  # type: ignore
                 if _errno_from_exception(exc) in (errno.EINTR, errno.EAGAIN):
                     continue
                 raise

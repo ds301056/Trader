@@ -12,12 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Representation for the MongoDB internal MaxKey type.
-"""
+"""Representation for the MongoDB internal MaxKey type."""
+from __future__ import annotations
+
 from typing import Any
 
 
-class MaxKey(object):
+class MaxKey:
     """MongoDB internal MaxKey type."""
 
     __slots__ = ()
@@ -51,5 +52,5 @@ class MaxKey(object):
     def __gt__(self, other: Any) -> bool:
         return not isinstance(other, MaxKey)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "MaxKey()"

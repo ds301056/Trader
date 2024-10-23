@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Tools for representing MongoDB internal Timestamps.
-"""
+"""Tools for representing MongoDB internal Timestamps."""
+from __future__ import annotations
 
 import calendar
 import datetime
@@ -25,7 +25,7 @@ from bson.tz_util import utc
 UPPERBOUND = 4294967296
 
 
-class Timestamp(object):
+class Timestamp:
     """MongoDB internal timestamps used in the opLog."""
 
     __slots__ = ("__time", "__inc")
@@ -47,11 +47,10 @@ class Timestamp(object):
         an instance of :class:`int`. Raises :class:`ValueError` if
         `time` or `inc` is not in [0, 2**32).
 
-        :Parameters:
-          - `time`: time in seconds since epoch UTC, or a naive UTC
+        :param time: time in seconds since epoch UTC, or a naive UTC
             :class:`~datetime.datetime`, or an aware
             :class:`~datetime.datetime`
-          - `inc`: the incrementing counter
+        :param inc: the incrementing counter
         """
         if isinstance(time, datetime.datetime):
             offset = time.utcoffset()
@@ -112,8 +111,8 @@ class Timestamp(object):
             return (self.time, self.inc) >= (other.time, other.inc)
         return NotImplemented
 
-    def __repr__(self):
-        return "Timestamp(%s, %s)" % (self.__time, self.__inc)
+    def __repr__(self) -> str:
+        return f"Timestamp({self.__time}, {self.__inc})"
 
     def as_datetime(self) -> datetime.datetime:
         """Return a :class:`~datetime.datetime` instance corresponding
