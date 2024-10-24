@@ -21,5 +21,10 @@
     "timestr",
     "xlsxwriter"
   ],
-  "git.ignoreLimitWarning": true
+  "git.ignoreLimitWarning": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "eslint.validate": ["javascript", "javascriptreact"],
+  "javascript.updateImportsOnFileMove.enabled": "always"
 }
