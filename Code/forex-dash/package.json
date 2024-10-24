@@ -20,13 +20,19 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "eslint src --ext .js,.jsx",
+    "lint:fix": "eslint src --ext .js,.jsx --fix"
   },
   "eslintConfig": {
     "extends": [
       "react-app",
       "react-app/jest"
-    ]
+    ],
+    "rules": {
+      "react/react-in-jsx-scope": "off",
+      "react/prop-types": "off"
+    }
   },
   "browserslist": {
     "production": [
@@ -41,6 +47,9 @@
     ]
   },
   "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "eslint": "^8.57.0",
+    "eslint-config-react-app": "^7.0.1",
+    "eslint-plugin-react": "^7.34.0"
   }
 }

@@ -22,6 +22,10 @@
 
 # 2. run: npm start
 
+# ----------------------------------------------
+
+# ##### if data is to be changed
+
 # check the setup.bat file
 
 run with .\setup.bat
