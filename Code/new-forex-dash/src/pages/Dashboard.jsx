@@ -254,7 +254,9 @@ const Dashboard = () => {
                   <SelectTrigger className="h-10 bg-white border-gray-200">
                     <SelectValue placeholder="Select Currency Pair" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent
+                    style={{ maxHeight: '200px', overflowY: 'auto' }}
+                  >
                     {options.pairs.map((pair) => (
                       <SelectItem
                         key={pair.value}
@@ -523,7 +525,6 @@ const Dashboard = () => {
                             />
                           </clipPath>
                         </defs>
-
                         <XAxis
                           dataKey="time"
                           tick={{ fontSize: 12 }}
@@ -531,16 +532,13 @@ const Dashboard = () => {
                           angle={-45}
                           textAnchor="end"
                         />
-
                         <YAxis
                           type="number"
                           domain={['dataMin', 'dataMax']}
                           tickFormatter={(value) => value.toFixed(4)}
                         />
-
                         <CartesianGrid strokeDasharray="3 3" />
                         <Tooltip content={<CustomTooltip />} />
-
                         {/* Use regular Line component for continuous price line */}
                         <Line
                           type="monotone"
@@ -549,8 +547,8 @@ const Dashboard = () => {
                           dot={false}
                           isAnimationActive={false}
                         />
-
                         {/* Add custom candles with clipPath and x-offset */}
+
                         {priceData && (
                           <svg clipPath="url(#clip-candle)">
                             <CandlestickSeries
@@ -562,9 +560,21 @@ const Dashboard = () => {
                                 )
                                 const scale = scaleLinear()
                                   .domain([min, max])
-                                  .range([550, 50]) // Adjust these values based on your chart height
+                                  .range([550, 50]) // Adjust as needed
                                 return scale(value)
                               }}
+                              x={(index) => 60 + index * 18} // Example spacing logic for x
+                              y={(price) => {
+                                const [min, max] = extent(
+                                  priceData,
+                                  (d) => d.close,
+                                )
+                                const scale = scaleLinear()
+                                  .domain([min, max])
+                                  .range([550, 50]) // Same scale as yScale
+                                return scale(price)
+                              }}
+                              width={10} // Fixed candle width
                             />
                           </svg>
                         )}
