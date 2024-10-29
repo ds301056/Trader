@@ -472,17 +472,26 @@ const Dashboard = () => {
                         handleCountChange(parseInt(value))
                       }
                     >
-                      <TabsList className="bg-slate-100 p-1">
-                        {COUNTS.map((count) => (
-                          <TabsTrigger
-                            key={count.value}
-                            value={count.value.toString()}
-                            className="data-[state=active]:bg-white data-[state=active]:text-slate-900"
-                          >
-                            {count.label}
-                          </TabsTrigger>
-                        ))}
-                      </TabsList>
+                      <div className="flex flex-col items-start space-y-2">
+                        {/* Label */}
+                        <p className="text-sm font-medium text-gray-700">
+                          Data Points
+                        </p>
+
+                        {/* Tabs for selecting data points */}
+                        <TabsList className="bg-slate-100 p-1 rounded-md border border-gray-300">
+                          {COUNTS.map((count) => (
+                            <TabsTrigger
+                              key={count.value}
+                              value={count.value.toString()}
+                              className="px-4 py-2 bg-white text-gray-700 rounded-md hover:bg-gray-200 data-[state=active]:bg-slate-900 data-[state=active]:text-white"
+                            >
+                              {count.label || count.value}{' '}
+                              {/* Use label or fallback to the count value */}
+                            </TabsTrigger>
+                          ))}
+                        </TabsList>
+                      </div>
                     </Tabs>
                   </div>
                 </CardHeader>
