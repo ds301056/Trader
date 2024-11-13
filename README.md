@@ -1,5 +1,6 @@
 # Forex - Trading Bot (built using python)
 
+ v1-Dash-Deployment
 # Data comes from OANDA API
 
 # Writes data to pkl's for advanced data analysis
@@ -24,6 +25,17 @@
 
 # ----------------------------------------------
 
+
+
+# check the setup.bat file 
+run with .\setup.bat
+
+
+
+
+
+ main
+
 # ##### if data is to be changed
 
 # check the setup.bat file
@@ -33,6 +45,7 @@ run with .\setup.bat
 # The stocks and data are from Oanda
 
 @ developer.oanda.com
+# educational account - nonprofit 
 
     Oanda api:
     REMOVED_OANDA_API_KEY
