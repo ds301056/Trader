@@ -1,6 +1,6 @@
 # Trader
 
-# educational account - nonprofit 
+
 
 # check the setup.bat file 
 run with .\setup.bat
@@ -8,6 +8,7 @@ run with .\setup.bat
 
 # The stocks and data are from Oanda
 @ developer.oanda.com
+# educational account - nonprofit 
 
     Oanda api:
     REMOVED_OANDA_API_KEY
