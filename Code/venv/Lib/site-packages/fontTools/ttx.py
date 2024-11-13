@@ -103,7 +103,6 @@ Compile options
              extension is available at https://pypi.python.org/pypi/zopfli
 """
 
-
 from fontTools.ttLib import TTFont, TTLibError
 from fontTools.misc.macCreatorType import getMacCreatorAndType
 from fontTools.unicode import setUnicodeData
@@ -376,7 +375,7 @@ def guessFileType(fileName):
 
 
 def parseOptions(args):
-    rawOptions, files = getopt.getopt(
+    rawOptions, files = getopt.gnu_getopt(
         args,
         "ld:o:fvqht:x:sgim:z:baey:",
         [

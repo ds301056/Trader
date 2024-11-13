@@ -228,9 +228,9 @@ class ScintillaFormatPropertyPage(dialog.PropertyPage):
         sel = 0
         for c in paletteVGA:
             if format[4] == c[1]:
-                # 				print "Style", style.name, "is", c[0]
+                # print("Style", style.name, "is", c[0])
                 break
-            sel = sel + 1
+            sel += 1
         else:
             sel = -1
         self.cbo.SetCurSel(sel)
@@ -286,7 +286,7 @@ class ScintillaFormatPropertyPage(dialog.PropertyPage):
 
 
 def test():
-    page = ColorEditorPropertyPage()
-    sheet = pywin.mfc.dialog.PropertySheet("Test")
+    page = ScintillaFormatPropertyPage()
+    sheet = dialog.PropertySheet("Test")
     sheet.AddPage(page)
     sheet.CreateWindow()

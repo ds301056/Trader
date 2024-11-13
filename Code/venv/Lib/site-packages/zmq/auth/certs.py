@@ -3,7 +3,6 @@
 # Copyright (C) PyZMQ Developers
 # Distributed under the terms of the Modified BSD License.
 
-
 import datetime
 import glob
 import os
@@ -88,7 +87,7 @@ def create_certificates(
 
 
 def load_certificate(
-    filename: Union[str, os.PathLike]
+    filename: Union[str, os.PathLike],
 ) -> Tuple[bytes, Optional[bytes]]:
     """Load public and secret key from a zmq certificate.
 
@@ -117,7 +116,7 @@ def load_certificate(
                 break
 
     if public_key is None:
-        raise ValueError("No public key found in %s" % filename)
+        raise ValueError(f"No public key found in {filename}")
 
     return public_key, secret_key
 

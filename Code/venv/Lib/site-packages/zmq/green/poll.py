@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import gevent
 from gevent import select
 
@@ -31,12 +33,12 @@ class _Poller(_original_Poller):
             elif hasattr(socket, 'fileno'):
                 try:
                     fd = int(socket.fileno())
-                except:
+                except Exception:
                     raise ValueError('fileno() must return an valid integer fd')
             else:
                 raise TypeError(
                     'Socket must be a 0MQ socket, an integer fd '
-                    'or have a fileno() method: %r' % socket
+                    f'or have a fileno() method: {socket!r}'
                 )
 
             if flags & zmq.POLLIN:

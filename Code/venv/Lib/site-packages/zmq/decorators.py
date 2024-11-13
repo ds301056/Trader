@@ -8,12 +8,14 @@ Context and sockets are closed at the end of the function.
 For example::
 
     from zmq.decorators import context, socket
-    
+
     @context()
     @socket(zmq.PUSH)
     def work(ctx, push):
         ...
 """
+
+from __future__ import annotations
 
 # Copyright (c) PyZMQ Developers.
 # Distributed under the terms of the Modified BSD License.
@@ -67,8 +69,8 @@ class _Decorator:
                         kwargs[kw_name] = obj
                     elif kw_name and kw_name in kwargs:
                         raise TypeError(
-                            "{}() got multiple values for"
-                            " argument '{}'".format(func.__name__, kw_name)
+                            f"{func.__name__}() got multiple values for"
+                            f" argument '{kw_name}'"
                         )
                     else:
                         args = args + (obj,)

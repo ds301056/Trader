@@ -38,7 +38,7 @@ def CallPipe(fn, args):
     ret = None
     retryCount = 0
     while retryCount < 8:  # Keep looping until user cancels.
-        retryCount = retryCount + 1
+        retryCount += 1
         try:
             return fn(*args)
         except win32api.error as exc:
@@ -111,7 +111,6 @@ def stressTestClient(server, numThreads, numMessages):
 
 def main():
     import getopt
-    import sys
 
     server = "."
     thread_count = 0

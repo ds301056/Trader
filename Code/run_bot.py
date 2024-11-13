@@ -3,6 +3,7 @@ from infrastructure.instrument_collection import instrumentCollection # Import t
 
 
 if __name__ == "__main__": # If the script is being run directly
-  instrumentCollection.LoadInstruments("./data") # Load the instruments from the data directory
+  instrumentCollection.LoadInstrumentsDB() # Load the instruments from the data directory
+  #print(instrumentCollection.instruments_dict)
   b = Bot() # Create a Bot object
   b.run() # Call the run method on the Bot object

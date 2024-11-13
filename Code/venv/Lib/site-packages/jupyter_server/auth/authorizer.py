@@ -5,6 +5,7 @@ allows all authenticated requests
 
 .. versionadded:: 2.0
 """
+
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
 from __future__ import annotations
@@ -65,7 +66,7 @@ class Authorizer(LoggingConfigurable):
         bool
             True if user authorized to make request; False, otherwise
         """
-        raise NotImplementedError()
+        raise NotImplementedError
 
 
 class AllowAllAuthorizer(Authorizer):

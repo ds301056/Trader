@@ -8,6 +8,7 @@ command line.
 """
 
 import re
+import types
 
 import pythoncom
 import win32api
@@ -21,10 +22,10 @@ from win32com.axscript.client.framework import (
     SCRIPTTEXT_FORCEEXECUTION,
     SCRIPTTEXT_ISEXPRESSION,
     SCRIPTTEXT_ISPERSISTENT,
-    Exception,
     RaiseAssert,
     trace,
 )
+from win32com.server.exception import COMException
 
 PyScript_CLSID = "{DF630910-1C1D-11d0-AE36-8C0F5E000000}"
 
@@ -37,11 +38,11 @@ def debug_attr_print(*args):
 
 
 def ExpandTabs(text):
-    return re.sub("\t", "    ", text)
+    return re.sub(r"\t", "    ", text)
 
 
 def AddCR(text):
-    return re.sub("\n", "\r\n", text)
+    return re.sub(r"\n", "\r\n", text)
 
 
 class AXScriptCodeBlock(framework.AXScriptCodeBlock):
@@ -210,10 +211,9 @@ class PyScript(framework.COMScript):
 
     def InitNew(self):
         framework.COMScript.InitNew(self)
-        import imp
 
         self.scriptDispatch = None
-        self.globalNameSpaceModule = imp.new_module("__ax_main__")
+        self.globalNameSpaceModule = types.ModuleType("__ax_main__")
         self.globalNameSpaceModule.__dict__["ax"] = AXScriptAttribute(self)
 
         self.codeBlocks = []
@@ -238,7 +238,7 @@ class PyScript(framework.COMScript):
         return framework.COMScript.Reset(self)
 
     def _GetNextCodeBlockNumber(self):
-        self.codeBlockCounter = self.codeBlockCounter + 1
+        self.codeBlockCounter += 1
         return self.codeBlockCounter
 
     def RegisterNamedItem(self, item):
@@ -252,9 +252,9 @@ class PyScript(framework.COMScript):
             if item.IsGlobal():
                 # Global items means sub-items are also added...
                 for subitem in item.subItems.values():
-                    self.globalNameSpaceModule.__dict__[
-                        subitem.name
-                    ] = subitem.attributeObject
+                    self.globalNameSpaceModule.__dict__[subitem.name] = (
+                        subitem.attributeObject
+                    )
                 # Also add all methods
                 for name, entry in item.dispatchContainer._olerepr_.mapFuncs.items():
                     if not entry.hidden:
@@ -333,7 +333,7 @@ class PyScript(framework.COMScript):
         codeBlock = function = None
         try:
             function = item.scriptlets[funcName]
-            if type(function) == type(self):  # ie, is a CodeBlock instance
+            if isinstance(function, PyScript):  # ie, is a CodeBlock instance
                 codeBlock = function
                 function = None
         except KeyError:
@@ -341,8 +341,8 @@ class PyScript(framework.COMScript):
         if codeBlock is not None:
             realCode = "def %s():\n" % funcName
             for line in framework.RemoveCR(codeBlock.codeText).split("\n"):
-                realCode = realCode + "\t" + line + "\n"
-            realCode = realCode + "\n"
+                realCode += "\t" + line + "\n"
+            realCode += "\n"
             if not self.CompileInScriptedSection(codeBlock, "exec", realCode):
                 return
             dict = {}
@@ -366,7 +366,7 @@ class PyScript(framework.COMScript):
                         item.scriptlets[funcName] = function
 
         if function is None:
-            raise Exception(scode=winerror.DISP_E_MEMBERNOTFOUND)
+            raise COMException(scode=winerror.DISP_E_MEMBERNOTFOUND)
         return self.ApplyInScriptedSection(codeBlock, function, args)
 
     def DoParseScriptText(
@@ -382,7 +382,7 @@ class PyScript(framework.COMScript):
         num = self._GetNextCodeBlockNumber()
         if num == 1:
             num = ""
-        name = "%s %s" % (name, num)
+        name += f" {num}"
         codeBlock = AXScriptCodeBlock(
             name, code, sourceContextCookie, startLineNumber, flags
         )

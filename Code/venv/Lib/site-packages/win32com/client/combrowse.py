@@ -22,6 +22,7 @@
    work.
 
 """
+
 import sys
 
 import pythoncom
@@ -45,8 +46,8 @@ class HLIRoot(browser.HLIPythonObject):
             HLIHeadingRegisterdTypeLibs(),
         ]
 
-    def __cmp__(self, other):
-        return cmp(self.name, other.name)
+    def __lt__(self, other):
+        return self.name < other.name
 
 
 class HLICOM(browser.HLIPythonObject):
@@ -59,7 +60,7 @@ class HLICOM(browser.HLIPythonObject):
 
 class HLICLSID(HLICOM):
     def __init__(self, myobject, name=None):
-        if type(myobject) == type(""):
+        if isinstance(myobject, str):
             myobject = pythoncom.MakeIID(myobject)
         if name is None:
             try:
@@ -194,7 +195,7 @@ class HLIRegisteredTypeLibrary(HLICOM):
         collected = []
         helpPath = ""
         key = win32api.RegOpenKey(
-            win32con.HKEY_CLASSES_ROOT, "TypeLib\\%s\\%s" % (clsidstr, versionStr)
+            win32con.HKEY_CLASSES_ROOT, f"TypeLib\\{clsidstr}\\{versionStr}"
         )
         win32ui.DoWaitCursor(1)
         try:
@@ -234,11 +235,11 @@ class HLIRegisteredTypeLibrary(HLICOM):
                             except win32api.error:
                                 fname = ""
                             collected.append((lcid, platform, fname))
-                            lcidnum = lcidnum + 1
+                            lcidnum += 1
                         win32api.RegCloseKey(lcidkey)
                     except ValueError:
                         pass
-                num = num + 1
+                num += 1
         finally:
             win32ui.DoWaitCursor(0)
             win32api.RegCloseKey(key)
@@ -453,15 +454,15 @@ class HLITypeLibFunction(HLICOM):
             typname = "?Bad type?"
         for flag, desc in self.type_flags:
             if flag & typ:
-                typname = "%s(%s)" % (desc, typname)
+                typname = f"{desc}({typname})"
         return typname
 
     def MakeReturnType(self, returnTypeDesc):
-        if type(returnTypeDesc) == type(()):
+        if isinstance(returnTypeDesc, tuple):
             first = returnTypeDesc[0]
             result = self.MakeReturnType(first)
             if first != pythoncom.VT_USERDEFINED:
-                result = result + " " + self.MakeReturnType(returnTypeDesc[1])
+                result += " " + self.MakeReturnType(returnTypeDesc[1])
             return result
         else:
             return self.MakeReturnTypeName(returnTypeDesc)
@@ -480,16 +481,16 @@ class HLITypeLibFunction(HLICOM):
             typ, flags, default = fd[8]
             val = self.MakeReturnType(typ)
             if flags:
-                val = "%s (Flags=%d, default=%s)" % (val, flags, default)
+                val += f" (Flags={flags}, default={default})"
             ret.append(browser.MakeHLI(val, "Return Type"))
 
         for argDesc in fd[2]:
             typ, flags, default = argDesc
             val = self.MakeReturnType(typ)
             if flags:
-                val = "%s (Flags=%d)" % (val, flags)
+                val += f" (Flags={flags})"
             if default is not None:
-                val = "%s (Default=%s)" % (val, default)
+                val += f" (Default={default})"
             ret.append(browser.MakeHLI(val, "Argument"))
 
         try:
@@ -580,12 +581,12 @@ class HLIHeadingRegisterdTypeLibs(HLICOM):
                         if versionFlt > bestVersion:
                             bestVersion = versionFlt
                             name = win32api.RegQueryValue(subKey, versionStr)
-                        subNum = subNum + 1
+                        subNum += 1
                 finally:
                     win32api.RegCloseKey(subKey)
                 if name is not None:
                     ret.append(HLIRegisteredTypeLibrary((keyName, versionStr), name))
-                num = num + 1
+                num += 1
         finally:
             win32api.RegCloseKey(key)
             win32ui.DoWaitCursor(0)

@@ -3,6 +3,7 @@ Timezone utilities
 
 Just UTC-awareness right now
 """
+
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
 from __future__ import annotations
@@ -13,7 +14,7 @@ from datetime import datetime, timedelta, timezone, tzinfo
 ZERO = timedelta(0)
 
 
-class tzUTC(tzinfo):
+class tzUTC(tzinfo):  # noqa: N801
     """tzinfo object for UTC (zero offset)"""
 
     def utcoffset(self, d: datetime | None) -> timedelta:

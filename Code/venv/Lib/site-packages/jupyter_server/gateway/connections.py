@@ -1,4 +1,5 @@
 """Gateway connection classes."""
+
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
 from __future__ import annotations
@@ -46,6 +47,8 @@ class GatewayWebSocketConnection(BaseKernelWebsocketConnection):
             url_escape(self.kernel_id),
             "channels",
         )
+        if self.session_id:
+            ws_url += f"?session_id={url_escape(self.session_id)}"
         self.log.info(f"Connecting to {ws_url}")
         kwargs: dict[str, Any] = {}
         kwargs = GatewayClient.instance().load_connection_args(**kwargs)
@@ -68,9 +71,7 @@ class GatewayWebSocketConnection(BaseKernelWebsocketConnection):
         else:
             self.log.warning(
                 "Websocket connection has been closed via client disconnect or due to error.  "
-                "Kernel with ID '{}' may not be terminated on GatewayClient: {}".format(
-                    self.kernel_id, GatewayClient.instance().url
-                )
+                f"Kernel with ID '{self.kernel_id}' may not be terminated on GatewayClient: {GatewayClient.instance().url}"
             )
 
     def disconnect(self):
@@ -109,7 +110,7 @@ class GatewayWebSocketConnection(BaseKernelWebsocketConnection):
 
         # NOTE(esevan): if websocket is not disconnected by client, try to reconnect.
         if not self.disconnected and self.retry < GatewayClient.instance().gateway_retry_max:
-            jitter = random.randint(10, 100) * 0.01
+            jitter = random.randint(10, 100) * 0.01  # noqa: S311
             retry_interval = (
                 min(
                     GatewayClient.instance().gateway_retry_interval * (2**self.retry),

@@ -1,8 +1,10 @@
 """zmq constants as enums"""
+
+from __future__ import annotations
+
 import errno
 import sys
 from enum import Enum, IntEnum, IntFlag
-from typing import List
 
 _HAUSNUMERO = 156384712
 
@@ -256,6 +258,19 @@ class SocketOption(IntEnum):
     HELLO_MSG = 110, _OptType.bytes
     DISCONNECT_MSG = 111, _OptType.bytes
     PRIORITY = 112
+    # 4.3.5
+    BUSY_POLL = 113
+    HICCUP_MSG = 114, _OptType.bytes
+    XSUB_VERBOSE_UNSUBSCRIBE = 115
+    TOPICS_COUNT = 116
+    NORM_MODE = 117
+    NORM_UNICAST_NACK = 118
+    NORM_BUFFER_SIZE = 119
+    NORM_SEGMENT_SIZE = 120
+    NORM_BLOCK_SIZE = 121
+    NORM_NUM_PARITY = 122
+    NORM_NUM_AUTOPARITY = 123
+    NORM_PUSH = 124
 
 
 class MessageOption(IntEnum):
@@ -279,6 +294,39 @@ class Flag(IntFlag):
     DONTWAIT = 1
     SNDMORE = 2
     NOBLOCK = DONTWAIT
+
+
+class RouterNotify(IntEnum):
+    """Values for zmq.ROUTER_NOTIFY socket option
+
+    .. versionadded:: 26
+    .. versionadded:: libzmq-4.3.0 (draft)
+    """
+
+    @staticmethod
+    def _global_name(name):
+        return f"NOTIFY_{name}"
+
+    CONNECT = 1
+    DISCONNECT = 2
+
+
+class NormMode(IntEnum):
+    """Values for zmq.NORM_MODE socket option
+
+    .. versionadded:: 26
+    .. versionadded:: libzmq-4.3.5 (draft)
+    """
+
+    @staticmethod
+    def _global_name(name):
+        return f"NORM_{name}"
+
+    FIXED = 0
+    CC = 1
+    CCL = 2
+    CCE = 3
+    CCE_ECNONLY = 4
 
 
 class SecurityMechanism(IntEnum):
@@ -501,6 +549,11 @@ NOBLOCK: int = Flag.NOBLOCK
 MORE: int = MessageOption.MORE
 SHARED: int = MessageOption.SHARED
 SRCFD: int = MessageOption.SRCFD
+NORM_FIXED: int = NormMode.FIXED
+NORM_CC: int = NormMode.CC
+NORM_CCL: int = NormMode.CCL
+NORM_CCE: int = NormMode.CCE
+NORM_CCE_ECNONLY: int = NormMode.CCE_ECNONLY
 POLLIN: int = PollEvent.POLLIN
 POLLOUT: int = PollEvent.POLLOUT
 POLLERR: int = PollEvent.POLLERR
@@ -508,6 +561,8 @@ POLLPRI: int = PollEvent.POLLPRI
 RECONNECT_STOP_CONN_REFUSED: int = ReconnectStop.CONN_REFUSED
 RECONNECT_STOP_HANDSHAKE_FAILED: int = ReconnectStop.HANDSHAKE_FAILED
 RECONNECT_STOP_AFTER_DISCONNECT: int = ReconnectStop.AFTER_DISCONNECT
+NOTIFY_CONNECT: int = RouterNotify.CONNECT
+NOTIFY_DISCONNECT: int = RouterNotify.DISCONNECT
 NULL: int = SecurityMechanism.NULL
 PLAIN: int = SecurityMechanism.PLAIN
 CURVE: int = SecurityMechanism.CURVE
@@ -619,6 +674,18 @@ RECONNECT_STOP: int = SocketOption.RECONNECT_STOP
 HELLO_MSG: int = SocketOption.HELLO_MSG
 DISCONNECT_MSG: int = SocketOption.DISCONNECT_MSG
 PRIORITY: int = SocketOption.PRIORITY
+BUSY_POLL: int = SocketOption.BUSY_POLL
+HICCUP_MSG: int = SocketOption.HICCUP_MSG
+XSUB_VERBOSE_UNSUBSCRIBE: int = SocketOption.XSUB_VERBOSE_UNSUBSCRIBE
+TOPICS_COUNT: int = SocketOption.TOPICS_COUNT
+NORM_MODE: int = SocketOption.NORM_MODE
+NORM_UNICAST_NACK: int = SocketOption.NORM_UNICAST_NACK
+NORM_BUFFER_SIZE: int = SocketOption.NORM_BUFFER_SIZE
+NORM_SEGMENT_SIZE: int = SocketOption.NORM_SEGMENT_SIZE
+NORM_BLOCK_SIZE: int = SocketOption.NORM_BLOCK_SIZE
+NORM_NUM_PARITY: int = SocketOption.NORM_NUM_PARITY
+NORM_NUM_AUTOPARITY: int = SocketOption.NORM_NUM_AUTOPARITY
+NORM_PUSH: int = SocketOption.NORM_PUSH
 PAIR: int = SocketType.PAIR
 PUB: int = SocketType.PUB
 SUB: int = SocketType.SUB
@@ -643,7 +710,7 @@ DGRAM: int = SocketType.DGRAM
 PEER: int = SocketType.PEER
 CHANNEL: int = SocketType.CHANNEL
 
-__all__: List[str] = [
+__all__: list[str] = [
     "ContextOption",
     "IO_THREADS",
     "MAX_SOCKETS",
@@ -737,6 +804,12 @@ __all__: List[str] = [
     "MORE",
     "SHARED",
     "SRCFD",
+    "NormMode",
+    "NORM_FIXED",
+    "NORM_CC",
+    "NORM_CCL",
+    "NORM_CCE",
+    "NORM_CCE_ECNONLY",
     "PollEvent",
     "POLLIN",
     "POLLOUT",
@@ -746,6 +819,9 @@ __all__: List[str] = [
     "RECONNECT_STOP_CONN_REFUSED",
     "RECONNECT_STOP_HANDSHAKE_FAILED",
     "RECONNECT_STOP_AFTER_DISCONNECT",
+    "RouterNotify",
+    "NOTIFY_CONNECT",
+    "NOTIFY_DISCONNECT",
     "SecurityMechanism",
     "NULL",
     "PLAIN",
@@ -859,6 +935,18 @@ __all__: List[str] = [
     "HELLO_MSG",
     "DISCONNECT_MSG",
     "PRIORITY",
+    "BUSY_POLL",
+    "HICCUP_MSG",
+    "XSUB_VERBOSE_UNSUBSCRIBE",
+    "TOPICS_COUNT",
+    "NORM_MODE",
+    "NORM_UNICAST_NACK",
+    "NORM_BUFFER_SIZE",
+    "NORM_SEGMENT_SIZE",
+    "NORM_BLOCK_SIZE",
+    "NORM_NUM_PARITY",
+    "NORM_NUM_AUTOPARITY",
+    "NORM_PUSH",
     "SocketType",
     "PAIR",
     "PUB",

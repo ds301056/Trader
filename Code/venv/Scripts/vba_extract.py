@@ -1,4 +1,4 @@
-#!C:\Users\Laura\OneDrive\Documents\GitHub\Trader\code\venv\Scripts\python.exe
+#!F:\GitHub\Trader\Code\venv\Scripts\python.exe
 
 ##############################################################################
 #

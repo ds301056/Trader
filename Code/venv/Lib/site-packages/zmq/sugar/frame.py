@@ -13,13 +13,12 @@ def _draft(v, feature):
     zmq.error._check_version(v, feature)
     if not zmq.DRAFT_API:
         raise RuntimeError(
-            "libzmq and pyzmq must be built with draft support for %s" % feature
+            f"libzmq and pyzmq must be built with draft support for {feature}"
         )
 
 
 class Frame(FrameBase, AttributeSetter):
-    """Frame(data=None, track=False, copy=None, copy_threshold=zmq.COPY_THRESHOLD)
-
+    """
     A zmq message Frame class for non-copying send/recvs and access to message properties.
 
     A ``zmq.Frame`` wraps an underlying ``zmq_msg_t``.
@@ -51,15 +50,17 @@ class Frame(FrameBase, AttributeSetter):
     data : object, optional
         any object that provides the buffer interface will be used to
         construct the 0MQ message data.
-    track : bool [default: False]
+    track : bool
         whether a MessageTracker_ should be created to track this object.
         Tracking a message has a cost at creation, because it creates a threadsafe
         Event object.
-    copy : bool [default: use copy_threshold]
+    copy : bool
+        default: use copy_threshold
         Whether to create a copy of the data to pass to libzmq
         or share the memory with libzmq.
         If unspecified, copy_threshold is used.
-    copy_threshold: int [default: zmq.COPY_THRESHOLD]
+    copy_threshold: int
+        default: :const:`zmq.COPY_THRESHOLD`
         If copy is unspecified, messages smaller than this many bytes
         will be copied and messages larger than this will be shared with libzmq.
     """
@@ -67,6 +68,33 @@ class Frame(FrameBase, AttributeSetter):
     def __getitem__(self, key):
         # map Frame['User-Id'] to Frame.get('User-Id')
         return self.get(key)
+
+    def __repr__(self):
+        """Return the str form of the message."""
+        nbytes = len(self)
+        msg_suffix = ""
+        if nbytes > 16:
+            msg_bytes = bytes(memoryview(self)[:12])
+            if nbytes >= 1e9:
+                unit = "GB"
+                n = nbytes // 1e9
+            elif nbytes >= 2**20:
+                unit = "MB"
+                n = nbytes // 1e6
+            elif nbytes >= 1e3:
+                unit = "kB"
+                n = nbytes // 1e3
+            else:
+                unit = "B"
+                n = nbytes
+            msg_suffix = f'...{n:.0f}{unit}'
+        else:
+            msg_bytes = self.bytes
+
+        _module = self.__class__.__module__
+        if _module == "zmq.sugar.frame":
+            _module = "zmq"
+        return f"<{_module}.{self.__class__.__name__}({msg_bytes!r}{msg_suffix})>"
 
     @property
     def group(self):

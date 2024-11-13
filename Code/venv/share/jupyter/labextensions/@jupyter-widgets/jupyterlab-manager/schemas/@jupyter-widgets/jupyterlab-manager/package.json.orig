@@ -1,6 +1,6 @@
 {
   "name": "@jupyter-widgets/jupyterlab-manager",
-  "version": "5.0.9",
+  "version": "5.0.13",
   "description": "The JupyterLab extension providing Jupyter widgets.",
   "keywords": [
     "jupyter",
@@ -46,11 +46,13 @@
     "watch": "jupyter labextension watch ."
   },
   "dependencies": {
-    "@jupyter-widgets/base": "^6.0.6",
-    "@jupyter-widgets/base-manager": "^1.0.7",
-    "@jupyter-widgets/controls": "^5.0.7",
-    "@jupyter-widgets/output": "^6.0.6",
+    "@jupyter-widgets/base": "^6.0.10",
+    "@jupyter-widgets/base-manager": "^1.0.11",
+    "@jupyter-widgets/controls": "^5.0.11",
+    "@jupyter-widgets/output": "^6.0.10",
     "@jupyterlab/application": "^3.0.0 || ^4.0.0",
+    "@jupyterlab/apputils": "^3.0.0 || ^4.0.0",
+    "@jupyterlab/console": "^3.0.0 || ^4.0.0",
     "@jupyterlab/docregistry": "^3.0.0 || ^4.0.0",
     "@jupyterlab/logconsole": "^3.0.0 || ^4.0.0",
     "@jupyterlab/mainmenu": "^3.0.0 || ^4.0.0",
@@ -65,7 +67,6 @@
     "@lumino/algorithm": "^1.11.1 || ^2.0.0",
     "@lumino/coreutils": "^1.11.1 || ^2.1",
     "@lumino/disposable": "^1.10.1 || ^2.1",
-    "@lumino/properties": "^1.8.1 || ^2.1",
     "@lumino/signaling": "^1.10.1 || ^2.1",
     "@lumino/widgets": "^1.30.0 || ^2.1",
     "@types/backbone": "1.4.14",
@@ -93,5 +94,5 @@
     "outputDir": "labextension",
     "schemaDir": "./schema"
   },
-  "gitHead": "17f68ed1b50f1c8b6843cb33f6b08161be89d3ea"
+  "gitHead": "35229eff5d87e4abf639d6b3c34ccc24845a44d4"
 }

@@ -1,4 +1,5 @@
 """Tornado handlers for api specifications."""
+
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
 import json
@@ -24,6 +25,11 @@ class APISpecHandler(web.StaticFileHandler, JupyterHandler):
     def initialize(self):
         """Initialize the API spec handler."""
         web.StaticFileHandler.initialize(self, path=os.path.dirname(__file__))
+
+    @web.authenticated
+    @authorized
+    def head(self):
+        return self.get("api.yaml", include_body=False)
 
     @web.authenticated
     @authorized

@@ -1,4 +1,4 @@
-"""
+r"""
 Implements a permissions editor for services.
 Service can be specified as plain name for local machine,
 or as a remote service of the form \\machinename\service
@@ -30,9 +30,6 @@ SERVICE_GENERIC_READ = (
 SERVICE_GENERIC_WRITE = win32service.SERVICE_CHANGE_CONFIG
 
 from ntsecuritycon import (
-    CONTAINER_INHERIT_ACE,
-    INHERIT_ONLY_ACE,
-    OBJECT_INHERIT_ACE,
     PSPCB_SI_INITDIALOG,
     READ_CONTROL,
     SI_ACCESS_CONTAINER,

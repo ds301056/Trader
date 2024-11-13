@@ -188,7 +188,6 @@ class Animation:
     def resume(self) -> None: ...
 
 class TimedAnimation(Animation):
-    repeat: bool
     def __init__(
         self,
         fig: Figure,
@@ -204,12 +203,11 @@ class ArtistAnimation(TimedAnimation):
     def __init__(self, fig: Figure, artists: Sequence[Collection[Artist]], *args, **kwargs) -> None: ...
 
 class FuncAnimation(TimedAnimation):
-    save_count: int
     def __init__(
         self,
         fig: Figure,
         func: Callable[..., Iterable[Artist]],
-        frames: Iterable[Artist] | int | Callable[[], Generator] | None = ...,
+        frames: Iterable | int | Callable[[], Generator] | None = ...,
         init_func: Callable[[], Iterable[Artist]] | None = ...,
         fargs: tuple[Any, ...] | None = ...,
         save_count: int | None = ...,

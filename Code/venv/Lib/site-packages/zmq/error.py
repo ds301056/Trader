@@ -2,9 +2,9 @@
 
 # Copyright (C) PyZMQ Developers
 # Distributed under the terms of the Modified BSD License.
+from __future__ import annotations
 
 from errno import EINTR
-from typing import Optional, Tuple, Union
 
 
 class ZMQBaseError(Exception):
@@ -19,13 +19,13 @@ class ZMQError(ZMQBaseError):
     errno : int
         The ZMQ errno or None.  If None, then ``zmq_errno()`` is called and
         used.
-    msg : string
+    msg : str
         Description of the error or None.
     """
 
-    errno: Optional[int] = None
+    errno: int | None = None
 
-    def __init__(self, errno: Optional[int] = None, msg: Optional[str] = None):
+    def __init__(self, errno: int | None = None, msg: str | None = None):
         """Wrap an errno style error.
 
         Parameters
@@ -172,18 +172,14 @@ class ZMQVersionError(NotImplementedError):
         self.version = _zmq_version
 
     def __repr__(self):
-        return "ZMQVersionError('%s')" % str(self)
+        return f"ZMQVersionError('{str(self)}')"
 
     def __str__(self):
-        return "{} requires libzmq >= {}, have {}".format(
-            self.msg,
-            self.min_version,
-            self.version,
-        )
+        return f"{self.msg} requires libzmq >= {self.min_version}, have {self.version}"
 
 
 def _check_version(
-    min_version_info: Union[Tuple[int], Tuple[int, int], Tuple[int, int, int]],
+    min_version_info: tuple[int] | tuple[int, int] | tuple[int, int, int],
     msg: str = "Feature",
 ):
     """Check for libzmq

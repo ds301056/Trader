@@ -1,7 +1,6 @@
 import unittest
 
 import winerror
-from pywin32_testutil import str2bytes  # py3k-friendly helper
 from pywin32_testutil import TestSkipped, testmain
 from win32inet import *
 from win32inetcon import *
@@ -13,7 +12,7 @@ class CookieTests(unittest.TestCase):
         InternetSetCookie("http://www.python.org", None, data)
         got = InternetGetCookie("http://www.python.org", None)
         # handle that there might already be cookies for the domain.
-        bits = map(lambda x: x.strip(), got.split(";"))
+        bits = (x.strip() for x in got.split(";"))
         self.assertTrue(data in bits)
 
     def testCookiesEmpty(self):
@@ -53,10 +52,9 @@ class TestNetwork(unittest.TestCase):
             if not chunk:
                 break
             chunks.append(chunk)
-        data = str2bytes("").join(chunks)
-        assert data.find(str2bytes("Python")) > 0, repr(
-            data
-        )  # This must appear somewhere on the main page!
+        data = b"".join(chunks)
+        # This must appear somewhere on the main page!
+        self.assertGreater(data.find(b"Python"), 0, repr(data))
 
     def testFtpCommand(self):
         # ftp.python.org doesn't exist.  ftp.gnu.org is what Python's urllib

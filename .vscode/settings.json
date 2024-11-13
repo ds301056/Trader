@@ -2,6 +2,7 @@
   "cSpell.words": [
     "ADDROWS",
     "Bollinger",
+    "cloudscraper",
     "cumsum",
     "Dataframe",
     "dropna",
@@ -19,5 +20,11 @@
     "strtime",
     "timestr",
     "xlsxwriter"
-  ]
+  ],
+  "git.ignoreLimitWarning": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "eslint.validate": ["javascript", "javascriptreact"],
+  "javascript.updateImportsOnFileMove.enabled": "always"
 }

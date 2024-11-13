@@ -3,7 +3,6 @@
 # Copyright (C) PyZMQ Developers
 # Distributed under the terms of the Modified BSD License.
 
-
 import os
 import platform
 
@@ -12,7 +11,7 @@ from .select import public_api, select_backend
 if 'PYZMQ_BACKEND' in os.environ:
     backend = os.environ['PYZMQ_BACKEND']
     if backend in ('cython', 'cffi'):
-        backend = 'zmq.backend.%s' % backend
+        backend = f'zmq.backend.{backend}'
     _ns = select_backend(backend)
 else:
     # default to cython, fallback to cffi

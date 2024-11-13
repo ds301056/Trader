@@ -1,4 +1,5 @@
 """Pytest Fixtures exported by Jupyter Server."""
+
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
 import json
@@ -18,8 +19,8 @@ sample_kernel_json = {
 }
 
 
-@pytest.fixture()  # type:ignore[misc]
-def jp_kernelspecs(jp_data_dir: Path) -> None:  # noqa: PT004
+@pytest.fixture  # type:ignore[misc]
+def jp_kernelspecs(jp_data_dir: Path) -> None:
     """Configures some sample kernelspecs in the Jupyter data directory."""
     spec_names = ["sample", "sample2", "bad"]
     for name in spec_names:
@@ -42,7 +43,7 @@ def jp_contents_manager(request, tmp_path):
     return AsyncFileContentsManager(root_dir=str(tmp_path), use_atomic_writing=request.param)
 
 
-@pytest.fixture()
+@pytest.fixture
 def jp_large_contents_manager(tmp_path):
     """Returns an AsyncLargeFileManager instance."""
     return AsyncLargeFileManager(root_dir=str(tmp_path))

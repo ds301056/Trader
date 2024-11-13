@@ -4,31 +4,31 @@ import requests  # Import requests to make HTTP requests
 
 def dailyfx_com():
     resp = requests.get('https://www.dailyfx.com/sentiment')  # Make a GET request to the website
-    # Uncomment below lines to debug the HTTP response content and status
-    # print(resp.content)
-    # print(resp.status_code)
-
+    
     soup = BeautifulSoup(resp.content, 'html.parser')  # Parse the HTML content using BeautifulSoup
-    # Uncomment below line to debug the parsed HTML structure
-    # print(soup)
-
     rows = soup.select(".dfx-technicalSentimentCard")  # Select all elements with the class
 
-    for r in rows:
-        card = r.select_one(".dfx-technicalSentimentCard__pairAndSignal")
-        if card:
-            a_tag = card.select_one('a')
-            if a_tag:
-                print(a_tag.get_text().replace("/", "_"))  # Print the text of the <a> tag, replacing "/" with "_"
-            else:
-                print("No link found in the card")
-
-            span_tag = card.select_one('span')
-            if span_tag:
-                print(span_tag.get_text())  # Print the text of the <span> tag
-            else:
-                print("No span found in the card")
+    pair_data = [] # Initialize an empty list to store the data
 
 
+    for r in rows: # Iterate through the selected elements
+        card = r.select_one(".dfx-technicalSentimentCard__pairAndSignal") # Select the element with the class
+        change_values = r.select(".dfx-technicalSentimentCard__changeValue") # Select all elements with the class
+        pair_data.append(dict(
+            pair=card.select_one('a').get_text().replace("/", "_").strip("\n"),   
+            sentiment=card.select_one('span').get_text().strip("\n"),   
+            longs_d=change_values[0].get_text().strip("\n"),
+            shorts_d=change_values[1].get_text().strip("\n"),
+            longs_w=change_values[3].get_text().strip("\n"),
+            shorts_w=change_values[4].get_text().strip("\n")
 
+        ))
+
+    return pd.DataFrame.from_dict(pair_data)  # Return the data as a pandas DataFrame
+
+        
+
+
+
+        
             

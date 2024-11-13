@@ -1,6 +1,6 @@
 {
   "name": "@jupyterlab/debugger-extension",
-  "version": "4.0.11",
+  "version": "4.2.5",
   "description": "JupyterLab - Debugger Extension",
   "keywords": [
     "jupyter",
@@ -40,33 +40,31 @@
   "scripts": {
     "build": "tsc -b",
     "clean": "rimraf lib && rimraf tsconfig.tsbuildinfo && rimraf tsconfig.test.tsbuildinfo && rimraf tests/build",
-    "docs": "typedoc --options tdoptions.json --theme ../../typedoc-theme src",
     "watch": "tsc -b --watch"
   },
   "dependencies": {
-    "@jupyterlab/application": "^4.0.11",
-    "@jupyterlab/apputils": "^4.1.11",
-    "@jupyterlab/cells": "^4.0.11",
-    "@jupyterlab/codeeditor": "^4.0.11",
-    "@jupyterlab/console": "^4.0.11",
-    "@jupyterlab/coreutils": "^6.0.11",
-    "@jupyterlab/debugger": "^4.0.11",
-    "@jupyterlab/docregistry": "^4.0.11",
-    "@jupyterlab/fileeditor": "^4.0.11",
-    "@jupyterlab/logconsole": "^4.0.11",
-    "@jupyterlab/notebook": "^4.0.11",
-    "@jupyterlab/rendermime": "^4.0.11",
-    "@jupyterlab/services": "^7.0.11",
-    "@jupyterlab/settingregistry": "^4.0.11",
-    "@jupyterlab/translation": "^4.0.11"
+    "@jupyterlab/application": "^4.2.5",
+    "@jupyterlab/apputils": "^4.3.5",
+    "@jupyterlab/cells": "^4.2.5",
+    "@jupyterlab/codeeditor": "^4.2.5",
+    "@jupyterlab/console": "^4.2.5",
+    "@jupyterlab/coreutils": "^6.2.5",
+    "@jupyterlab/debugger": "^4.2.5",
+    "@jupyterlab/docregistry": "^4.2.5",
+    "@jupyterlab/fileeditor": "^4.2.5",
+    "@jupyterlab/logconsole": "^4.2.5",
+    "@jupyterlab/notebook": "^4.2.5",
+    "@jupyterlab/rendermime": "^4.2.5",
+    "@jupyterlab/services": "^7.2.5",
+    "@jupyterlab/settingregistry": "^4.2.5",
+    "@jupyterlab/translation": "^4.2.5"
   },
   "devDependencies": {
-    "@jupyterlab/testing": "^4.0.11",
+    "@jupyterlab/testing": "^4.2.5",
     "@types/jest": "^29.2.0",
     "@types/react-dom": "^18.0.9",
-    "rimraf": "~3.0.0",
-    "typedoc": "~0.24.7",
-    "typescript": "~5.0.4"
+    "rimraf": "~5.0.5",
+    "typescript": "~5.1.6"
   },
   "publishConfig": {
     "access": "public"
