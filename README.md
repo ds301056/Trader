@@ -1,5 +1,7 @@
 # Trader
 
+# educational account - nonprofit 
+
 # check the setup.bat file 
 run with .\setup.bat
 
