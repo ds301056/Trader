@@ -25,6 +25,7 @@ import { Label } from '@/components/ui/label'
 import { toast } from '@/components/ui/use-toast'
 import { extent } from 'd3-array'
 import { scaleLinear } from 'd3-scale'
+import Headlines from '@/components/Headlines'
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload || !payload.length) {
@@ -127,6 +128,7 @@ CandlestickSeries.propTypes = {
 
 // ------------------------------
 const Dashboard = () => {
+  // State management
   const [selectedPair, setSelectedPair] = useState(null)
   const [selectedGran, setSelectedGran] = useState(null)
   const [technicalsData, setTechnicalsData] = useState(null)
@@ -135,21 +137,15 @@ const Dashboard = () => {
   const [options, setOptions] = useState({ pairs: [], granularities: [] })
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    loadOptions()
-  }, [])
-
-  const handleCountChange = (count) => {
-    setSelectedCount(count)
-    loadPrices(count)
-  }
-
-  const loadPrices = async (count) => {
+  // Load prices with optional parameters
+  const loadPrices = async (
+    count,
+    pair = selectedPair,
+    gran = selectedGran,
+  ) => {
     try {
-      console.log(
-        `Loading prices for ${selectedPair}, ${selectedGran}, ${count}`,
-      )
-      const response = await endPoints.prices(selectedPair, selectedGran, count)
+      console.log(`Loading prices for ${pair}, ${gran}, ${count}`)
+      const response = await endPoints.prices(pair, gran, count)
 
       if (response && response.time && response.mid_c) {
         const formattedData = response.time
@@ -162,7 +158,6 @@ const Dashboard = () => {
           }))
           .reverse()
 
-        console.log('Formatted price data:', formattedData)
         setPriceData(formattedData)
       }
     } catch (error) {
@@ -175,10 +170,26 @@ const Dashboard = () => {
     }
   }
 
+  // Load technical data with optional parameters
+  const loadTechnicals = async (pair = selectedPair, gran = selectedGran) => {
+    try {
+      const data = await endPoints.technicals(pair, gran)
+      setTechnicalsData(data)
+      await loadPrices(selectedCount, pair, gran)
+    } catch (error) {
+      console.error('Error loading technicals:', error)
+      toast({
+        variant: 'destructive',
+        title: 'Error loading technicals',
+        description: error.message,
+      })
+    }
+  }
+
+  // Load initial options and set defaults
   const loadOptions = async () => {
     try {
       const data = await endPoints.options()
-      console.log('Loaded options:', data)
 
       const formattedData = {
         pairs: data.pairs.map((pair) => ({
@@ -192,24 +203,46 @@ const Dashboard = () => {
       }
 
       setOptions(formattedData)
-      setSelectedGran(formattedData.granularities[0]?.value || null)
-      setSelectedPair(formattedData.pairs[0]?.value || null)
+
+      // Find and set USD_CAD and M5 as defaults
+      const usdCadPair = formattedData.pairs.find(
+        (pair) => pair.value === 'USD_CAD',
+      )
+      const m5Gran = formattedData.granularities.find(
+        (gran) => gran.value === 'M5',
+      )
+
+      const defaultPair = usdCadPair?.value || formattedData.pairs[0]?.value
+      const defaultGran = m5Gran?.value || formattedData.granularities[0]?.value
+
+      setSelectedGran(defaultGran)
+      setSelectedPair(defaultPair)
       setLoading(false)
+
+      return { selectedPair: defaultPair, selectedGran: defaultGran }
     } catch (error) {
       console.error('Error loading options:', error)
       setLoading(false)
+      return null
     }
   }
 
-  const loadTechnicals = async () => {
-    try {
-      const data = await endPoints.technicals(selectedPair, selectedGran)
-      console.log('Technical data:', data)
-      setTechnicalsData(data)
-      await loadPrices(selectedCount)
-    } catch (error) {
-      console.error('Error loading technicals:', error)
+  // Initialize data on component mount
+  useEffect(() => {
+    const initializeData = async () => {
+      const defaults = await loadOptions()
+      if (defaults) {
+        await loadTechnicals(defaults.selectedPair, defaults.selectedGran)
+      }
     }
+
+    initializeData()
+  }, [])
+
+  // Handle count change for data points
+  const handleCountChange = (count) => {
+    setSelectedCount(count)
+    loadPrices(count)
   }
 
   if (loading) {
@@ -595,6 +628,7 @@ const Dashboard = () => {
             )}
           </div>
         </div>
+        <Headlines className="items-center overflow-scroll" />
       </div>
     </div>
   )
