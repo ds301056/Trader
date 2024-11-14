@@ -137,14 +137,16 @@ const Dashboard = () => {
   const [options, setOptions] = useState({ pairs: [], granularities: [] })
   const [loading, setLoading] = useState(true)
 
-  // Load prices with optional parameters
+  // Modified loadPrices function with error handling
   const loadPrices = async (
     count,
     pair = selectedPair,
     gran = selectedGran,
   ) => {
+    if (!pair || !gran) return // Guard clause to prevent loading without required params
+
     try {
-      console.log(`Loading prices for ${pair}, ${gran}, ${count}`)
+      setLoading(true)
       const response = await endPoints.prices(pair, gran, count)
 
       if (response && response.time && response.mid_c) {
@@ -167,12 +169,16 @@ const Dashboard = () => {
         title: 'Error loading prices',
         description: error.message,
       })
+    } finally {
+      setLoading(false)
     }
   }
-
-  // Load technical data with optional parameters
+  // Modified loadTechnicals function with error handling
   const loadTechnicals = async (pair = selectedPair, gran = selectedGran) => {
+    if (!pair || !gran) return // Guard clause to prevent loading without required params
+
     try {
+      setLoading(true)
       const data = await endPoints.technicals(pair, gran)
       setTechnicalsData(data)
       await loadPrices(selectedCount, pair, gran)
@@ -183,10 +189,11 @@ const Dashboard = () => {
         title: 'Error loading technicals',
         description: error.message,
       })
+    } finally {
+      setLoading(false)
     }
   }
-
-  // Load initial options and set defaults
+  // Modified loadOptions function
   const loadOptions = async () => {
     try {
       const data = await endPoints.options()
@@ -215,34 +222,48 @@ const Dashboard = () => {
       const defaultPair = usdCadPair?.value || formattedData.pairs[0]?.value
       const defaultGran = m5Gran?.value || formattedData.granularities[0]?.value
 
+      // Set the state values
       setSelectedGran(defaultGran)
       setSelectedPair(defaultPair)
-      setLoading(false)
 
       return { selectedPair: defaultPair, selectedGran: defaultGran }
     } catch (error) {
       console.error('Error loading options:', error)
-      setLoading(false)
+      toast({
+        variant: 'destructive',
+        title: 'Error loading options',
+        description: error.message,
+      })
       return null
     }
   }
-
-  // Initialize data on component mount
+  // Modified initialization useEffect
   useEffect(() => {
     const initializeData = async () => {
-      const defaults = await loadOptions()
-      if (defaults) {
-        await loadTechnicals(defaults.selectedPair, defaults.selectedGran)
+      try {
+        const defaults = await loadOptions()
+        if (defaults) {
+          // Wait for state updates to propagate
+          setTimeout(() => {
+            loadTechnicals(defaults.selectedPair, defaults.selectedGran)
+          }, 0)
+        }
+      } finally {
+        setLoading(false)
       }
     }
 
     initializeData()
   }, [])
 
-  // Handle count change for data points
+  // Handle load button click separately from initialization
+  const handleLoadClick = () => {
+    loadTechnicals(selectedPair, selectedGran)
+  }
+  // Modified count change handler
   const handleCountChange = (count) => {
     setSelectedCount(count)
-    loadPrices(count)
+    loadPrices(count, selectedPair, selectedGran)
   }
 
   if (loading) {
@@ -327,7 +348,7 @@ const Dashboard = () => {
 
               <div className="md:col-span-2 flex items-end">
                 <Button
-                  onClick={loadTechnicals}
+                  onClick={handleLoadClick}
                   className="w-full h-10 bg-slate-900 text-white hover:bg-slate-800"
                 >
                   Load Data
