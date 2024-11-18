@@ -6,8 +6,7 @@ https://forex.devhorizon.io/ **
  v1-Dash-Deployment
 # Data comes from OANDA API
 
-# Writes data to pkl's for each currency conversion
-# then consolidates all pkl's into an excel sheet for advanced data analysis
+# Writes data to pkl's for each currency conversion then consolidates all pkl's into an excel sheet for advanced data analysis
 ![Excell](https://github.com/user-attachments/assets/a3692d15-4493-4f38-8289-c5b2e00387c1)
 
 
