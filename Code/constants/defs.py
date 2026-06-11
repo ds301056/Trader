@@ -1,6 +1,16 @@
-API_KEY = "REMOVED_OANDA_API_KEY"
-ACCOUNT_ID = "101-001-27981277-001" 
-OANDA_URL = "https://api-fxpractice.oanda.com/v3"
+import os
+from pathlib import Path
+
+from dotenv import load_dotenv
+
+# Load secrets from Code/.env (sits next to this package, regardless of cwd).
+# Copy .env.example to .env and fill in your own values — .env is gitignored.
+_CODE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(_CODE_DIR / ".env")
+
+API_KEY = os.getenv("OANDA_API_KEY", "")
+ACCOUNT_ID = os.getenv("OANDA_ACCOUNT_ID", "")
+OANDA_URL = os.getenv("OANDA_URL", "https://api-fxpractice.oanda.com/v3")
 
 
 SECURE_HEADER = {
@@ -11,11 +21,11 @@ SECURE_HEADER = {
 
 
 SELL = -1 # Constants for selling and buying
-BUY = 1 
+BUY = 1
 NONE = 0
 
 
-MONGO_CONN_STR = "mongodb+srv://ds301056:REMOVED_DB_PASSWORD@cluster0.pro4cmw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+MONGO_CONN_STR = os.getenv("MONGO_CONN_STR", "")
 
 
 # pairs and ids for the instruments

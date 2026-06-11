@@ -1,0 +1,27 @@
+# ---- Secrets / credentials (NEVER commit) ----
+.env
+*.env
+!.env.example
+Oanda_API.txt
+.ssh/
+*.pem
+*_rsa
+*_rsa.pub
+id_rsa*
+
+# ---- Python virtual environments ----
+venv/
+.venv/
+env/
+ENV/
+
+# ---- Python caches / build ----
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+.pytest_cache/
+
+# ---- OS / editor ----
+.DS_Store
+Thumbs.db
